@@ -1,4 +1,4 @@
-package utils
+package APIResponse
 
 import (
     "github.com/gofiber/fiber/v2"

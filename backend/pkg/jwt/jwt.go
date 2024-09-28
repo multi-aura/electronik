@@ -1,8 +1,9 @@
-package utils
+package jwt
 
 import (
 	"electronik/internal/models"
 	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -11,8 +12,9 @@ func GenerateToken(user models.User) (string, error) {
 	claims["id"] = user.ID
 	claims["username"] = user.Username
 	claims["email"] = user.Email
-	claims["exp"] = time.Now().Add(time.Second * 120).Unix()
+	claims["isAdmin"] = user.IsAdmin
+	claims["exp"] = time.Now().Add(time.Hour * 720).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte("firstproject"))
+	return token.SignedString([]byte("electronik"))
 }

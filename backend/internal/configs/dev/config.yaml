@@ -1,0 +1,3 @@
+mongo:
+  uri: "mongodb+srv://trongthang412003:uUptQfnTQeGgRiSF@cluster0.0u3du.mongodb.net/"
+  database: "Electronik"
