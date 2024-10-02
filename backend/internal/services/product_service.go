@@ -1,0 +1,139 @@
+package services
+
+import (
+	"electronik/internal/models"
+	"electronik/internal/repositories"
+	"errors"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type (
+	ProductService interface {
+		NewProduct(product *models.Product) ([]ErrorResponse, error)
+		GetProductByID(id string) (*models.Product, error)
+		UpdateProduct(id string, product *models.Product) ([]ErrorResponse, error)
+		DeleteProduct(id string) error
+		GetListProductByPagination(page int, limit int) ([]models.Product, error)
+		GetListProductBySearch(page int, limit int, query string) ([]models.Product, error)
+	}
+	productService struct {
+		repo repositories.ProductRepository
+	}
+	ErrorResponse struct {
+		Error       bool
+		FailedField string
+		Tag         string
+	}
+)
+
+func NewProductService(repo repositories.ProductRepository) ProductService {
+	return &productService{repo}
+}
+func (s *productService) NewProduct(product *models.Product) ([]ErrorResponse, error) {
+	validationErrors := []ErrorResponse{}
+	validate := validator.New()
+
+	// Thực hiện kiểm tra tính hợp lệ
+	err := validate.Struct(product)
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			var elem ErrorResponse
+			elem.FailedField = err.Field() // Trường bị lỗi
+			elem.Tag = err.Tag()           // Quy tắc validation bị vi phạm
+			elem.Error = true              // Xác nhận có lỗi
+			validationErrors = append(validationErrors, elem)
+		}
+		// Trả về các lỗi validation
+		return validationErrors, nil
+	}
+	product.CreatedAt = time.Now()
+	err = s.repo.Create(*product)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (s *productService) GetProductByID(id string) (*models.Product, error) {
+
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	product, err := s.repo.GetByID(objectID.Hex())
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &product, nil
+}
+
+func (pro *productService) UpdateProduct(id string, product *models.Product) ([]ErrorResponse, error) {
+	var errors []ErrorResponse
+	if id == "" {
+		errors = append(errors, ErrorResponse{
+			Error:       true,
+			FailedField: "ID",
+			Tag:         "Product ID is not required",
+		})
+		return errors, nil
+	}
+
+	errr := pro.repo.Update(id, *product)
+	if errr != nil {
+		errors = append(errors, ErrorResponse{
+			Error:       true,
+			FailedField: "product",
+			Tag:         "Update failed",
+		})
+		return errors, nil
+
+	}
+	return nil, nil
+}
+func (pro *productService) DeleteProduct(id string) error {
+	if id == "" {
+		return errors.New("Product ID is required")
+	}
+	err := pro.repo.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+func (pro *productService) GetListProductByPagination(page int, limit int) ([]models.Product, error) {
+	if (page <= 0) || (limit <= 0) {
+		return nil, errors.New("Page and limit must be greater than 0")
+	}
+	skip := (page - 1) * limit
+	Dsproduct, err := pro.repo.GetListProductByPagination(limit, skip)
+	if err != nil {
+		return nil, err
+	}
+	return Dsproduct, nil
+
+}
+
+func (pro *productService) GetListProductBySearch(page int, limit int, query string) ([]models.Product, error) {
+	if (page <= 0) || (limit <= 0) {
+		return nil, errors.New("Page and limit must be greater than 0")
+	}
+	if query == "" {
+		query = ".*"
+	}
+	skip := (page - 1) * limit
+	Dsproduct, err := pro.repo.GetListProductBySearch(limit, skip, query)
+	if err != nil {
+		return nil, err
+	}
+	return Dsproduct, nil
+
+}
