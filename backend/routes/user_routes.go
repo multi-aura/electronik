@@ -19,4 +19,5 @@ func setupUserRoutes(app *fiber.App) {
 	userGroup.Post("/register", controller.Register)
 	userGroup.Post("/login", controller.Login)
 	userGroup.Delete("/delete/:id", middlewares.AuthMiddleware(), controller.DeleteUser)
+	userGroup.Put("/update", middlewares.AuthMiddleware(), controller.UpdateUser)
 }

@@ -55,22 +55,43 @@ func (repo *userRepository) Create(entity models.User) error {
 	return err
 }
 
-func (repo *userRepository) Update(id string, entity models.User) error {
-	filter := bson.M{"_id": id}
-	update := bson.M{
-		"$set": entity,
-	}
+func (repo *userRepository) Update(entity models.User) error {
+    filter := bson.M{"_id": entity.ID}
+    update := bson.M{}
+    
+    if entity.Username != "" {
+        update["username"] = entity.Username
+    }
+    if entity.Email != "" {
+        update["email"] = entity.Email
+    }
+    if entity.PhoneNumber != "" {
+        update["phone_number"] = entity.PhoneNumber
+    }
+    if entity.DeliveryAddresses != nil {
+        update["delivery_addresses"] = entity.DeliveryAddresses
+    }
+    update["is_admin"] = entity.IsAdmin
 
-	result, err := repo.collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		return err
-	}
-	if result.MatchedCount == 0 {
-		return mongo.ErrNoDocuments
-	}
+    if len(update) == 0 {
+        return nil
+    }
 
-	return nil
+    updateQuery := bson.M{"$set": update}
+
+    result, err := repo.collection.UpdateOne(context.Background(), filter, updateQuery)
+    if err != nil {
+        return err
+    }
+
+    if result.MatchedCount == 0 {
+        return mongo.ErrNoDocuments
+    }
+
+    return nil
 }
+
+
 
 func (repo *userRepository) Delete(id string) error {
 	objectID, err := primitive.ObjectIDFromHex(id)

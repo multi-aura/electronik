@@ -55,7 +55,6 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
-
 	existingUser, err := uc.service.Login(req.Email)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
@@ -93,6 +92,37 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	})
 }
 
+func (uc *UserController) UpdateUser(c *fiber.Ctx) error {
+	var updatedData models.User
+	if err := c.BodyParser(&updatedData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot parse JSON",
+		})
+	}
+
+	err := uc.service.Update(&updatedData)
+	if err != nil {
+		if err.Error() == "user not found" {
+			return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusNotFound,
+				Message: "User not found",
+				Error:   "StatusNotFound",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: "Failed to update user information",
+			Error:   "StatusInternalServerError",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "User updated successfully",
+		Data:    updatedData,
+	})
+}
+
 func (uc *UserController) DeleteUser(c *fiber.Ctx) error {
 	userID := c.Params("id")
 
@@ -118,17 +148,17 @@ func (uc *UserController) DeleteUser(c *fiber.Ctx) error {
 	err := uc.service.DeleteAccount(userID)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") {
-            return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
-                Status:  fiber.StatusNotFound,
-                Message: "User not found",
-                Error:   "StatusNotFound",
-            })
-        }
-        return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
-            Status:  fiber.StatusInternalServerError,
-            Message: "An error occurred while deleting user",
-            Error:   "StatusInternalServerError",
-        })
+			return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusNotFound,
+				Message: "User not found",
+				Error:   "StatusNotFound",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: "An error occurred while deleting user",
+			Error:   "StatusInternalServerError",
+		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{

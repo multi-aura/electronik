@@ -15,7 +15,7 @@ type UserService interface {
 	Register(user *models.User) error
 	Login(email string) (*models.User, error)
 	DeleteAccount(userID string) error
-	Update(userID string, user *models.User) error
+	Update(user *models.User) error
 	ForgotPassword(email string) error
 	ChangePassword(userID, oldPassword, newPassword string) error
 	ComparePassword(hashedPassword, plainPassword string) error
@@ -89,8 +89,8 @@ func (s *userService) DeleteAccount(userID string) error {
 	return nil
 }
 
-func (s *userService) Update(userID string, user *models.User) error {
-	existingUser, err := s.repo.GetByID(userID)
+func (s *userService) Update(user *models.User) error {
+	existingUser, err := s.repo.GetByID(user.ID.Hex())
 	if err != nil {
 		return errors.New("user not found")
 	}
@@ -99,7 +99,7 @@ func (s *userService) Update(userID string, user *models.User) error {
 		return errors.New("user ID does not match")
 	}
 
-	if err := s.repo.Update(userID, *user); err != nil {
+	if err := s.repo.Update(*user); err != nil {
 		return errors.New("failed to update user information")
 	}
 
@@ -149,7 +149,7 @@ func (s *userService) ChangePassword(userID, oldPassword, newPassword string) er
 	}
 
 	user.Password = string(hashedPassword)
-	if err := s.repo.Update(userID, *user); err != nil {
+	if err := s.repo.Update(*user); err != nil {
 		return errors.New("failed to update password")
 	}
 
