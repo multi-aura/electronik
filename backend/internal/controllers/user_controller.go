@@ -4,10 +4,9 @@ import (
 	"electronik/internal/models"
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
-	"electronik/pkg/jwt"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct {
@@ -21,16 +20,29 @@ func NewUserController(service services.UserService) *UserController {
 func (uc *UserController) Register(c *fiber.Ctx) error {
 	var user models.User
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot parse JSON",
+		})
 	}
-	if err := uc.service.Register(&user); err != nil {
+
+	user.IsAdmin = false
+	err := uc.service.Register(&user)
+	if err != nil {
+		if err.Error() == "email already in use" {
+			return c.Status(fiber.StatusConflict).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusConflict,
+				Message: "User with this email already exists",
+				Error:   "EmailAlreadyInUse",
+			})
+		}
+		// Xử lý các lỗi khác
 		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusInternalServerError,
-			Message: "User already exists",
-			Error:   "StatusInternalServerError",
+			Message: "Failed to register user",
+			Error:   err.Error(),
 		})
-
 	}
+
 	return c.Status(fiber.StatusCreated).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusCreated,
 		Message: "Register successful",
@@ -43,7 +55,6 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
-
 	existingUser, err := uc.service.Login(req.Email)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
@@ -53,7 +64,7 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(existingUser.Password), []byte(req.Password))
+	err = uc.service.ComparePassword(existingUser.Password, req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusUnauthorized,
@@ -62,7 +73,7 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	token, err := jwt.GenerateToken(*existingUser)
+	token, err := uc.service.GenerateJWTToken(*existingUser)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusInternalServerError,
@@ -81,24 +92,75 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	})
 }
 
-func (uc *UserController) DeleteUser(c *fiber.Ctx) error {
-	email := c.Params("email")
-	if email == "" {
-		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
-			Status:  fiber.StatusNotFound,
-			Message: "User not found",
-			Error:   "StatusNotFound",
+func (uc *UserController) UpdateUser(c *fiber.Ctx) error {
+	var updatedData models.User
+	if err := c.BodyParser(&updatedData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot parse JSON",
 		})
 	}
 
-	err := uc.service.DeleteAccount(email)
+	err := uc.service.Update(&updatedData)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
-			Status:  fiber.StatusNotFound,
-			Message: "User not found",
-			Error:   "StatusNotFound",
+		if err.Error() == "user not found" {
+			return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusNotFound,
+				Message: "User not found",
+				Error:   "StatusNotFound",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: "Failed to update user information",
+			Error:   "StatusInternalServerError",
 		})
 	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "User updated successfully",
+		Data:    updatedData,
+	})
+}
+
+func (uc *UserController) DeleteUser(c *fiber.Ctx) error {
+	userID := c.Params("id")
+
+	currentUserID := c.Locals("userID").(string)
+	isAdmin := c.Locals("isAdmin").(bool)
+
+	if userID == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "User ID is required",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	if !isAdmin && currentUserID != userID {
+		return c.Status(fiber.StatusForbidden).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusForbidden,
+			Message: "You do not have permission to delete this user",
+			Error:   "StatusForbidden",
+		})
+	}
+
+	err := uc.service.DeleteAccount(userID)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusNotFound,
+				Message: "User not found",
+				Error:   "StatusNotFound",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: "An error occurred while deleting user",
+			Error:   "StatusInternalServerError",
+		})
+	}
+
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
 		Message: "User deleted successfully",
