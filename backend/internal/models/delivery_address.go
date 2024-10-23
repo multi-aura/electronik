@@ -1,12 +1,15 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type DeliveryAddress struct {
-	RecipientName string `bson:"recipient_name" json:"recipient_name"`
-	ContactNumber string `bson:"contact_number" json:"contact_number"`
-	AddressLine   string `bson:"address_line" json:"address_line"`
-	Ward          string `bson:"ward" json:"ward"`
-	District      string `bson:"district" json:"district"`
-	Province      string `bson:"province" json:"province"`
-	Country       string `bson:"country" json:"country"`
-	IsDefault     bool   `bson:"is_default" json:"is_default"`
+	ID                 primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
+	RecipientName      string             `bson:"recipientName" json:"recipientName"`
+	ContactPhoneNumber string             `bson:"contactPhoneNumber" json:"contactPhoneNumber"`
+	AddressLine        string             `bson:"addressLine" json:"addressLine"`
+	Ward               string             `bson:"ward" json:"ward"`
+	District           string             `bson:"district" json:"district"`
+	Province           string             `bson:"province" json:"province"`
+	Country            string             `bson:"country" json:"country"`
+	IsDefault          bool               `bson:"isDefault" json:"isDefault"`
 }
