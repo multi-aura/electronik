@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+.intro-page-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    background-image: url('../img/Intropage.png'); 
+    background-size: cover;
+    background-position: center;
+    animation: backgroundZoom 8s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+    cursor: pointer; 
+    position: relative;
+  }
+  @keyframes backgroundZoom {
+    0% {
+      background-size: 100%;
+    }
+    50% {
+      background-size: 110%; 
+    }
+    100% {
+      background-size: 100%;
+    }
+  }
+  .intro-content {
+    text-align: center;
+    color: rgb(232, 232, 232);
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .intro-content h1 {
+    font-size: 49px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .intro-content p {
+    font-size: 24px;
+    margin-top: 10px;
+    font-weight: 300;
+  }
+  
+  /* Hiệu ứng khi hover */
+  .intro-page-container:hover .intro-content h1,
+  .intro-page-container:hover .intro-content p {
+    color: #ffffff; /* Hiệu ứng đổi màu khi hover */
+  }
+  

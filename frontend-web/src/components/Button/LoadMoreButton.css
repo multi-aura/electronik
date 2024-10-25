@@ -1,0 +1,29 @@
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Điều chỉnh margin nếu cần */
+  }
+  
+  .load-more-btn {
+    padding: 10px 20px;
+    background-color: #00000000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .load-more-btn:hover {
+    background-color: #00000000;
+  }
+  
+  .no-more-results {
+    text-align: center;
+    color: gray;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  

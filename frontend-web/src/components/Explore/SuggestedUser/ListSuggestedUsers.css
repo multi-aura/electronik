@@ -1,0 +1,33 @@
+.suggested-users {
+    padding: 20px;
+    margin-top: 100px;
+    background-color: #000000;
+    border-left: 1px solid #3f3f3f5d;
+    border-radius: 8px;
+    color: white;
+  }
+  
+  .suggested-header h5 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight:initial;
+
+  }
+  .see-all-link {
+    color: #8b8b8b;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-right: 25px;
+
+  }
+  .see-all-link:hover {
+    color: rgb(147, 230, 255);
+    text-decoration: none;
+  }
+  .list-group {
+    padding: 0;
+    margin: 0;
+  }
+  

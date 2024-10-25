@@ -1,0 +1,20 @@
+    .form-controlh {
+    background-color: white; 
+    width: 90%;
+    color: black; 
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ced4da; 
+  }
+  
+  .input-group-text {
+    border-radius: 0;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+  }
+  
+  .form-control:focus {
+    border-color: #007bff; /* Màu viền khi focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  

@@ -1,0 +1,46 @@
+.search-results-container {
+    background-color: #111; /* Nền đen */
+    color: white; /* Màu chữ trắng */
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
+    position: absolute; 
+    top: 100%;
+    z-index: 1000; 
+  }
+  
+  .recent-searches h5, .suggestions-for-you h5 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .recent-searches ul, .suggestions-for-you ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .search-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .btn-remove {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .hr {
+    border-color: #333;
+  }
+  
+  .see-more {
+    color: #888;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  

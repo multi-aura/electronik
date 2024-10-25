@@ -1,0 +1,14 @@
+.tab-menu {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    color: #aaa;
+  }
+  .tab-menu span{
+    cursor: pointer;
+  }
+  .tab-menu span.active {
+    color: #fff;
+    border-bottom: 2px solid #00f;
+  }
+  
