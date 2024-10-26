@@ -40,6 +40,7 @@ func (uc *UserController) Register(c *fiber.Ctx) error {
 			Error:   "BadRequest",
 		})
 	}
+
 	return c.Status(fiber.StatusCreated).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusCreated,
 		Message: "Register successful",
