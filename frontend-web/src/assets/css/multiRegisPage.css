@@ -1,25 +1,123 @@
+/* Trang nền */
 .register-page {
-    height: 100vh; 
-    background-image: url('../img/Intro_banner.png');
-    background-position: center;
-    background-size: cover;
-    height: 100vh;
-  }
-  
-  .logo-title {
-    font-size: 36px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .logo-subtitle {
-    font-size: 16px;
-    color: #777;
-  }
-  
-  .btn-primary {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-  }
-  
+  height: 100vh;
+  background-image: url('../img/Intro_banner.png');
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Logo tiêu đề */
+.logo-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.logo-subtitle {
+  font-size: 16px;
+  color: #777;
+  text-align: center;
+  margin-top: -10px;
+}
+
+/* Nút chính */
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: black;
+  border: none;
+  color: white;
+  border-radius: 8px;
+}
+
+/* Khung đăng ký */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.register-card {
+  max-width: 500px; /* Tăng chiều rộng tối đa */
+  width: 100%;
+  padding: 40px; /* Tăng khoảng cách bên trong */
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề đăng ký */
+.register-title {
+  font-family: 'Brush Script MT', cursive;
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.register-subtitle {
+  font-family: sans-serif;
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 30px; /* Tăng khoảng cách phía dưới */
+}
+
+/* Nhóm ô nhập liệu */
+.form-group {
+  position: relative;
+  margin-bottom: 25px; /* Tăng khoảng cách giữa các trường */
+}
+
+/* Ô nhập liệu */
+.register-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px; /* Tăng padding để khoảng cách rộng hơn */
+  border: none;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Icon trong ô nhập liệu */
+.input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+}
+
+/* Nút đăng ký */
+.register-button {
+  width: 100%;
+  padding: 15px; /* Tăng chiều cao nút */
+  font-size: 18px; /* Tăng cỡ chữ */
+  font-weight: bold;
+  color: white;
+  background-color: black;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Liên kết đăng nhập */
+.login-link {
+  color: #FF5722;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}

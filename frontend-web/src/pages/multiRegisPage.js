@@ -1,5 +1,5 @@
 import React from 'react';
-import MultiStepRegisterForm from '../components/MultiRegisterForm/RegisterForm/MultiStepRegisterForm'; // Đường dẫn tới MultiStepRegisterForm
+import RegisterForm from '../components/MultiRegisterForm/RegisterForm';
 import logoImage from '../assets/img/Logo.png';
 import LogoSection from '../components/LogoSection/LogoSection'; 
 import '../assets/css/multiRegisPage.css';
@@ -17,7 +17,7 @@ function RegisterPage() {
         </div>
         <div className="col-md-6 register-right">
           
-          <MultiStepRegisterForm />
+          < RegisterForm />
         </div>
       </div>
     </div>
