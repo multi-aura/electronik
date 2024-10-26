@@ -11,5 +11,6 @@ var mongoDB *databases.MongoDB
 func SetupRoutes(app *fiber.App) {
 	mongoDB = databases.Instance()
 	setupUserRoutes(app)
+	setupProductRoutes(app)
 
 }
