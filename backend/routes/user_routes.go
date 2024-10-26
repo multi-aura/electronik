@@ -2,8 +2,10 @@ package routes
 
 import (
 	"electronik/internal/controllers"
+	"electronik/internal/middlewares"
 	"electronik/internal/repositories"
 	"electronik/internal/services"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,6 +16,8 @@ func setupUserRoutes(app *fiber.App) {
 
 	userGroup := app.Group("/user")
 
-    userGroup.Post("/register", controller.Register)
-    userGroup.Post("/login", controller.Login)
+	userGroup.Post("/register", controller.Register)
+	userGroup.Post("/login", controller.Login)
+	userGroup.Delete("/delete/:id", middlewares.AuthMiddleware(), controller.DeleteUser)
+	userGroup.Put("/update", middlewares.AuthMiddleware(), controller.UpdateUser)
 }

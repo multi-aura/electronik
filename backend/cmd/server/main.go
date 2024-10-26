@@ -20,7 +20,7 @@ func main() {
 	app := fiber.New()
 
 	// Nạp cấu hình từ file config.yaml
-	cfg, err := config.LoadConfig()
+	cfg, err := config.Instance()
 	if err != nil {
 		log.Fatalf("Could not load config: %v", err)
 	}

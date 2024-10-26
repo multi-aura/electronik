@@ -3,19 +3,23 @@ package services
 import (
 	"electronik/internal/models"
 	"electronik/internal/repositories"
+	"electronik/pkg/jwt"
 	"errors"
+	"fmt"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
 	Register(user *models.User) error
 	Login(email string) (*models.User, error)
-	Logout(userID string) error
 	DeleteAccount(userID string) error
-	Update(userID string, user *models.User) error
+	Update(user *models.User) error
 	ForgotPassword(email string) error
 	ChangePassword(userID, oldPassword, newPassword string) error
+	ComparePassword(hashedPassword, plainPassword string) error
+	GenerateJWTToken(user models.User) (string, error)
 }
 
 type userService struct {
@@ -27,12 +31,24 @@ func NewUserService(repo repositories.UserRepository) UserService {
 }
 
 func (s *userService) Register(user *models.User) error {
-	// Hash the password before saving
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	// Kiểm tra xem email đã tồn tại chưa
+	existingUser, err := s.repo.GetUserByEmail(user.Email)
 	if err != nil {
 		return err
 	}
+
+	if existingUser != nil {
+		return errors.New("email already in use")
+	}
+	user.ID = primitive.NewObjectID()
+	// Hash the password before saving
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return errors.New("failed to hash password")
+	}
 	user.Password = string(hashedPassword)
+
+	// Tạo tài khoản mới
 	return s.repo.Create(*user)
 }
 
@@ -41,45 +57,101 @@ func (s *userService) Login(email string) (*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
 }
 
-func (s *userService) Logout(userID string) error {
-	// Implement logout logic, such as invalidating tokens, if applicable
+func (s *userService) ComparePassword(hashedPassword string, plainPassword string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
+	if err != nil {
+		return errors.New("invalid password")
+	}
 	return nil
 }
 
-func (s *userService) DeleteAccount(userID string) error {
-	return s.repo.Delete(userID) // Gọi phương thức Delete trong UserRepository
+func (s *userService) GenerateJWTToken(user models.User) (string, error) {
+	token, err := jwt.GenerateToken(user)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
 
-func (s *userService) Update(userID string, user *models.User) error {
-	// Update user information. Ensure that the user ID matches.
-	return s.repo.Update(userID, *user) // Gọi phương thức Update trong UserRepository
+func (s *userService) DeleteAccount(userID string) error {
+	user, err := s.repo.GetByID(userID)
+	if err != nil {
+		return fmt.Errorf("user with ID %s not found: %v", userID, err)
+	}
+
+	if err := s.repo.Delete(user.ID.Hex()); err != nil {
+		return fmt.Errorf("failed to delete user with ID %s: %v", user.ID.Hex(), err)
+	}
+
+	return nil
+}
+
+func (s *userService) Update(user *models.User) error {
+	existingUser, err := s.repo.GetByID(user.ID.Hex())
+	if err != nil {
+		return errors.New("user not found")
+	}
+
+	if user.ID != existingUser.ID {
+		return errors.New("user ID does not match")
+	}
+
+	if err := s.repo.Update(*user); err != nil {
+		return errors.New("failed to update user information")
+	}
+
+	return nil
 }
 
 func (s *userService) ForgotPassword(email string) error {
-	// Implement password recovery logic, such as sending a reset link or code via email.
-	// This is a placeholder for the actual implementation.
+	// user, err := s.repo.GetUserByEmail(email)
+	// if err != nil {
+	// 	return errors.New("user not found")
+	// }
+
+	// resetToken, err := jwt.GenerateToken(user)
+	// if err != nil {
+	// 	return errors.New("failed to generate reset token")
+	// }
+
+	// if err := s.repo.SavePasswordResetToken(user.ID, resetToken); err != nil {
+	// 	return errors.New("failed to save reset token")
+	// }
+
+	// err = s.mailService.SendPasswordResetEmail(user.Email, resetURL)
+	// if err != nil {
+	// 	return errors.New("failed to send reset email")
+	// }
+
 	return nil
 }
 
 func (s *userService) ChangePassword(userID, oldPassword, newPassword string) error {
-	user, err := s.repo.GetByID(userID) // Sử dụng GetByID từ UserRepository
+	user, err := s.repo.GetByID(userID)
 	if err != nil {
 		return err
 	}
-	// if user == (models.User{}) {
-	// 	return errors.New("user not found")
-	// }
+
+	if user.ID == primitive.NilObjectID {
+		return errors.New("user not found")
+	}
+
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(oldPassword)); err != nil {
 		return errors.New("invalid old password")
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		return errors.New("failed to hash new password")
 	}
+
 	user.Password = string(hashedPassword)
-	return s.repo.Update(userID, user) // Cập nhật lại mật khẩu
+	if err := s.repo.Update(*user); err != nil {
+		return errors.New("failed to update password")
+	}
+
+	return nil
 }

@@ -15,10 +15,11 @@ type (
 	ProductService interface {
 		NewProduct(product *models.Product) ([]ErrorResponse, error)
 		GetProductByID(id string) (*models.Product, error)
-		UpdateProduct(id string, product *models.Product) ([]ErrorResponse, error)
+		UpdateProduct(product *models.Product) ([]ErrorResponse, error)
 		DeleteProduct(id string) error
 		GetListProductByPagination(page int, limit int) ([]models.Product, error)
 		GetListProductBySearch(page int, limit int, query string) ([]models.Product, error)
+		UpdateList(id string, status int) error
 	}
 	productService struct {
 		repo repositories.ProductRepository
@@ -72,21 +73,21 @@ func (s *productService) GetProductByID(id string) (*models.Product, error) {
 		return nil, err
 	}
 
-	return &product, nil
+	return product, nil
 }
 
-func (pro *productService) UpdateProduct(id string, product *models.Product) ([]ErrorResponse, error) {
+func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorResponse, error) {
 	var errors []ErrorResponse
-	if id == "" {
+	if product.ID.IsZero() {
 		errors = append(errors, ErrorResponse{
 			Error:       true,
 			FailedField: "ID",
-			Tag:         "Product ID is not required",
+			Tag:         "Product ID is required",
 		})
 		return errors, nil
 	}
 
-	errr := pro.repo.Update(id, *product)
+	errr := pro.repo.Update(*product)
 	if errr != nil {
 		errors = append(errors, ErrorResponse{
 			Error:       true,
@@ -103,6 +104,18 @@ func (pro *productService) DeleteProduct(id string) error {
 		return errors.New("Product ID is required")
 	}
 	err := pro.repo.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+func (pro *productService) UpdateList(id string, status int) error {
+	if id == "" || status <= -2 {
+		return errors.New("Product ID is required")
+	}
+	err := pro.repo.UpdateList(id, status)
 	if err != nil {
 		return err
 	}

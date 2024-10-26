@@ -4,6 +4,7 @@ import (
 	"context"
 	"electronik/internal/databases"
 	"electronik/internal/models"
+	"errors"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,6 +18,7 @@ type (
 		Repository[models.Product]
 		GetListProductByPagination(limit int, skip int) ([]models.Product, error)
 		GetListProductBySearch(limit int, skip int, query string) ([]models.Product, error)
+		UpdateList(id string, status int) error
 	}
 
 	productRepository struct {
@@ -35,11 +37,11 @@ func NewProductRepository(db *databases.MongoDB) ProductRepository {
 
 // Cài các phương thức trong productRepository
 // 1. Get product
-func (pro *productRepository) GetByID(id string) (models.Product, error) {
+func (pro *productRepository) GetByID(id string) (*models.Product, error) {
 	var product models.Product
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return models.Product{}, err
+		return nil, err
 	}
 
 	// Truy vấn MongoDB dựa trên ObjectID
@@ -48,11 +50,11 @@ func (pro *productRepository) GetByID(id string) (models.Product, error) {
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return models.Product{}, nil
+			return &models.Product{}, nil
 		}
-		return models.Product{}, err
+		return nil, err
 	}
-	return product, nil
+	return &product, nil
 }
 
 // 2. create product
@@ -61,23 +63,72 @@ func (pro *productRepository) Create(entity models.Product) error {
 	return err
 }
 
-// 3. update product
-func (pro *productRepository) Update(id string, entity models.Product) error {
-	objectID, err := primitive.ObjectIDFromHex(id)
-	filter := bson.M{"_id": objectID}
-	update := bson.M{
-		"$set": entity,
+// 3. update
+func (pro *productRepository) Update(entity models.Product) error {
+	// Tạo bộ lọc để tìm sản phẩm theo ID
+	filter := bson.M{"_id": entity.ID}
+	update := bson.M{}
+
+	// Hàm trợ giúp để thêm trường vào update nếu giá trị hợp lệ
+	addUpdateField := func(field string, value interface{}) {
+		switch v := value.(type) {
+		case string:
+			if v != "" {
+				update[field] = v
+			}
+		case float64:
+			if v != 0 {
+				update[field] = v
+			}
+		case []models.Variant:
+			if v != nil && len(v) > 0 {
+				update[field] = v
+			}
+		case []models.Feedback:
+			if v != nil && len(v) > 0 {
+				update[field] = v
+			}
+		case nil:
+			return
+		default:
+			update[field] = value
+		}
 	}
 
-	result, err := pro.collection.UpdateOne(context.Background(), filter, update)
+	// Sử dụng hàm trợ giúp để thêm các trường cần thiết
+	addUpdateField("product_name", entity.ProductName)
+	addUpdateField("description", entity.Description)
+	addUpdateField("default_image", entity.DefaultImage)
+	addUpdateField("price", entity.Price)
+	addUpdateField("category.name", entity.Category.Name)
+	addUpdateField("variants", entity.Variants)
+	addUpdateField("feedbacks", entity.Feedbacks)
+	addUpdateField("dimensions", entity.Dimensions)
+	addUpdateField("manufacturer", entity.Manufacturer)
+	addUpdateField("specifications.cpu", entity.Specifications.CPU)
+	addUpdateField("specifications.graphics", entity.Specifications.Graphics)
+	addUpdateField("specifications.ram", entity.Specifications.RAM)
+	addUpdateField("warranty", entity.Warranty)
+	addUpdateField("weight", entity.Weight)
+
+	// Nếu không có trường nào để cập nhật, trả về nil
+	if len(update) == 0 {
+		return errors.New("no fields to update")
+	}
+
+	// Thực hiện cập nhật
+	updateQuery := bson.M{"$set": update}
+	result, err := pro.collection.UpdateOne(context.Background(), filter, updateQuery)
 	if err != nil {
 		return err
 	}
+
+	// Kiểm tra xem có bản ghi nào được tìm thấy và cập nhật không
 	if result.MatchedCount == 0 {
 		return mongo.ErrNoDocuments
 	}
-	return nil
 
+	return nil
 }
 
 // 4. delete product
@@ -168,4 +219,23 @@ func (pro *productRepository) GetListProductBySearch(limit int, skip int, query 
 	}
 
 	return listProduct, nil
+}
+func (pro *productRepository) UpdateList(id string, status int) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	update := bson.M{
+		"$set": bson.M{"status": status},
+	}
+	result, err := pro.collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+	if result.MatchedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+	return nil
 }

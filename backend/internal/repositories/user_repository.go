@@ -7,44 +7,47 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserRepository interface {
-	Repository[models.User] // Nhúng interface chung
-	// Các phương thức cụ thể cho UserRepository
+	Repository[models.User]
 	GetUsersByName(name string) ([]models.User, error)
-	GetUserByEmail(email string) (models.User, error)
+	GetUserByEmail(email string) (*models.User, error)
 }
 
-// Tạo một struct cụ thể cho User
 type userRepository struct {
 	db         *databases.MongoDB
 	collection *mongo.Collection
 }
 
 func NewUserRepository(db *databases.MongoDB) UserRepository {
-	// Sử dụng collection "users" cho MongoDB
 	return &userRepository{
 		db:         db,
 		collection: db.Database.Collection("users"),
 	}
 }
 
-// Cài đặt các phương thức từ interface
-func (repo *userRepository) GetByID(id string) (models.User, error) {
+func (repo *userRepository) GetByID(id string) (*models.User, error) {
 	var user models.User
-	filter := bson.M{"_id": id}
 
-	err := repo.collection.FindOne(context.Background(), filter).Decode(&user)
+	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return models.User{}, nil // Không tìm thấy tài liệu
-		}
-		return models.User{}, err // Trả về lỗi nếu có
+		return &models.User{}, err
 	}
 
-	return user, nil
+	filter := bson.M{"_id": objectID}
+
+	err = repo.collection.FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func (repo *userRepository) Create(entity models.User) error {
@@ -52,41 +55,67 @@ func (repo *userRepository) Create(entity models.User) error {
 	return err
 }
 
-func (repo *userRepository) Update(id string, entity models.User) error {
-	filter := bson.M{"_id": id}
-	update := bson.M{
-		"$set": entity,
-	}
+func (repo *userRepository) Update(entity models.User) error {
+    filter := bson.M{"_id": entity.ID}
+    update := bson.M{}
+    
+    if entity.Username != "" {
+        update["username"] = entity.Username
+    }
+    if entity.Email != "" {
+        update["email"] = entity.Email
+    }
+    if entity.PhoneNumber != "" {
+        update["phone_number"] = entity.PhoneNumber
+    }
+    if entity.DeliveryAddresses != nil {
+        update["delivery_addresses"] = entity.DeliveryAddresses
+    }
+    update["is_admin"] = entity.IsAdmin
 
-	result, err := repo.collection.UpdateOne(context.Background(), filter, update)
+    if len(update) == 0 {
+        return nil
+    }
+
+    updateQuery := bson.M{"$set": update}
+
+    result, err := repo.collection.UpdateOne(context.Background(), filter, updateQuery)
+    if err != nil {
+        return err
+    }
+
+    if result.MatchedCount == 0 {
+        return mongo.ErrNoDocuments
+    }
+
+    return nil
+}
+
+
+
+func (repo *userRepository) Delete(id string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
-	if result.MatchedCount == 0 {
-		return mongo.ErrNoDocuments // Không tìm thấy tài liệu để cập nhật
-	}
 
-	return nil
-}
-
-func (repo *userRepository) Delete(id string) error {
-	filter := bson.M{"_id": id}
+	filter := bson.M{"_id": objectID}
 
 	result, err := repo.collection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return err
 	}
 	if result.DeletedCount == 0 {
-		return mongo.ErrNoDocuments // Không tìm thấy tài liệu để xóa
+		return mongo.ErrNoDocuments
 	}
 
 	return nil
 }
 
-// Cài đặt phương thức cụ thể GetUsersByName
+
 func (repo *userRepository) GetUsersByName(name string) ([]models.User, error) {
 	var users []models.User
-	filter := bson.M{"username": bson.M{"$regex": name, "$options": "i"}} // Tìm kiếm theo tên với regex
+	filter := bson.M{"username": bson.M{"$regex": name, "$options": "i"}}
 
 	cursor, err := repo.collection.Find(context.Background(), filter)
 	if err != nil {
@@ -109,27 +138,21 @@ func (repo *userRepository) GetUsersByName(name string) ([]models.User, error) {
 	return users, nil
 }
 
-// Cài đặt phương thức GetUserByEmail
-func (repo *userRepository) GetUserByEmail(email string) (models.User, error) {
+func (repo *userRepository) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 
-	// Tạo context để tìm kiếm với thời gian chờ
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Tạo bộ lọc để tìm kiếm theo email
 	filter := bson.M{"email": email}
 
-	// Tìm người dùng với bộ lọc
 	err := repo.collection.FindOne(ctx, filter).Decode(&user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			// Không tìm thấy người dùng nào với email này
-			return models.User{}, nil
+			return nil, nil
 		}
-		// Có lỗi khác khi truy vấn
-		return models.User{}, err
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }

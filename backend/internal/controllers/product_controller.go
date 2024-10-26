@@ -68,7 +68,6 @@ func (pro *ProductController) GetProductByID(c *fiber.Ctx) error {
 
 }
 func (pro *ProductController) UpdateProduct(c *fiber.Ctx) error {
-	id := c.Params("id")
 	var product models.Product
 
 	err := c.BodyParser(&product)
@@ -77,7 +76,7 @@ func (pro *ProductController) UpdateProduct(c *fiber.Ctx) error {
 			"error": "Invalid request body",
 		})
 	}
-	validationErrors, er := pro.service.UpdateProduct(id, &product)
+	validationErrors, er := pro.service.UpdateProduct(&product)
 	if er != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Failed to update product",
@@ -155,4 +154,70 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 		Data:    products,
 	})
 
+}
+func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
+	var products []models.Product
+	statusStr := c.Params("status")
+	if statusStr == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Failed to update product list",
+			Error:   "Status is required",
+		})
+	}
+
+	var status int
+	switch statusStr {
+	case "activate":
+		status = 1
+	case "activi":
+		status = 2
+	case "enabled":
+		status = 0
+	case "deleted":
+		status = -1
+	default:
+
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Failed to update product list",
+			Error:   "Invalid status value",
+		})
+	}
+
+	err := c.BodyParser(&products)
+	if err != nil {
+
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Failed to update product list",
+			Error:   "Invalid request body",
+		})
+	}
+
+	if len(products) == 0 {
+
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Failed to update product list",
+			Error:   "Product list is empty",
+		})
+	}
+
+	for _, product := range products {
+		err := pro.service.UpdateList(product.ID.Hex(), status)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusInternalServerError,
+				Message: "Failed to update product list",
+				Error:   "Failed to update product with ID " + product.ID.Hex(),
+			})
+		}
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Product list updated successfully",
+		Data:    products,
+	})
 }
