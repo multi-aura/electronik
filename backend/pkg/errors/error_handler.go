@@ -1,7 +1,7 @@
 package errors_handler
 
 import (
-	APIResponse "multiaura/pkg/api_response"
+	APIResponse "electronik/pkg/api_response"
 
 	"github.com/gofiber/fiber/v2"
 )
