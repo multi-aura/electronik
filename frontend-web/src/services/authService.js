@@ -10,31 +10,35 @@ export const login = async (username, password) => {
       username,
       password,
     });
-  
 
-    const { token } = response.data.data; 
+
+    const { token } = response.data.data;
     Cookies.set('authToken', token, {
-      expires: 1, 
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'Strict', 
+      expires: 1,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
     });
     localStorage.setItem('user', JSON.stringify(response.data.data));
-    return response.data.data; 
+    return response.data.data;
   } catch (error) {
     console.error('Lỗi khi đăng nhập:', error);
-    throw error; 
+    throw error;
   }
 };
-export const register = async (fullname, username, email, password, phone, birthday, nation, province, gender) => {
+export const register = async (formData) => {
+  console.log("formData:", formData);
+  const username = formData.username;
+  const email = formData.email;
+  const password = formData.password;
+  const phone = formData.phone;
+  const gender = formData.gender;
+
+
   return axios.post(`${API_URL}/user/register`, {
-    fullname,
     username,
     email,
     password,
     phone,
-    birthday,
-    nation,
-    province,
     gender
   });
 };
