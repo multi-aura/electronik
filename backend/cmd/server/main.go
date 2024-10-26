@@ -13,11 +13,20 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
 	// Tạo Fiber app
 	app := fiber.New()
+
+	// Cấu hình CORS
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "http://localhost:3001",       // Địa chỉ frontend của bạn
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS", // Cho phép các phương thức, bao gồm OPTIONS
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true, // Cho phép gửi cookies hoặc các thông tin xác thực khác
+	}))
 
 	// Nạp cấu hình từ file config.yaml
 	cfg, err := config.Instance()
