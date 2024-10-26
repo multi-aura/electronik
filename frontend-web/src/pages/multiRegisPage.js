@@ -2,6 +2,7 @@ import React from 'react';
 import MultiStepRegisterForm from '../components/MultiRegisterForm/RegisterForm/MultiStepRegisterForm'; // Đường dẫn tới MultiStepRegisterForm
 import logoImage from '../assets/img/Logo.png';
 import LogoSection from '../components/LogoSection/LogoSection'; 
+import '../assets/css/multiRegisPage.css';
 
 
 function RegisterPage() {
