@@ -51,11 +51,13 @@ func (s *productService) NewProduct(product *models.Product) ([]ErrorResponse, e
 		// Trả về các lỗi validation
 		return validationErrors, nil
 	}
+
 	product.CreatedAt = time.Now()
-	err = s.repo.Create(*product)
+	err = s.repo.Create(product) // Truyền trực tiếp con trỏ thay vì *product
 	if err != nil {
 		return nil, err
 	}
+
 	return nil, nil
 }
 
@@ -87,18 +89,35 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 		return errors, nil
 	}
 
-	errr := pro.repo.Update(*product)
-	if errr != nil {
+	// Tạo một map để chứa các trường cần cập nhật
+	updateFields := map[string]interface{}{
+		"product_name":   product.ProductName,
+		"description":    product.Description,
+		"default_image":  product.DefaultImage,
+		"price":          product.Price,
+		"category.name":  product.Category.Name,
+		"variants":       product.Variants,
+		"feedbacks":      product.Feedbacks,
+		"dimensions":     product.Dimensions,
+		"manufacturer":   product.Manufacturer,
+		"specifications": product.Specifications,
+		"warranty":       product.Warranty,
+		"weight":         product.Weight,
+	}
+
+	err := pro.repo.Update(&updateFields)
+	if err != nil {
 		errors = append(errors, ErrorResponse{
 			Error:       true,
 			FailedField: "product",
 			Tag:         "Update failed",
 		})
 		return errors, nil
-
 	}
+
 	return nil, nil
 }
+
 func (pro *productService) DeleteProduct(id string) error {
 	if id == "" {
 		return errors.New("Product ID is required")

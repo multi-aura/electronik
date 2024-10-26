@@ -4,6 +4,7 @@ import (
 	"electronik/internal/models"
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
+	"electronik/pkg/jwt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,35 +19,32 @@ func NewUserController(service services.UserService) *UserController {
 }
 
 func (uc *UserController) Register(c *fiber.Ctx) error {
-	var user models.User
-	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Cannot parse JSON",
-		})
+	var req models.RegisterRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
 
-	user.IsAdmin = false
-	err := uc.service.Register(&user)
+	err := uc.service.Register(&req)
 	if err != nil {
-		if err.Error() == "email already in use" {
+		if err.Error() == "email already exists" {
 			return c.Status(fiber.StatusConflict).JSON(APIResponse.ErrorResponse{
 				Status:  fiber.StatusConflict,
-				Message: "User with this email already exists",
-				Error:   "EmailAlreadyInUse",
+				Message: "Email already exists",
+				Error:   "Conflict",
 			})
 		}
-		// Xử lý các lỗi khác
-		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
-			Status:  fiber.StatusInternalServerError,
-			Message: "Failed to register user",
-			Error:   err.Error(),
+		// Return specific errors if any
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: err.Error(),
+			Error:   "BadRequest",
 		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusCreated,
 		Message: "Register successful",
-		Data:    user,
+		Data:    err,
 	})
 }
 
@@ -55,25 +53,33 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
-	existingUser, err := uc.service.Login(req.Email)
+
+	// Call the Login service method
+	existingUser, err := uc.service.Login(req.Username, req.Password)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
-			Status:  fiber.StatusUnauthorized,
-			Message: "Invalid email",
-			Error:   "StatusUnauthorized",
+		if err.Error() == "invalid email" {
+			return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusUnauthorized,
+				Message: "Invalid email",
+				Error:   "StatusUnauthorized",
+			})
+		} else if err.Error() == "invalid password" {
+			return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusUnauthorized,
+				Message: "Invalid password",
+				Error:   "StatusUnauthorized",
+			})
+		}
+		// Handle other unexpected errors
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: err.Error(),
+			Error:   "StatusInternalServerError",
 		})
 	}
 
-	err = uc.service.ComparePassword(existingUser.Password, req.Password)
-	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
-			Status:  fiber.StatusUnauthorized,
-			Message: "Invalid password",
-			Error:   "StatusUnauthorized",
-		})
-	}
-
-	token, err := uc.service.GenerateJWTToken(*existingUser)
+	// Generate JWT token if login is successful
+	token, err := jwt.GenerateToken(*existingUser)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusInternalServerError,
@@ -81,7 +87,6 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 			Error:   "StatusInternalServerError",
 		})
 	}
-
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
 		Message: "Login successful",
@@ -93,13 +98,29 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 }
 
 func (uc *UserController) UpdateUser(c *fiber.Ctx) error {
-	var updatedData models.User
+	// Khai báo một map để lưu dữ liệu cập nhật
+	updatedData := make(map[string]interface{})
+
+	// Phân tích JSON vào map
 	if err := c.BodyParser(&updatedData); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Cannot parse JSON",
 		})
 	}
 
+	userID, ok := c.Locals("userID").(string)
+	if !ok || userID == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusUnauthorized,
+			Message: "Unauthorized",
+			Error:   "StatusUnauthorized",
+		})
+	}
+
+	// Thêm userID vào map cập nhật
+	updatedData["_id"] = userID
+
+	// Gọi hàm Update với map thay vì đối tượng User
 	err := uc.service.Update(&updatedData)
 	if err != nil {
 		if err.Error() == "user not found" {
@@ -108,11 +129,18 @@ func (uc *UserController) UpdateUser(c *fiber.Ctx) error {
 				Message: "User not found",
 				Error:   "StatusNotFound",
 			})
+		} else if err.Error() == "user ID does not match" {
+			return c.Status(fiber.StatusForbidden).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusForbidden,
+				Message: "You do not have permission to update this user",
+				Error:   "StatusForbidden",
+			})
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusInternalServerError,
-			Message: "Failed to update user information",
-			Error:   "StatusInternalServerError",
+			Message: err.Error(),
+			// Message: "Failed to update user information",
+			Error: "StatusInternalServerError",
 		})
 	}
 

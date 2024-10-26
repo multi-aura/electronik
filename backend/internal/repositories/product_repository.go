@@ -58,15 +58,15 @@ func (pro *productRepository) GetByID(id string) (*models.Product, error) {
 }
 
 // 2. create product
-func (pro *productRepository) Create(entity models.Product) error {
+func (pro *productRepository) Create(entity *models.Product) error {
 	_, err := pro.collection.InsertOne(context.Background(), entity)
 	return err
 }
 
 // 3. update
-func (pro *productRepository) Update(entity models.Product) error {
+func (pro *productRepository) Update(entity *map[string]interface{}) error {
 	// Tạo bộ lọc để tìm sản phẩm theo ID
-	filter := bson.M{"_id": entity.ID}
+	filter := bson.M{"_id": (*entity)["_id"]}
 	update := bson.M{}
 
 	// Hàm trợ giúp để thêm trường vào update nếu giá trị hợp lệ
@@ -95,23 +95,12 @@ func (pro *productRepository) Update(entity models.Product) error {
 		}
 	}
 
-	// Sử dụng hàm trợ giúp để thêm các trường cần thiết
-	addUpdateField("product_name", entity.ProductName)
-	addUpdateField("description", entity.Description)
-	addUpdateField("default_image", entity.DefaultImage)
-	addUpdateField("price", entity.Price)
-	addUpdateField("category.name", entity.Category.Name)
-	addUpdateField("variants", entity.Variants)
-	addUpdateField("feedbacks", entity.Feedbacks)
-	addUpdateField("dimensions", entity.Dimensions)
-	addUpdateField("manufacturer", entity.Manufacturer)
-	addUpdateField("specifications.cpu", entity.Specifications.CPU)
-	addUpdateField("specifications.graphics", entity.Specifications.Graphics)
-	addUpdateField("specifications.ram", entity.Specifications.RAM)
-	addUpdateField("warranty", entity.Warranty)
-	addUpdateField("weight", entity.Weight)
+	// Duyệt qua các trường trong entity và sử dụng hàm trợ giúp để thêm các trường cần thiết
+	for key, value := range *entity {
+		addUpdateField(key, value)
+	}
 
-	// Nếu không có trường nào để cập nhật, trả về nil
+	// Nếu không có trường nào để cập nhật, trả về lỗi
 	if len(update) == 0 {
 		return errors.New("no fields to update")
 	}
