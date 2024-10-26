@@ -1,0 +1,25 @@
+/* src/components/SearchBar/SearchBar.css */
+
+.search-bar-container {
+    flex: 1;
+    padding-top: 20px;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-icon-bg {
+    background-color: #333;
+    padding: 8px;
+    border-radius: 5px 0 0 5px;
+  }
+  
+  .search-input-field {
+    border: none;
+    outline: none;
+    border-radius: 0 5px 5px 0;
+    padding: 8px;
+  }
+  

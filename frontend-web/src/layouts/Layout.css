@@ -1,0 +1,34 @@
+/* Layout.css */
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f9;
+  }
+  
+  .header {
+    background-color: #d32f2f;
+    color: white;
+    padding: 10px 20px;
+  }
+  
+  .content-area {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+  }
+  
