@@ -1,0 +1,9 @@
+.chat-content {
+  background-color: #000000;
+  color: #fff; 
+  height: 100vh; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+}

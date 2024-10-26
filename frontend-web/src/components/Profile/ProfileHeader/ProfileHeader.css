@@ -1,0 +1,68 @@
+/* MyProfile.css */
+.profile-header {
+    background-color: #000000; /* Màu nền tối */
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%; 
+    border: 3px solid #fff;
+}
+  
+.profile-info {
+    text-align: left;
+    color: #fff;
+}
+  
+  .profile-info h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff; /* Màu xanh cho tên */
+  }
+  
+  .profile-info p {
+    font-size: 16px;
+    color: #cccccc; /* Màu chữ phụ */
+  }
+  
+  .profile-info .btn {
+    margin-top: 10px;
+    color: #ffffff;
+    border-color: #000000;
+    background-color: #000000;
+  }
+  
+  .profile-info .btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .friend-avatars {
+    display: flex;
+    position: relative;
+    padding-left: 0;
+  }
+  
+  .friend-avatars img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: -15px;
+    z-index: 1;
+    position: relative;
+  }
+  
+  .friend-avatars img:first-child {
+    margin-left: 0;
+  }
+  
+  .friend-avatars span {
+    color: white;
+    font-size: 14px;
+    margin-left: 10px; 
+  }
+  

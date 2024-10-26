@@ -1,0 +1,35 @@
+.suggested-user {
+    background-color: #0000009b !important; 
+    color: #fff; 
+    border: none !important; 
+    margin-bottom: 10px; 
+    border-radius: 8px; 
+    padding: 10px !important; 
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  
+  .usersuggest-info .full-name {
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none !important;
+    color: #fff; 
+  }
+  
+  .follow-btn {
+    color: #fff; 
+    border: none !important;
+    padding: 5px 15px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .follow-btn:hover {
+    color: #a5e4ff !important; 
+    background-color:#00000000 !important;
+  }
+  

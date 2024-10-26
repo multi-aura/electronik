@@ -1,0 +1,60 @@
+.myprofile-page {
+    min-height: 100vh;
+    background-color: #000000; 
+    color: white;
+  }
+
+  
+  .myprofile-page h2 {
+    color: #ffffff;
+    font-size: 2rem;
+  }
+  
+  .myprofile-page p {
+    color: #cccccc; 
+  }
+  
+  .myprofile-page .btn-outline-light {
+    border-color: #ffffff; 
+    color: #ffffff; 
+  }
+  
+  .myprofile-page .btn-outline-light:hover {
+    background-color: #ffffff;
+    color: #000000; 
+  }
+  
+  .profile-nav {
+    border-bottom: 1px solid #ffffff; 
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-nav .nav-link {
+    color: #cccccc;
+  }
+  
+  .profile-nav .nav-link.active {
+    color: white;
+    font-weight: bold;
+    border-bottom: 2px solid #ffffff; 
+  }
+  
+  .post-item {
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .post-item h5 {
+    color: #ffffff;
+  }
+  
+  .post-item p {
+    color: #cccccc; 
+  }
+  
+  .post-item:hover {
+    background-color: #292929; 
+  }
+  

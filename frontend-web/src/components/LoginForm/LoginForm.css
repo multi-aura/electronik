@@ -1,0 +1,87 @@
+.custom-login-form {
+    padding-top: 50px;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .form-title {
+    font-size: 3.5rem;
+    font-weight:bold;
+    font-family:'Times New Roman', Times, serif;
+    text-decoration: solid;
+  }
+  
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .input-group-text {
+    background-color: #f0f0f0;
+    border-radius: 5px 0 0 5px;
+    border-right: 0;
+  }
+  
+  .custom-form-check {
+    display: flex;
+    align-items: center;
+  }
+  
+  .custom-btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+  }
+  
+  .custom-btn-google {
+    background-color: #db4437;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); 
+
+    border: none;
+    color: white;
+    padding: 10px 40px; 
+    border-radius: 5px;
+    width: 100%;
+  }
+  .custom-btn-google:hover{
+    transform: scale(1.05); 
+
+  }
+  
+  .form-link {
+    color: #007bff;
+  }
+  
+  .form-link:hover {
+    text-decoration: underline;
+  }
+  .custom-button {
+    border-radius: 5px;
+    padding: 10px 40px; 
+    background-color: #ffffff;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); 
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .custom-button:hover {
+    transform: scale(1.05); 
+    background-color: black;
+    color: #ffffff;
+  }
+  
+  .custom-button:active {
+    transform: scale(0.98);
+  }
+  
+
+  

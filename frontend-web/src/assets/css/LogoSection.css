@@ -1,0 +1,38 @@
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .logo-image {
+    max-width: 150px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-20px); /* Moves the logo up by 20px */
+    }
+    60% {
+      transform: translateY(-10px); /* Moves the logo up by 10px */
+    }
+  }
+  .logo-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #000000;
+  }
+  
+  .logo-subtitle {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+  }
+  

@@ -1,0 +1,82 @@
+.list-group-item:hover {
+  background-color: #424242; 
+}
+.friend-item {
+  margin-bottom: 5px; 
+  padding: 10px;
+  border-radius: 8px; 
+  background-color: #1f1f1f; 
+}
+
+.btn-dark {
+  background-color: #007bff; 
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-dark:hover {
+  background-color: #0056b3; 
+}
+
+h5 {
+  color: #ffffff; 
+}
+
+.text {
+  color: #030303; 
+}
+.btn {
+    padding: 0.5rem 1.5rem;
+    display: inline-flex;
+    align-items: center; 
+}
+  
+.btn .fa-user-friends {
+    margin-left: 10px; 
+    font-size: 1rem; 
+  }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px; 
+  box-shadow: 0px 4px 10px rgba(251, 251, 251, 0.404);
+  max-width: 400px; 
+  width: 100%;
+  text-align: center;
+  border: 2px solid #dc3545;
+}
+
+.modal-content p {
+  margin-bottom: 15px;
+}
+
+.modal-content .btn {
+  margin: 10px 0;
+}
+
+.modal-content .btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  width: 100%;
+}
+
+.modal-content .btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  width: 100%;
+}
