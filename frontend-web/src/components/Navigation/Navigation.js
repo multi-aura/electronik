@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faMapMarkerAlt, faShoppingCart, faUser, faSignOutAlt,faUserCircle  } from '@fortawesome/free-solid-svg-icons';
+import { faPhone, faMapMarkerAlt, faShoppingCart, faUser, faSignOutAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import { logout } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -49,12 +49,13 @@ const Navigation = () => {
       {dataUser ? (
         <Dropdown align="end">
           <Dropdown.Toggle variant="link" className="text-white text-decoration-none d-flex align-items-center" id="dropdown-user">
+
+            <span> {dataUser.data.username}</span>
             <img
               src={dataUser.data.avatar || 'path-to-default-avatar.png'}
               className="rounded-circle me-2 avatar_login"
-       
+
             />
-            {dataUser.data.username}
           </Dropdown.Toggle>
 
           <Dropdown.Menu>

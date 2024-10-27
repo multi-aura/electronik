@@ -1,3 +1,5 @@
+/* src/components/SearchBar/SearchBar.css */
+
 .search-bar-container {
   flex: 1;
   display: flex;
@@ -12,27 +14,27 @@
 }
 
 .search-input-field {
-  border-radius: 10px !important;
-  width: 100%; 
+  width: 100%;
+  
   padding: 10px 15px;
+  padding-right: 40px;
   border: 1px solid #ccc;
+  border-radius: 10px !important;
   outline: none;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-
-.search-icon-bg {
+.ssearch-icon-bg {
   position: absolute;
-  right: 0px;
+  right: 10px; 
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
-  color: black; 
-  background: white;
+  color: black;
+  background: none;
+  padding: 0;
+  border: none;
   pointer-events: none; 
   z-index: 2;
-  border-radius: 10px;
-  border: none;
-  
 }

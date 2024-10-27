@@ -19,4 +19,9 @@ a {
     height: 40px;
     border-radius: 50%; 
     object-fit: cover;
+    margin-left: 10px;
 }
+.dropdown-toggle::after {
+    display: none !important;
+  }
+  
