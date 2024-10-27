@@ -5,7 +5,6 @@ import (
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
 	"log"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -112,25 +111,33 @@ func (pro *ProductController) DeleteProduct(c *fiber.Ctx) error {
 
 func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 	query := c.Query("q")
-	page, err := strconv.Atoi(c.Query("page", "1"))
-	if err != nil || page < 1 {
-		page = 1
+	var req models.PagingRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "StatusBadRequest",
+		})
 	}
-	limit, err := strconv.Atoi(c.Query("limit", "10"))
-	if err != nil || limit < 1 || limit > 100 {
-		limit = 10
+
+	if req.Limit <= 0 {
+		req.Limit = 10 // Mặc định limit là 10 nếu không cung cấp hoặc không hợp lệ
 	}
+	if req.Page <= 0 {
+		req.Page = 1 // Mặc định page là 1 nếu không cung cấp hoặc không hợp lệ
+	}
+
 	var products []*models.Product
-	log.Println(query)
+	var err error
 	if query == "" {
-		products, err = pro.service.GetListProductByPagination(page, limit)
+		products, err = pro.service.GetListProductByPagination(int(req.Page), int(req.Limit))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "Failed to get list product",
 			})
 		}
 	} else {
-		products, err = pro.service.GetListProductBySearch(page, limit, query)
+		products, err = pro.service.GetListProductBySearch(int(req.Page), int(req.Limit), query)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "Failed to get list product",
@@ -144,8 +151,10 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 		Data:    products,
 	})
 }
+
 func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	var products []models.Product
+
 	statusStr := c.Params("status")
 	if statusStr == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
@@ -166,7 +175,6 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	case "deleted":
 		status = -1
 	default:
-
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusBadRequest,
 			Message: "Failed to update product list",
@@ -176,7 +184,6 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 
 	err := c.BodyParser(&products)
 	if err != nil {
-
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusBadRequest,
 			Message: "Failed to update product list",
@@ -185,7 +192,6 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	}
 
 	if len(products) == 0 {
-
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusBadRequest,
 			Message: "Failed to update product list",
@@ -207,6 +213,41 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
 		Message: "Product list updated successfully",
+		Data:    products,
+	})
+}
+
+func (pro *ProductController) GetOnSaleProducts(c *fiber.Ctx) error {
+	var req models.PagingRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	if req.Limit <= 0 {
+		req.Limit = 10 // Mặc định limit là 10 nếu không cung cấp hoặc không hợp lệ
+	}
+	if req.Page <= 0 {
+		req.Page = 1 // Mặc định page là 1 nếu không cung cấp hoặc không hợp lệ
+	}
+
+	// Call the service method to get on-sale products
+	products, err := pro.service.GetOnSaleProducts(int(req.Page), int(req.Limit))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: err.Error(),
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	// Return the products in a success response
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Retrieved on-sale products successfully",
 		Data:    products,
 	})
 }

@@ -20,6 +20,7 @@ type (
 		GetListProductByPagination(page int, limit int) ([]*models.Product, error)
 		GetListProductBySearch(page int, limit int, query string) ([]*models.Product, error)
 		UpdateList(id string, status int) error
+		GetOnSaleProducts(page int, limit int) ([]*models.Product, error)
 	}
 	productService struct {
 		repo repositories.ProductRepository
@@ -89,8 +90,8 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 		return errors, nil
 	}
 
-	// Tạo một map để chứa các trường cần cập nhật
 	updateFields := map[string]interface{}{
+		"_id":            product.ID,
 		"product_name":   product.ProductName,
 		"description":    product.Description,
 		"default_image":  product.DefaultImage,
@@ -112,7 +113,7 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 			FailedField: "product",
 			Tag:         "Update failed",
 		})
-		return errors, nil
+		return errors, err
 	}
 
 	return nil, nil
@@ -158,14 +159,25 @@ func (pro *productService) GetListProductBySearch(page int, limit int, query str
 	if (page <= 0) || (limit <= 0) {
 		return nil, errors.New("page and limit must be greater than 0")
 	}
-	if query == "" {
-		query = ".*"
-	}
+
 	skip := (page - 1) * limit
 	products, err := pro.repo.GetProductsBySearch(limit, skip, query)
 	if err != nil {
 		return nil, err
 	}
 	return products, nil
+}
 
+func (pro *productService) GetOnSaleProducts(page int, limit int) ([]*models.Product, error) {
+    if page <= 0 || limit <= 0 {
+        return nil, errors.New("page and limit must be greater than 0")
+    }
+
+    skip := (page - 1) * limit
+    products, err := pro.repo.GetOnSaleProducts(limit, skip)
+    if err != nil {
+        return nil, err
+    }
+
+    return products, nil
 }

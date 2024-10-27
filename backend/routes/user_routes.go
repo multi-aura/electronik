@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func setupUserRoutes(app *fiber.App) {
+func SetUpUserRoutes(app *fiber.App) {
 	repository := repositories.NewUserRepository(mongoDB)
 	service := services.NewUserService(repository)
 	controller := controllers.NewUserController(service)

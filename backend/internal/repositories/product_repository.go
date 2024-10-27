@@ -5,6 +5,8 @@ import (
 	"electronik/internal/databases"
 	"electronik/internal/models"
 	"errors"
+	"fmt"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,6 +21,7 @@ type (
 		GetProductsByPagination(limit int, skip int) ([]*models.Product, error)
 		GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error)
 		UpdateStatus(id string, status int) error
+		GetOnSaleProducts(limit int, skip int) ([]*models.Product, error)
 	}
 
 	productRepository struct {
@@ -65,11 +68,13 @@ func (pro *productRepository) Create(entity *models.Product) error {
 
 // 3. update
 func (pro *productRepository) Update(entity *map[string]interface{}) error {
-	// Tạo bộ lọc để tìm sản phẩm theo ID
-	filter := bson.M{"_id": (*entity)["_id"]}
+	id, ok := (*entity)["_id"].(primitive.ObjectID)
+	if !ok {
+		return errors.New("invalid _id type, expected ObjectID")
+	}
+	filter := bson.M{"_id": id}
 	update := bson.M{}
 
-	// Hàm trợ giúp để thêm trường vào update nếu giá trị hợp lệ
 	addUpdateField := func(field string, value interface{}) {
 		switch v := value.(type) {
 		case string:
@@ -88,6 +93,10 @@ func (pro *productRepository) Update(entity *map[string]interface{}) error {
 			if v != nil && len(v) > 0 {
 				update[field] = v
 			}
+		case []interface{}:
+			if v != nil && len(v) > 0 {
+				update[field] = v
+			}
 		case nil:
 			return
 		default:
@@ -95,26 +104,22 @@ func (pro *productRepository) Update(entity *map[string]interface{}) error {
 		}
 	}
 
-	// Duyệt qua các trường trong entity và sử dụng hàm trợ giúp để thêm các trường cần thiết
 	for key, value := range *entity {
 		addUpdateField(key, value)
 	}
 
-	// Nếu không có trường nào để cập nhật, trả về lỗi
 	if len(update) == 0 {
 		return errors.New("no fields to update")
 	}
 
-	// Thực hiện cập nhật
 	updateQuery := bson.M{"$set": update}
 	result, err := pro.collection.UpdateOne(context.Background(), filter, updateQuery)
 	if err != nil {
 		return err
 	}
 
-	// Kiểm tra xem có bản ghi nào được tìm thấy và cập nhật không
 	if result.MatchedCount == 0 {
-		return mongo.ErrNoDocuments
+		return fmt.Errorf("no document found with the provided _id: %v", id)
 	}
 
 	return nil
@@ -129,7 +134,7 @@ func (pro *productRepository) Delete(id string) error {
 
 	filter := bson.M{"_id": objectID}
 	update := bson.M{
-		"$set": bson.M{"status": 1},
+		"$set": bson.M{"status": -1},
 	}
 	result, err := pro.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
@@ -180,21 +185,33 @@ func (pro *productRepository) GetProductsBySearch(limit int, skip int, query str
 	}
 
 	listProduct := []*models.Product{}
-	filter := bson.M{
-		"$or": []bson.M{
-			{"product_name": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm trong tên sản phẩm
-			{"description": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
-		},
+
+	// Thiết lập filter cho tìm kiếm với $regex hoặc lấy tất cả sản phẩm nếu query trống
+	var filter bson.M
+	if query == "" {
+		filter = bson.M{} // Không có từ khóa, lấy tất cả sản phẩm
+	} else {
+		filter = bson.M{
+			"$or": []bson.M{
+				{"product_name": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
+				{"description": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
+			},
+		}
 	}
 
-	opt := options.Find().SetLimit(int64(limit)).SetSkip(int64(skip))
+	// Tùy chọn truy vấn với giới hạn và sắp xếp
+	opt := options.Find().
+		SetLimit(int64(limit)).
+		SetSkip(int64(skip))
 
+	// Thực hiện truy vấn
 	cursor, err := pro.collection.Find(context.Background(), filter, opt)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(context.Background())
 
+	// Duyệt qua kết quả và thêm vào danh sách
 	for cursor.Next(context.Background()) {
 		var product models.Product
 		if err := cursor.Decode(&product); err != nil {
@@ -203,12 +220,14 @@ func (pro *productRepository) GetProductsBySearch(limit int, skip int, query str
 		listProduct = append(listProduct, &product)
 	}
 
+	// Kiểm tra lỗi của cursor
 	if err := cursor.Err(); err != nil {
 		return nil, err
 	}
 
 	return listProduct, nil
 }
+
 func (pro *productRepository) UpdateStatus(id string, status int) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -216,15 +235,64 @@ func (pro *productRepository) UpdateStatus(id string, status int) error {
 	}
 
 	filter := bson.M{"_id": objectID}
-	update := bson.M{
-		"$set": bson.M{"status": status},
-	}
+	update := bson.M{"$set": bson.M{"status": status}}
+
 	result, err := pro.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		return err
 	}
 	if result.MatchedCount == 0 {
-		return mongo.ErrNoDocuments
+		return mongo.ErrNoDocuments // Trả về lỗi nếu không tìm thấy sản phẩm
 	}
+
 	return nil
+}
+
+func (pro *productRepository) GetOnSaleProducts(limit int, skip int) ([]*models.Product, error) {
+	if limit <= 0 {
+		return []*models.Product{}, nil
+	}
+
+	listProduct := []*models.Product{}
+	now := primitive.NewDateTimeFromTime(time.Now())
+
+	// Thiết lập filter cho sản phẩm đang giảm giá
+	filter := bson.M{
+		"sale":            bson.M{"$ne": nil},
+		"sale.start_date": bson.M{"$exists": true, "$lte": now},
+		"sale.end_date":   bson.M{"$exists": true, "$gte": now},
+	}
+
+	// Tùy chọn phân trang
+	opt := options.Find().
+		SetLimit(int64(limit)).
+		SetSkip(int64(skip)).
+		SetSort(bson.D{
+			{Key: "sale.discount_percentage", Value: -1},
+			{Key: "price", Value: -1},
+			{Key: "created_at", Value: -1},
+		})
+
+	// Thực hiện truy vấn
+	cursor, err := pro.collection.Find(context.Background(), filter, opt)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	// Duyệt qua kết quả và thêm vào danh sách
+	for cursor.Next(context.Background()) {
+		var product models.Product
+		if err := cursor.Decode(&product); err != nil {
+			return nil, err
+		}
+		listProduct = append(listProduct, &product)
+	}
+
+	// Kiểm tra lỗi của cursor
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return listProduct, nil
 }

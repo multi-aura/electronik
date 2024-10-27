@@ -19,7 +19,7 @@ func SetupRoutes(app *fiber.App) {
 	}))
 
 	mongoDB = databases.Instance()
-	setupUserRoutes(app)
-	setupProductRoutes(app)
-
+	SetUpUserRoutes(app)
+	SetUpProductRoutes(app)
+	SetUpCategoryRoutes(app)
 }
