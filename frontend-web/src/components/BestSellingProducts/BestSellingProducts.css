@@ -1,7 +1,9 @@
 .best-selling-container {
     background-color: #f5f5f5;
     border-radius: 8px;
-    padding: 20px;
+    margin: 20px;
+    padding: 15px;
+    position: relative;
   }
   
   .options-bar {
@@ -48,26 +50,5 @@
   }
   
   /* Carousel button styles */
-  .btn-prev, .btn-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    padding: 0;
-    border-radius: 50%;
-  }
   
-  .btn-prev {
-    left: -20px;
-  }
-  
-  .btn-next {
-    right: -20px;
-  }
   
