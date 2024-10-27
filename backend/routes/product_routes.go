@@ -8,18 +8,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func setupProductRoutes(app *fiber.App) {
+func SetUpProductRoutes(app *fiber.App) {
 	repository := repositories.NewProductRepository(mongoDB)
 	service := services.NewProductService(repository)
 	controller := controllers.NewProductController(service)
 
 	productGroup := app.Group("/product")
-	productGroup.Post("/create-product", controller.CreateProduct)
-	productGroup.Get("/get-product-by-id/:id", controller.GetProductByID)
-	productGroup.Put("/update-product", controller.UpdateProduct)
-	productGroup.Delete("/delete-product/:id", controller.DeleteProduct)
-	productGroup.Get("/search-product", controller.SearchProducts)                             //http://127.0.0.1:3000/product/searchProduct?query=Update
-	productGroup.Get("/get-list-product-by-pagination", controller.GetListProductByPagination) //http://127.0.0.1:3000/product?page=&limit=13
-	productGroup.Post("/update-listProduct/:status", controller.UpdateListProduct)             //http://127.0.0.1:3000/updateListProduct/activi
-
+	productGroup.Post("/create", controller.CreateProduct)
+	productGroup.Put("/update/", controller.UpdateProduct)
+	productGroup.Patch("/delete/:id", controller.DeleteProduct)
+	productGroup.Get("/sales", controller.GetOnSaleProducts)
+	productGroup.Get("/search", controller.SearchProducts)
+	productGroup.Get("/search/:q", controller.SearchProducts)
+	productGroup.Post("/updateListProduct/:status", controller.UpdateListProduct)
+	productGroup.Get("/:id", controller.GetProductByID)
 }

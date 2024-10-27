@@ -6,6 +6,7 @@ import (
 	"electronik/internal/models"
 	"errors"
 	"fmt"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,9 +18,10 @@ type (
 	// ProductRepository nhúng interface Repository
 	ProductRepository interface {
 		Repository[models.Product]
-		GetListProductByPagination(limit int, skip int) ([]models.Product, error)
-		GetListProductBySearch(limit int, skip int, query string) ([]models.Product, error)
-		UpdateList(id string, status int) error
+		GetProductsByPagination(limit int, skip int) ([]*models.Product, error)
+		GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error)
+		UpdateStatus(id string, status int) error
+		GetOnSaleProducts(limit int, skip int) ([]*models.Product, error)
 	}
 
 	productRepository struct {
@@ -145,12 +147,12 @@ func (pro *productRepository) Delete(id string) error {
 }
 
 // 5. Get product by pagination
-func (pro *productRepository) GetListProductByPagination(limit int, skip int) ([]models.Product, error) {
+func (pro *productRepository) GetProductsByPagination(limit int, skip int) ([]*models.Product, error) {
 	if limit <= 0 {
-		return []models.Product{}, nil
+		return []*models.Product{}, nil
 	}
 
-	listProduct := []models.Product{}
+	listProduct := []*models.Product{}
 
 	opt := options.Find().SetLimit(int64(limit)).SetSkip(int64(skip))
 
@@ -165,7 +167,7 @@ func (pro *productRepository) GetListProductByPagination(limit int, skip int) ([
 		if err := cursor.Decode(&product); err != nil {
 			return nil, err
 		}
-		listProduct = append(listProduct, product)
+		listProduct = append(listProduct, &product)
 	}
 
 	if err := cursor.Err(); err != nil {
@@ -177,12 +179,12 @@ func (pro *productRepository) GetListProductByPagination(limit int, skip int) ([
 
 //5. search products
 
-func (pro *productRepository) GetListProductBySearch(limit int, skip int, query string) ([]models.Product, error) {
+func (pro *productRepository) GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error) {
 	if limit <= 0 {
-		return []models.Product{}, nil
+		return []*models.Product{}, nil
 	}
 
-	listProduct := []models.Product{}
+	listProduct := []*models.Product{}
 
 	// Thiết lập filter cho tìm kiếm với $regex hoặc lấy tất cả sản phẩm nếu query trống
 	var filter bson.M
@@ -215,7 +217,7 @@ func (pro *productRepository) GetListProductBySearch(limit int, skip int, query 
 		if err := cursor.Decode(&product); err != nil {
 			return nil, err
 		}
-		listProduct = append(listProduct, product)
+		listProduct = append(listProduct, &product)
 	}
 
 	// Kiểm tra lỗi của cursor
@@ -226,7 +228,7 @@ func (pro *productRepository) GetListProductBySearch(limit int, skip int, query 
 	return listProduct, nil
 }
 
-func (pro *productRepository) UpdateList(id string, status int) error {
+func (pro *productRepository) UpdateStatus(id string, status int) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
@@ -244,4 +246,53 @@ func (pro *productRepository) UpdateList(id string, status int) error {
 	}
 
 	return nil
+}
+
+func (pro *productRepository) GetOnSaleProducts(limit int, skip int) ([]*models.Product, error) {
+	if limit <= 0 {
+		return []*models.Product{}, nil
+	}
+
+	listProduct := []*models.Product{}
+	now := primitive.NewDateTimeFromTime(time.Now())
+
+	// Thiết lập filter cho sản phẩm đang giảm giá
+	filter := bson.M{
+		"sale":            bson.M{"$ne": nil},
+		"sale.start_date": bson.M{"$exists": true, "$lte": now},
+		"sale.end_date":   bson.M{"$exists": true, "$gte": now},
+	}
+
+	// Tùy chọn phân trang
+	opt := options.Find().
+		SetLimit(int64(limit)).
+		SetSkip(int64(skip)).
+		SetSort(bson.D{
+			{Key: "sale.discount_percentage", Value: -1},
+			{Key: "price", Value: -1},
+			{Key: "created_at", Value: -1},
+		})
+
+	// Thực hiện truy vấn
+	cursor, err := pro.collection.Find(context.Background(), filter, opt)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	// Duyệt qua kết quả và thêm vào danh sách
+	for cursor.Next(context.Background()) {
+		var product models.Product
+		if err := cursor.Decode(&product); err != nil {
+			return nil, err
+		}
+		listProduct = append(listProduct, &product)
+	}
+
+	// Kiểm tra lỗi của cursor
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return listProduct, nil
 }

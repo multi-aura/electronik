@@ -14,7 +14,7 @@ import (
 
 type UserRepository interface {
 	Repository[models.User]
-	GetUsersByName(name string) ([]models.User, error)
+	GetUsersByName(name string) ([]*models.User, error)
 	GetUserByEmail(email string) (*models.User, error)
 	GetUserByUsername(username string) (*models.User, error)
 	GetUserByPhone(phone string) (*models.User, error)
@@ -120,8 +120,8 @@ func (repo *userRepository) Delete(id string) error {
 	return nil
 }
 
-func (repo *userRepository) GetUsersByName(name string) ([]models.User, error) {
-	var users []models.User
+func (repo *userRepository) GetUsersByName(name string) ([]*models.User, error) {
+	var users []*models.User
 	filter := bson.M{"username": bson.M{"$regex": name, "$options": "i"}}
 
 	cursor, err := repo.collection.Find(context.Background(), filter)
@@ -135,7 +135,7 @@ func (repo *userRepository) GetUsersByName(name string) ([]models.User, error) {
 		if err := cursor.Decode(&user); err != nil {
 			return nil, err
 		}
-		users = append(users, user)
+		users = append(users, &user)
 	}
 
 	if err := cursor.Err(); err != nil {

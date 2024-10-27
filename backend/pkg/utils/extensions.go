@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -31,6 +32,52 @@ func GetString(data map[string]interface{}, key string) string {
 		}
 	}
 	return ""
+}
+
+func GetInt(data map[string]interface{}, key string) int {
+	if val, ok := data[key]; ok {
+		switch v := val.(type) {
+		case int:
+			return v
+		case int32:
+			return int(v)
+		case int64:
+			return int(v)
+		case float64:
+			return int(v) // Chuyển đổi từ float64 (MongoDB đôi khi lưu số dưới dạng float64)
+		case float32:
+			return int(v)
+		case string:
+			// Thử chuyển chuỗi thành số nguyên nếu cần
+			if intVal, err := strconv.Atoi(v); err == nil {
+				return intVal
+			}
+		}
+	}
+	return 0 // Giá trị mặc định nếu không có hoặc không phải kiểu int
+}
+
+func GetFloat64(data map[string]interface{}, key string) float64 {
+	if val, ok := data[key]; ok {
+		switch v := val.(type) {
+		case float64:
+			return v
+		case float32:
+			return float64(v)
+		case int:
+			return float64(v)
+		case int32:
+			return float64(v)
+		case int64:
+			return float64(v)
+		case string:
+			// Thử chuyển chuỗi thành float64 nếu cần
+			if floatVal, err := strconv.ParseFloat(v, 64); err == nil {
+				return floatVal
+			}
+		}
+	}
+	return 0.0 // Giá trị mặc định nếu không có hoặc không phải kiểu float64
 }
 
 func GetBool(data map[string]interface{}, key string) bool {

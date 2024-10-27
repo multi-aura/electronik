@@ -17,9 +17,10 @@ type (
 		GetProductByID(id string) (*models.Product, error)
 		UpdateProduct(product *models.Product) ([]ErrorResponse, error)
 		DeleteProduct(id string) error
-		GetListProductByPagination(page int, limit int) ([]models.Product, error)
-		GetListProductBySearch(page int, limit int, query string) ([]models.Product, error)
+		GetListProductByPagination(page int, limit int) ([]*models.Product, error)
+		GetListProductBySearch(page int, limit int, query string) ([]*models.Product, error)
 		UpdateList(id string, status int) error
+		GetOnSaleProducts(page int, limit int) ([]*models.Product, error)
 	}
 	productService struct {
 		repo repositories.ProductRepository
@@ -121,7 +122,7 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 
 func (pro *productService) DeleteProduct(id string) error {
 	if id == "" {
-		return errors.New("Product ID is required")
+		return errors.New("product ID is required")
 	}
 	err := pro.repo.Delete(id)
 	if err != nil {
@@ -132,34 +133,52 @@ func (pro *productService) DeleteProduct(id string) error {
 }
 
 func (pro *productService) UpdateList(id string, status int) error {
-	if id == "" || status < -1 || status > 2 {
-		return errors.New("Invalid product ID or status")
+	if id == "" || status <= -2 {
+		return errors.New("product ID is required")
 	}
-	return pro.repo.UpdateList(id, status)
-}
+	err := pro.repo.UpdateStatus(id, status)
+	if err != nil {
+		return err
+	}
+	return nil
 
-func (pro *productService) GetListProductByPagination(page int, limit int) ([]models.Product, error) {
+}
+func (pro *productService) GetListProductByPagination(page int, limit int) ([]*models.Product, error) {
 	if (page <= 0) || (limit <= 0) {
-		return nil, errors.New("Page and limit must be greater than 0")
+		return nil, errors.New("page and limit must be greater than 0")
 	}
 	skip := (page - 1) * limit
-	Dsproduct, err := pro.repo.GetListProductByPagination(limit, skip)
+	products, err := pro.repo.GetProductsByPagination(limit, skip)
 	if err != nil {
 		return nil, err
 	}
-	return Dsproduct, nil
+	return products, nil
 
 }
 
-func (pro *productService) GetListProductBySearch(page int, limit int, query string) ([]models.Product, error) {
-	if page <= 0 || limit <= 0 {
-		return nil, errors.New("Page and limit must be greater than 0")
+func (pro *productService) GetListProductBySearch(page int, limit int, query string) ([]*models.Product, error) {
+	if (page <= 0) || (limit <= 0) {
+		return nil, errors.New("page and limit must be greater than 0")
 	}
 
 	skip := (page - 1) * limit
-	Dsproduct, err := pro.repo.GetListProductBySearch(limit, skip, query)
+	products, err := pro.repo.GetProductsBySearch(limit, skip, query)
 	if err != nil {
 		return nil, err
 	}
-	return Dsproduct, nil
+	return products, nil
+}
+
+func (pro *productService) GetOnSaleProducts(page int, limit int) ([]*models.Product, error) {
+    if page <= 0 || limit <= 0 {
+        return nil, errors.New("page and limit must be greater than 0")
+    }
+
+    skip := (page - 1) * limit
+    products, err := pro.repo.GetOnSaleProducts(limit, skip)
+    if err != nil {
+        return nil, err
+    }
+
+    return products, nil
 }
