@@ -2,7 +2,7 @@ import React from 'react';
 
 const SubMenu = () => {
   const subMenuItems = [
-    'Săn Voucher GEARVN',
+    'Săn Voucher Multi Aura',
     'Tin công nghệ',
     'Video',
     'Hướng dẫn thanh toán',

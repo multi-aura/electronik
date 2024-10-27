@@ -1,6 +1,6 @@
 
 .sidebar {
-    background-color: #d4d4d431;
+    background-color: #72727231;
     color: #000000;
     padding: 15px;
     width: 250px;
@@ -28,6 +28,7 @@
   }
   
   .submenu {
+    z-index: 100;
     display: none;
     position: absolute;
     top: 0;

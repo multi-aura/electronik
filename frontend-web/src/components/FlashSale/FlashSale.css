@@ -1,0 +1,48 @@
+
+.flash-sale-container {
+    background-color: #ededed61;
+    border-radius: 8px;
+    margin: 20px;
+    padding: 15px;
+  }
+  
+  .flash-sale-container .card {
+    padding-top: 20px;
+    border: none;
+  }
+  
+  .flash-sale-container .card-img-top {
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .flash-sale-container .card-title {
+    font-size: 14px;
+  }
+  
+  .flash-sale-container .card-text {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .btn-prev, .btn-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    padding: 0;
+    border-radius: 50%;
+  }
+  
+  .btn-prev {
+    left: -20px; 
+  }
+  
+  .btn-next {
+    right: -20px; 
+  }
