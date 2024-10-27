@@ -1,0 +1,38 @@
+/* src/pages/ProductDetails.css */
+
+.product-details {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .product-image img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+  }
+  
+  .product-info {
+    margin-top: 20px;
+  }
+  
+  .product-price {
+    color: #ff5722;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .product-specifications,
+  .product-reviews {
+    margin-top: 30px;
+  }
+  
+  .product-reviews .review {
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .product-reviews .review:first-of-type {
+    border-top: none;
+  }
+  
