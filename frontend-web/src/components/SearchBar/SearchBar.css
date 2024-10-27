@@ -1,25 +1,30 @@
-/* src/components/SearchBar/SearchBar.css */
-
 .search-bar-container {
     flex: 1;
-    padding-top: 20px;
+    padding-top: 25px;
   }
   
   .input-group {
     display: flex;
     align-items: center;
+    border: 2px solid #ffffff ; 
+    border-radius: 7px; 
+    overflow: hidden;
   }
   
-  .search-icon-bg {
-    background-color: #333;
-    padding: 8px;
-    border-radius: 5px 0 0 5px;
-  }
+  .search-icon-bgr {
+    background-color: #ffffff; 
+    padding: 11px;
+    border: none; 
+    outline: none;
+    border-radius: 0 7px 7px 0;
+    color: black; 
+    }
   
   .search-input-field {
-    border: none;
+    border: none; 
     outline: none;
     border-radius: 0 5px 5px 0;
-    padding: 8px;
+    padding: 12px 15px;
+    flex: 1;
+    font-size: 16px;
   }
-  
