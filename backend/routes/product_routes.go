@@ -14,12 +14,11 @@ func setupProductRoutes(app *fiber.App) {
 	controller := controllers.NewProductController(service)
 
 	productGroup := app.Group("/product")
-	productGroup.Post("/CreateProduct", controller.CreateProduct)
-	productGroup.Get("/GetProductByid/:id", controller.GetProductByID)
-	productGroup.Put("/updateProduct/", controller.UpdateProduct)
-	productGroup.Patch("/deleteProduct/:id", controller.DeleteProduct)
-	productGroup.Get("/searchProduct", controller.SearchProducts)                 //http://127.0.0.1:3000/product/searchProduct?query=Update
-	productGroup.Get("/", controller.GetListProductByPagination)                  //http://127.0.0.1:3000/product?page=&limit=13
-	productGroup.Post("/updateListProduct/:status", controller.UpdateListProduct) //http://127.0.0.1:3000/updateListProduct/activi
-
+	productGroup.Post("/create", controller.CreateProduct)
+	productGroup.Put("/update/", controller.UpdateProduct)
+	productGroup.Patch("/delete/:id", controller.DeleteProduct)
+	productGroup.Get("/search", controller.SearchProducts)
+	productGroup.Get("/search/:q", controller.SearchProducts)
+	productGroup.Post("/updateListProduct/:status", controller.UpdateListProduct)
+	productGroup.Get("/:id", controller.GetProductByID)
 }

@@ -110,30 +110,8 @@ func (pro *ProductController) DeleteProduct(c *fiber.Ctx) error {
 	})
 }
 
-func (pro *ProductController) GetListProductByPagination(c *fiber.Ctx) error {
-	page, err := strconv.Atoi(c.Query("page", "1"))
-	if err != nil || page < 1 {
-		page = 1
-	}
-	limit, err := strconv.Atoi(c.Query("limit", "10"))
-	if err != nil || limit < 1 || limit > 100 {
-		limit = 10
-	}
-	products, err := pro.service.GetListProductByPagination(page, limit)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to get list product",
-		})
-	}
-	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
-		Status:  fiber.StatusOK,
-		Message: "Get list product successful",
-		Data:    products,
-	})
-
-}
 func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
-	query := c.Query("query", "")
+	query := c.Query("q")
 	page, err := strconv.Atoi(c.Query("page", "1"))
 	if err != nil || page < 1 {
 		page = 1
@@ -142,18 +120,29 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 	if err != nil || limit < 1 || limit > 100 {
 		limit = 10
 	}
-	products, err := pro.service.GetListProductBySearch(page, limit, query)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to get list product",
-		})
+	var products []*models.Product
+	log.Println(query)
+	if query == "" {
+		products, err = pro.service.GetListProductByPagination(page, limit)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to get list product",
+			})
+		}
+	} else {
+		products, err = pro.service.GetListProductBySearch(page, limit, query)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "Failed to get list product",
+			})
+		}
 	}
+
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
-		Message: "search product successful",
+		Message: "Retriving product successful",
 		Data:    products,
 	})
-
 }
 func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	var products []models.Product

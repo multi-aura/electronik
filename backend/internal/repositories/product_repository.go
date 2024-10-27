@@ -16,9 +16,9 @@ type (
 	// ProductRepository nhúng interface Repository
 	ProductRepository interface {
 		Repository[models.Product]
-		GetListProductByPagination(limit int, skip int) ([]models.Product, error)
-		GetListProductBySearch(limit int, skip int, query string) ([]models.Product, error)
-		UpdateList(id string, status int) error
+		GetProductsByPagination(limit int, skip int) ([]*models.Product, error)
+		GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error)
+		UpdateStatus(id string, status int) error
 	}
 
 	productRepository struct {
@@ -142,12 +142,12 @@ func (pro *productRepository) Delete(id string) error {
 }
 
 // 5. Get product by pagination
-func (pro *productRepository) GetListProductByPagination(limit int, skip int) ([]models.Product, error) {
+func (pro *productRepository) GetProductsByPagination(limit int, skip int) ([]*models.Product, error) {
 	if limit <= 0 {
-		return []models.Product{}, nil
+		return []*models.Product{}, nil
 	}
 
-	listProduct := []models.Product{}
+	listProduct := []*models.Product{}
 
 	opt := options.Find().SetLimit(int64(limit)).SetSkip(int64(skip))
 
@@ -162,7 +162,7 @@ func (pro *productRepository) GetListProductByPagination(limit int, skip int) ([
 		if err := cursor.Decode(&product); err != nil {
 			return nil, err
 		}
-		listProduct = append(listProduct, product)
+		listProduct = append(listProduct, &product)
 	}
 
 	if err := cursor.Err(); err != nil {
@@ -174,12 +174,12 @@ func (pro *productRepository) GetListProductByPagination(limit int, skip int) ([
 
 //5. search products
 
-func (pro *productRepository) GetListProductBySearch(limit int, skip int, query string) ([]models.Product, error) {
+func (pro *productRepository) GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error) {
 	if limit <= 0 {
-		return []models.Product{}, nil
+		return []*models.Product{}, nil
 	}
 
-	listProduct := []models.Product{}
+	listProduct := []*models.Product{}
 	filter := bson.M{
 		"$or": []bson.M{
 			{"product_name": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm trong tên sản phẩm
@@ -200,7 +200,7 @@ func (pro *productRepository) GetListProductBySearch(limit int, skip int, query 
 		if err := cursor.Decode(&product); err != nil {
 			return nil, err
 		}
-		listProduct = append(listProduct, product)
+		listProduct = append(listProduct, &product)
 	}
 
 	if err := cursor.Err(); err != nil {
@@ -209,7 +209,7 @@ func (pro *productRepository) GetListProductBySearch(limit int, skip int, query 
 
 	return listProduct, nil
 }
-func (pro *productRepository) UpdateList(id string, status int) error {
+func (pro *productRepository) UpdateStatus(id string, status int) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
