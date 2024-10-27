@@ -90,6 +90,7 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 		return errors, nil
 	}
 
+
 	updateFields := map[string]interface{}{
 		"_id":            product.ID,
 		"product_name":   product.ProductName,

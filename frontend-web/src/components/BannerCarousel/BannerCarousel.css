@@ -1,0 +1,15 @@
+
+.carousel-container {
+    width: 100%;
+    max-width: 1200px; 
+    margin: 0 auto; 
+    border-radius: 8px;
+    overflow: hidden; 
+    box-shadow: 0 4px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .carousel-container .carousel-inner img {
+    width: 100%;
+    object-fit: cover; 
+  }
+  

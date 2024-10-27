@@ -25,9 +25,10 @@ const SearchBar = ({ onSearch }) => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-          <div className="input-group-text search-icon-bg">
-          <FontAwesomeIcon icon={faSearch} style={{ color: 'black' }} />
-        </div>
+          <div className="input-group-text ssearch-icon-bg">
+            <FontAwesomeIcon icon={faSearch} />
+          </div>
+
       </div>
     </div>
   );

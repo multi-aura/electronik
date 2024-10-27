@@ -1,0 +1,27 @@
+.no-underline {
+    text-decoration-line: none;
+
+}
+
+.no-underline:hover {
+    text-decoration-line: none;
+    background-color: black;
+    color: white;
+}
+
+a {
+    text-decoration-line: none !important;
+
+}
+
+.avatar_login {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%; 
+    object-fit: cover;
+    margin-left: 10px;
+}
+.dropdown-toggle::after {
+    display: none !important;
+  }
+  

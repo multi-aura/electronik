@@ -16,6 +16,7 @@ function RegisterForm() {
     gender: '',
   });
 
+  const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
@@ -26,8 +27,47 @@ function RegisterForm() {
       [name]: value,
     });
   };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.username) {
+      newErrors.username = 'Tên người dùng không được để trống.';
+    }
+
+    if (!formData.email) {
+      newErrors.email = 'Email không được để trống.';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email không hợp lệ.';
+    }
+
+    if (!formData.phone) {
+      newErrors.phone = 'Số điện thoại không được để trống.';
+    } else if (!/^\d{10,11}$/.test(formData.phone)) {
+      newErrors.phone = 'Số điện thoại phải gồm 10-11 chữ số.';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Mật khẩu không được để trống.';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự.';
+    }
+
+    if (formData.confirmPassword !== formData.password) {
+      newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp.';
+    }
+
+    if (!formData.gender) {
+      newErrors.gender = 'Vui lòng chọn giới tính.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleRegister = async () => {
-   
+    if (!validateForm()) return; // Nếu form không hợp lệ, dừng lại
+
     try {
       const response = await register(formData);
       console.log('Đăng ký thành công:', response);
@@ -56,6 +96,7 @@ function RegisterForm() {
               required
             />
             <FontAwesomeIcon icon={faUser} className="input-icon" />
+            {errors.username && <p className="text-danger-error" >{errors.username}</p>}
           </div>
 
           <div className="form-group position-relative">
@@ -69,6 +110,7 @@ function RegisterForm() {
               required
             />
             <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
+            {errors.email && <p className="text-danger-error">{errors.email}</p>}
           </div>
 
           <div className="form-group position-relative">
@@ -82,6 +124,7 @@ function RegisterForm() {
               required
             />
             <FontAwesomeIcon icon={faPhone} className="input-icon" />
+            {errors.phone && <p className="text-danger-error">{errors.phone}</p>}
           </div>
 
           <div className="form-group position-relative">
@@ -95,6 +138,7 @@ function RegisterForm() {
               required
             />
             <FontAwesomeIcon icon={faLock} className="input-icon" />
+            {errors.password && <p className="text-danger-error">{errors.password}</p>}
           </div>
 
           <div className="form-group position-relative">
@@ -108,6 +152,7 @@ function RegisterForm() {
               required
             />
             <FontAwesomeIcon icon={faLock} className="input-icon" />
+            {errors.confirmPassword && <p className="text-danger-error">{errors.confirmPassword}</p>}
           </div>
 
           <div className="form-group position-relative">
@@ -123,9 +168,10 @@ function RegisterForm() {
               <option value="Female">Female</option>
             </select>
             <FontAwesomeIcon icon={faVenusMars} className="input-icon" />
+            {errors.gender && <p className="text-danger-error">{errors.gender}</p>}
           </div>
 
-          {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}
+          {errorMessage && <p className="text-danger-error text-center">{errorMessage}</p>}
 
           <button type="submit" className="btn register-button">Đăng ký</button>
         </form>
