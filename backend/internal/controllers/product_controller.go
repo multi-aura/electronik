@@ -255,3 +255,44 @@ func (pro *ProductController) GetOnSaleProducts(c *fiber.Ctx) error {
 		Data:    products,
 	})
 }
+
+func (pro *ProductController) GetProductsByCategoryID(c *fiber.Ctx) error {
+	categoryID := c.Params("categoryID")
+	manufacturer := c.Query("manufacturer")
+	var req models.PagingRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	if req.Limit <= 0 {
+		req.Limit = 10
+	}
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+
+	products, err := pro.service.GetProductsByCategoryID(int(req.Page), int(req.Limit), categoryID, manufacturer)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to retrieve products by category",
+		})
+	}
+
+	if len(products) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusNotFound,
+			Message: "No products found for this category",
+			Error:   "StatusNotFound",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Products retrieved successfully",
+		Data:    products,
+	})
+}

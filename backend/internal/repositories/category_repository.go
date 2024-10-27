@@ -97,16 +97,17 @@ func (c *categoryRepository) GetCategories() ([]*models.CategoryRequest, error) 
 				{Key: "_id", Value: bson.D{
 					{Key: "categoryId", Value: "$category._id"},
 					{Key: "categoryName", Value: "$category.name"},
+					{Key: "categoryImage", Value: "$category.image"},
 				}},
 				{Key: "manufacturers", Value: bson.D{{Key: "$addToSet", Value: "$manufacturer"}}},
 			}},
 		},
 		{
 			{Key: "$project", Value: bson.D{
-				{Key: "_id", Value: 0},
 				{Key: "category", Value: bson.D{
-					{Key: "id", Value: "$_id.categoryId"},
+					{Key: "_id", Value: "$_id.categoryId"},
 					{Key: "name", Value: "$_id.categoryName"},
+					{Key: "image", Value: "$_id.categoryImage"},
 				}},
 				{Key: "manufacturers", Value: 1},
 			}}},
@@ -121,6 +122,7 @@ func (c *categoryRepository) GetCategories() ([]*models.CategoryRequest, error) 
 			// Log lỗi nếu cần thiết
 		}
 	}()
+
 	// Giải mã kết quả vào slice
 	for cursor.Next(ctx) {
 		var categoryRequest models.CategoryRequest

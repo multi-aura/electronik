@@ -20,7 +20,8 @@ type (
 		GetListProductByPagination(page int, limit int) ([]*models.Product, error)
 		GetListProductBySearch(page int, limit int, query string) ([]*models.Product, error)
 		UpdateList(id string, status int) error
-		GetOnSaleProducts(page int, limit int) ([]*models.Product, error)
+		GetOnSaleProducts(page, limit int) ([]*models.Product, error)
+		GetProductsByCategoryID(page, limit int, categoryID, manufacturer string) ([]*models.Product, error)
 	}
 	productService struct {
 		repo repositories.ProductRepository
@@ -89,7 +90,6 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 		})
 		return errors, nil
 	}
-
 
 	updateFields := map[string]interface{}{
 		"_id":            product.ID,
@@ -169,16 +169,30 @@ func (pro *productService) GetListProductBySearch(page int, limit int, query str
 	return products, nil
 }
 
-func (pro *productService) GetOnSaleProducts(page int, limit int) ([]*models.Product, error) {
-    if page <= 0 || limit <= 0 {
-        return nil, errors.New("page and limit must be greater than 0")
-    }
+func (pro *productService) GetOnSaleProducts(page, limit int) ([]*models.Product, error) {
+	if page <= 0 || limit <= 0 {
+		return nil, errors.New("page and limit must be greater than 0")
+	}
 
-    skip := (page - 1) * limit
-    products, err := pro.repo.GetOnSaleProducts(limit, skip)
-    if err != nil {
-        return nil, err
-    }
+	skip := (page - 1) * limit
+	products, err := pro.repo.GetOnSaleProducts(limit, skip)
+	if err != nil {
+		return nil, err
+	}
 
-    return products, nil
+	return products, nil
+}
+
+func (s *productService) GetProductsByCategoryID(page, limit int, categoryID, manufacturer string) ([]*models.Product, error) {
+	if page <= 0 || limit <= 0 {
+		return nil, errors.New("page and limit must be greater than 0")
+	}
+
+	skip := (page - 1) * limit
+	products, err := s.repo.GetProductsByCategoryID(limit, skip, categoryID, manufacturer)
+	if err != nil {
+		return nil, err
+	}
+
+	return products, nil
 }

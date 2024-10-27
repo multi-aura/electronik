@@ -8,8 +8,9 @@ import (
 
 type (
 	Category struct {
-		ID   primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
-		Name string             `bson:"name" json:"name" form:"name"`
+		ID    primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
+		Name  string             `bson:"name" json:"name" form:"name"`
+		Image string             `bson:"image" json:"image" form:"image"`
 	}
 
 	CategoryRequest struct {
