@@ -13,7 +13,7 @@ function LoginPage() {
       const response = await login(credentials.username, credentials.password); 
       console.log('Đăng nhập thành công:', response);
       try {
-        navigate('/Home', { state: { userData: response.data } });
+        navigate('/', { state: { userData: response.data } });
       } catch (error) {
         console.error('Lỗi điều hướng:', error);
       }
