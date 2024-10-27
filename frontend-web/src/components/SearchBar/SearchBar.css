@@ -1,25 +1,38 @@
-/* src/components/SearchBar/SearchBar.css */
-
 .search-bar-container {
-    flex: 1;
-    padding-top: 20px;
-  }
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.search-input-field {
+  border-radius: 10px !important;
+  width: 100%; 
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
+.search-icon-bg {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: black; 
+  background: white;
+  pointer-events: none; 
+  z-index: 2;
+  border-radius: 10px;
+  border: none;
   
-  .input-group {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-icon-bg {
-    background-color: #333;
-    padding: 8px;
-    border-radius: 5px 0 0 5px;
-  }
-  
-  .search-input-field {
-    border: none;
-    outline: none;
-    border-radius: 0 5px 5px 0;
-    padding: 8px;
-  }
-  
+}
