@@ -41,11 +41,10 @@ type (
 		NumberStar   int                `bson:"number_star" json:"number_star" validate:"required,min=1,max=5" form:"number_star"`
 	}
 
-	Specifications struct {
-		CPU      string `bson:"cpu" json:"cpu" validate:"required" form:"CPU"`
-		RAM      string `bson:"ram" json:"ram" validate:"required" form:"RAM"`
-		Storage  string `bson:"storage" json:"storage" validate:"required" form:"storage"`
-		Graphics string `bson:"graphics" json:"graphics" validate:"required" form:"graphics"`
+	Specification struct {
+		ID    primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty" form:"_id"`
+		Name  string             `bson:"name" json:"name" validate:"required" form:"name"`
+		Value string             `bson:"value" json:"value" validate:"required" form:"value"`
 	}
 
 	Sale struct {
@@ -68,7 +67,7 @@ type (
 		Feedbacks      []Feedback         `bson:"feedbacks" json:"feedbacks" validate:"dive" form:"feedbacks"`
 		Dimensions     string             `bson:"dimensions" json:"dimensions" validate:"required" form:"dimensions"`
 		Manufacturer   string             `bson:"manufacturer" json:"manufacturer" validate:"required" form:"manufacturer"`
-		Specifications Specifications     `bson:"specifications" json:"specifications" validate:"required" form:"specifications"`
+		Specifications []Specification    `bson:"specifications" json:"specifications" validate:"required" form:"specifications"`
 		Warranty       string             `bson:"warranty" json:"warranty" validate:"required" form:"warranty"`
 		Weight         string             `bson:"weight" json:"weight" validate:"required" form:"weight"`
 		Status         int                `bson:"status" json:"status" validate:"required" form:"status"`
