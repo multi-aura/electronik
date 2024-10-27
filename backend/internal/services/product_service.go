@@ -89,8 +89,8 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 		return errors, nil
 	}
 
-	// Tạo một map để chứa các trường cần cập nhật
 	updateFields := map[string]interface{}{
+		"_id":            product.ID,
 		"product_name":   product.ProductName,
 		"description":    product.Description,
 		"default_image":  product.DefaultImage,
@@ -112,7 +112,7 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 			FailedField: "product",
 			Tag:         "Update failed",
 		})
-		return errors, nil
+		return errors, err
 	}
 
 	return nil, nil
@@ -131,16 +131,12 @@ func (pro *productService) DeleteProduct(id string) error {
 }
 
 func (pro *productService) UpdateList(id string, status int) error {
-	if id == "" || status <= -2 {
-		return errors.New("Product ID is required")
+	if id == "" || status < -1 || status > 2 {
+		return errors.New("Invalid product ID or status")
 	}
-	err := pro.repo.UpdateList(id, status)
-	if err != nil {
-		return err
-	}
-	return nil
-
+	return pro.repo.UpdateList(id, status)
 }
+
 func (pro *productService) GetListProductByPagination(page int, limit int) ([]models.Product, error) {
 	if (page <= 0) || (limit <= 0) {
 		return nil, errors.New("Page and limit must be greater than 0")
@@ -155,17 +151,14 @@ func (pro *productService) GetListProductByPagination(page int, limit int) ([]mo
 }
 
 func (pro *productService) GetListProductBySearch(page int, limit int, query string) ([]models.Product, error) {
-	if (page <= 0) || (limit <= 0) {
+	if page <= 0 || limit <= 0 {
 		return nil, errors.New("Page and limit must be greater than 0")
 	}
-	if query == "" {
-		query = ".*"
-	}
+
 	skip := (page - 1) * limit
 	Dsproduct, err := pro.repo.GetListProductBySearch(limit, skip, query)
 	if err != nil {
 		return nil, err
 	}
 	return Dsproduct, nil
-
 }

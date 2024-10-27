@@ -29,7 +29,7 @@ type (
 		ID           primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
 		UserID       primitive.ObjectID `bson:"user_id" json:"user_id" validate:"required" form:"user_id"`
 		Username     string             `bson:"username" json:"username" validate:"required" form:"username"`
-		ContentRated string             `bson:"content_rated" json:"content_rated" validate:"required" form:"content_rated"`
+		ContentRated string  	           `bson:"content_rated" json:"content_rated" validate:"required" form:"content_rated"`
 		FeedbackDate time.Time          `bson:"feedback_date" json:"feedback_date" validate:"required" form:"feedback_date"`
 		NumberStar   int                `bson:"number_star" json:"number_star" validate:"required,min=1,max=5" form:"number_star"`
 	}
@@ -58,6 +58,6 @@ type (
 
 		Warranty string `bson:"warranty" json:"warranty" validate:"required" form:"warranty"`
 		Weight   string `bson:"weight" json:"weight" validate:"required" form:"weight"`
-		Status   string `bson:"status" json:"status" validate:"required" form:"status"`
+		Status   int    `bson:"status" json:"status" validate:"required" form:"status"`
 	}
 )
