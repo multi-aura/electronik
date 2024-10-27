@@ -1,7 +1,7 @@
 
 .carousel-container {
     width: 100%;
-    max-width: 1200px; 
+    max-width: 90%; 
     margin: 0 auto; 
     border-radius: 8px;
     overflow: hidden; 
