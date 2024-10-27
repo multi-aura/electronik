@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar/Sidebar'
 import BannerCarousel from '../components/BannerCarousel/BannerCarousel';
 import FlashSale from '../components/FlashSale/FlashSale';
 import BestSellingProducts from '../components/BestSellingProducts/BestSellingProducts';
+import CategoryGrid from '../components/CategoryGrid/CategoryGrid'
 function Home() {
   const userData = { name: 'Alex Korobov' }; 
   const banners = [
@@ -21,6 +22,8 @@ function Home() {
       </div>
       <FlashSale />
       <BestSellingProducts />
+      <CategoryGrid />
+
     </Layout>
   );
 }
