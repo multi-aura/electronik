@@ -109,6 +109,7 @@ func (pro *ProductController) DeleteProduct(c *fiber.Ctx) error {
 		Message: "Delete product successful",
 	})
 }
+
 func (pro *ProductController) GetListProductByPagination(c *fiber.Ctx) error {
 	page, err := strconv.Atoi(c.Query("page", "1"))
 	if err != nil || page < 1 {
@@ -131,6 +132,7 @@ func (pro *ProductController) GetListProductByPagination(c *fiber.Ctx) error {
 		Message: "Get list product successful",
 		Data:    products,
 	})
+
 }
 
 func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
@@ -161,9 +163,10 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
-		Message: "Search product successful",
+		Message: "search product successful",
 		Data:    products,
 	})
+
 }
 
 func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
@@ -189,6 +192,7 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	case "deleted":
 		status = -1
 	default:
+
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusBadRequest,
 			Message: "Failed to update product list",
@@ -198,6 +202,7 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 
 	err := c.BodyParser(&products)
 	if err != nil {
+
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusBadRequest,
 			Message: "Failed to update product list",
@@ -206,6 +211,7 @@ func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	}
 
 	if len(products) == 0 {
+
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusBadRequest,
 			Message: "Failed to update product list",

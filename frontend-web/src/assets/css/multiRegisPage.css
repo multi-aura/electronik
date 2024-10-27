@@ -121,3 +121,7 @@
 .login-link:hover {
   text-decoration: underline;
 }
+.text-danger-error{
+  color: #FF5722;
+text-align: center;
+}

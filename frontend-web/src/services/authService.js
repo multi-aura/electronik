@@ -42,3 +42,15 @@ export const register = async (formData) => {
     gender
   });
 };
+
+export const logout = async()=>
+{
+  try{
+    Cookies.remove('authToken');
+    localStorage.removeItem('user');
+
+  }catch(error)
+  {
+    console.log("Lỗi đăng xuất:", error);
+  }
+};

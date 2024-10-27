@@ -6,10 +6,6 @@
   animation: moveBackground 20s infinite alternate ease-in-out;
 
 }
-.input-group-text.custom-padding {
-  padding: 0.905rem 0.75rem !important;
-}
-
 @keyframes moveBackground {
   /* 0% {
     background-position: 0 0;
