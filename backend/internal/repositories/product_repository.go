@@ -22,6 +22,7 @@ type (
 		GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error)
 		UpdateStatus(id string, status int) error
 		GetOnSaleProducts(limit int, skip int) ([]*models.Product, error)
+		GetProductsByCategoryID(limit, skip int, categoryID, manufacturer string) ([]*models.Product, error)
 	}
 
 	productRepository struct {
@@ -295,4 +296,45 @@ func (pro *productRepository) GetOnSaleProducts(limit int, skip int) ([]*models.
 	}
 
 	return listProduct, nil
+}
+
+func (pro *productRepository) GetProductsByCategoryID(limit, skip int, categoryID, manufacturer string) ([]*models.Product, error) {
+	var results []*models.Product
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	categoryObjID, err := primitive.ObjectIDFromHex(categoryID)
+	if err != nil {
+		return nil, errors.New("invalid category ID")
+	}
+
+	filter := bson.D{{Key: "category._id", Value: categoryObjID}}
+
+	if manufacturer != "" {
+		filter = append(filter, bson.E{Key: "manufacturer", Value: manufacturer})
+	}
+
+	cursor, err := pro.collection.Find(ctx, filter, options.Find().SetLimit(int64(limit)).SetSkip(int64(skip)))
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+
+		}
+	}()
+
+	for cursor.Next(ctx) {
+		var product models.Product
+		if err := cursor.Decode(&product); err != nil {
+			return nil, err
+		}
+		results = append(results, &product)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }

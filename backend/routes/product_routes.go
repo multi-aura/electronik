@@ -21,5 +21,6 @@ func SetUpProductRoutes(app *fiber.App) {
 	productGroup.Get("/search", controller.SearchProducts)
 	productGroup.Get("/search/:q", controller.SearchProducts)
 	productGroup.Post("/updateListProduct/:status", controller.UpdateListProduct)
+	productGroup.Get("/category/:categoryID", controller.GetProductsByCategoryID)
 	productGroup.Get("/:id", controller.GetProductByID)
 }
