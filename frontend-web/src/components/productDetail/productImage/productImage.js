@@ -8,3 +8,4 @@ const ProductImage = ({ imageUrl, altText }) => (
 );
 
 export default ProductImage;
+pp
