@@ -21,7 +21,7 @@ const ProductDetail = () => {
     const [selectedImage, setSelectedImage] = useState('https://cdn.tgdd.vn/Products/Images/44/302532/hp-15s-fq5162tu-i5-7c134pa-1-750x500.jpg');
     return (
         <Layout>
-            <Container className="product-details my-5">
+            <Container className="product-details my-2">
                 <Row style={{ justifyContent: 'center', marginBottom: '20px', padding: '10px', backgroundColor: 'white' }}>
                     <Col md={6}>
                         <ProductImage imageUrl={selectedImage} />

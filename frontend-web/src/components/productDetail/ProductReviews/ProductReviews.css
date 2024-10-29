@@ -1,38 +1,130 @@
-.input-container {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ccc; /* Đường gạch chân */
-    padding: 8px 0;
-    width: 100%;
+.product-reviews {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 20px auto;
 }
 
-.input-container input {
-    border: none;
-    outline: none;
-    flex: 1;
-    padding: 8px;
+h4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+/* Button lọc sao */
+.star-filter-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.star-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.star-button:hover {
+    background-color: #e0e0e0;
+    border-color: #ccc;
+}
+
+.star-button .fa-star {
+    color: #ffc107;
+}
+
+.star-button.active {
+    background-color: #ffc107;
+    color: #fff;
+    border-color: #ffc107;
+}
+
+.star-button .star-count {
+    font-weight: bold;
+    color: #555;
+}
+.star-icon{
+    color:#ffc107;
+}
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.product-reviews .input-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-container input,
+.input-container textarea {
+    width: 100%;
+    padding: 10px;
     font-size: 16px;
-    height: 50px;
-    border: none;
-    border-radius: 10px;
-    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
 }
 
 .input-container .send-icon {
-    background: none;
-    border: none;
+    font-size: 20px;
+    color: #007bff;
     cursor: pointer;
-    color: #007bff; /* Màu của icon gửi */
-    font-size: 20px; /* Kích thước icon */
-    position:absolute;
-    top:  0px;
-    right: 5px;
+    align-self: flex-end;
 }
 
-.input-container input:focus {
+.input-container input:focus,
+.input-container textarea:focus {
     border-color: #007bff;
 }
 
-.input-container:hover {
-    border-bottom-color: #007bff; /* Màu gạch chân khi hover */
+.list-group-item {
+    border: none;
+    padding: 15px 0;
+}
+
+.card.border-0 {
+    border: none !important;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+.product-reviews p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.text-warning {
+    color: #ffc107 !important;
+}
+
+.me-3 {
+    margin-right: 1rem !important;
 }
