@@ -195,3 +195,37 @@ func (uc *UserController) DeleteUser(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func (uc *UserController) GetProfile(c *fiber.Ctx) error {
+	userID, ok := c.Locals("userID").(string)
+	if !ok || userID == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusUnauthorized,
+			Message: "Unauthorized",
+			Error:   "StatusUnauthorized",
+		})
+	}
+
+	userProfile, err := uc.service.GetByID(userID)
+	if err != nil {
+		if err.Error() == "user not found" {
+			return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusNotFound,
+				Message: "User not found",
+				Error:   "StatusNotFound",
+			})
+		}
+
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: err.Error(),
+			Error:   "StatusInternalServerError",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Profile retrieved successfully",
+		Data:    userProfile,
+	})
+}

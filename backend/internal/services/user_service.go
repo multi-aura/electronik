@@ -14,6 +14,7 @@ import (
 )
 
 type UserService interface {
+	GetByID(id string) (*models.User, error)
 	Register(req *models.RegisterRequest) error
 	Login(username, password string) (*models.User, error)
 	DeleteAccount(userID string) error
@@ -30,6 +31,14 @@ type userService struct {
 
 func NewUserService(repo repositories.UserRepository) UserService {
 	return &userService{repo}
+}
+
+func (s *userService) GetByID(id string) (*models.User, error) {
+    user, err := s.repo.GetByID(id)
+    if err != nil {
+        return nil, err
+    }
+    return user, nil
 }
 
 func (s *userService) Register(req *models.RegisterRequest) error {
