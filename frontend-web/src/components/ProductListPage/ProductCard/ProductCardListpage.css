@@ -1,0 +1,128 @@
+/* ProductCardListpage.css */
+.product-card {
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 15px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin-right: 0px !important;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e53935;
+  color: #fff;
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.product-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.product-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.spec-item {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.old-price {
+  font-size: 14px;
+  color: #888;
+  text-decoration: line-through;
+  margin-bottom: 4px;
+}
+
+.new-price {
+  font-size: 18px;
+  color: #e53935;
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+
+.installment-info {
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.rating-favorite {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-top: 8px;
+  border-top: 1px solid #ddd;
+}
+
+.stars {
+  color: #ffb400;
+  font-size: 14px;
+}
+
+.favorite {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.heart {
+  color: red;
+  margin-left: 5px;
+}

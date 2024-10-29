@@ -1,0 +1,48 @@
+/* TopFilterBar.css */
+.top-filter-bar {
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.sort-label {
+  font-weight: bold;
+  color: #333;
+
+}
+
+.sort-options {
+  display: flex;
+  gap: 10px;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sort-button:hover {
+  background-color: #e0e0e0;
+}
+
+.sort-icon {
+  margin-right: 5px;
+}
+
+.xem-nhieu {
+  color: #e53935;
+  border: 1px solid #e53935;
+  background-color: #ffecec;
+}
+
+.xem-nhieu:hover {
+  background-color: #ffd7d7;
+}
