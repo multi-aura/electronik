@@ -96,7 +96,8 @@ func (c *categoryRepository) GetCategories() ([]*models.CategoryRequest, error) 
 			{Key: "$group", Value: bson.D{
 				{Key: "_id", Value: bson.D{
 					{Key: "categoryId", Value: "$category._id"},
-					{Key: "categoryName", Value: "$category.name"},
+					{Key: "categoryNameVi", Value: "$category.nameVi"},
+					{Key: "categoryNameEn", Value: "$category.nameEn"},
 					{Key: "categoryImage", Value: "$category.image"},
 				}},
 				{Key: "manufacturers", Value: bson.D{{Key: "$addToSet", Value: "$manufacturer"}}},
@@ -106,7 +107,8 @@ func (c *categoryRepository) GetCategories() ([]*models.CategoryRequest, error) 
 			{Key: "$project", Value: bson.D{
 				{Key: "category", Value: bson.D{
 					{Key: "_id", Value: "$_id.categoryId"},
-					{Key: "name", Value: "$_id.categoryName"},
+					{Key: "nameVi", Value: "$_id.categoryNameVi"},
+					{Key: "nameEn", Value: "$_id.categoryNameEn"},
 					{Key: "image", Value: "$_id.categoryImage"},
 				}},
 				{Key: "manufacturers", Value: 1},

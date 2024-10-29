@@ -15,6 +15,7 @@ type (
 	ProductService interface {
 		NewProduct(product *models.Product) ([]ErrorResponse, error)
 		GetProductByID(id string) (*models.Product, error)
+		GetProductsByIDs(ids []string) ([]*models.Product, error)
 		UpdateProduct(product *models.Product) ([]ErrorResponse, error)
 		DeleteProduct(id string) error
 		GetListProductByPagination(page int, limit int) ([]*models.Product, error)
@@ -22,6 +23,7 @@ type (
 		UpdateList(id string, status int) error
 		GetOnSaleProducts(page, limit int) ([]*models.Product, error)
 		GetProductsByCategoryID(page, limit int, categoryID, manufacturer string) ([]*models.Product, error)
+		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
 	}
 	productService struct {
 		repo repositories.ProductRepository
@@ -80,6 +82,14 @@ func (s *productService) GetProductByID(id string) (*models.Product, error) {
 	return product, nil
 }
 
+func (s *productService) GetProductsByIDs(ids []string) ([]*models.Product, error) {
+	products, err := s.repo.GetByIDs(ids)
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
 func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorResponse, error) {
 	var errors []ErrorResponse
 	if product.ID.IsZero() {
@@ -92,19 +102,22 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 	}
 
 	updateFields := map[string]interface{}{
-		"_id":            product.ID,
-		"product_name":   product.ProductName,
-		"description":    product.Description,
-		"default_image":  product.DefaultImage,
-		"price":          product.Price,
-		"category.name":  product.Category.Name,
-		"variants":       product.Variants,
-		"feedbacks":      product.Feedbacks,
-		"dimensions":     product.Dimensions,
-		"manufacturer":   product.Manufacturer,
-		"specifications": product.Specifications,
-		"warranty":       product.Warranty,
-		"weight":         product.Weight,
+		"_id":             product.ID,
+		"nameVi":          product.NameVi,
+		"nameEn":          product.NameEn,
+		"descriptionVi":   product.DescriptionVi,
+		"descriptionEn":   product.DescriptionEn,
+		"default_image":   product.DefaultImage,
+		"price":           product.Price,
+		"category.nameVi": product.Category.NameVi,
+		"category.nameEn": product.Category.NameEn,
+		"variants":        product.Variants,
+		"feedbacks":       product.Feedbacks,
+		"dimensions":      product.Dimensions,
+		"manufacturer":    product.Manufacturer,
+		"specifications":  product.Specifications,
+		"warranty":        product.Warranty,
+		"weight":          product.Weight,
 	}
 
 	err := pro.repo.Update(&updateFields)
@@ -195,4 +208,17 @@ func (s *productService) GetProductsByCategoryID(page, limit int, categoryID, ma
 	}
 
 	return products, nil
+}
+
+func (s *productService) GetSimilarProducts(productId string, limit int64) ([]*models.Product, error) {
+	if productId == "" {
+		return nil, errors.New("product ID is required")
+	}
+
+	similarProducts, err := s.repo.GetSimilarProducts(productId, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	return similarProducts, nil
 }

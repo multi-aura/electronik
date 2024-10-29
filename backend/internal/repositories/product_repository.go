@@ -5,7 +5,6 @@ import (
 	"electronik/internal/databases"
 	"electronik/internal/models"
 	"errors"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,11 +17,13 @@ type (
 	// ProductRepository nhúng interface Repository
 	ProductRepository interface {
 		Repository[models.Product]
+		GetByIDs(ids []string) ([]*models.Product, error)
 		GetProductsByPagination(limit int, skip int) ([]*models.Product, error)
 		GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error)
 		UpdateStatus(id string, status int) error
 		GetOnSaleProducts(limit int, skip int) ([]*models.Product, error)
 		GetProductsByCategoryID(limit, skip int, categoryID, manufacturer string) ([]*models.Product, error)
+		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
 	}
 
 	productRepository struct {
@@ -39,8 +40,6 @@ func NewProductRepository(db *databases.MongoDB) ProductRepository {
 	}
 }
 
-// Cài các phương thức trong productRepository
-// 1. Get product
 func (pro *productRepository) GetByID(id string) (*models.Product, error) {
 	var product models.Product
 	objectID, err := primitive.ObjectIDFromHex(id)
@@ -54,20 +53,50 @@ func (pro *productRepository) GetByID(id string) (*models.Product, error) {
 
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return &models.Product{}, nil
+			return nil, err
 		}
 		return nil, err
 	}
 	return &product, nil
 }
 
-// 2. create product
+func (pro *productRepository) GetByIDs(ids []string) ([]*models.Product, error) {
+	var products []*models.Product
+	objectIDs := make([]primitive.ObjectID, 0, len(ids))
+
+	for _, id := range ids {
+		objectID, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return nil, err
+		}
+		objectIDs = append(objectIDs, objectID)
+	}
+
+	if len(objectIDs) == 0 {
+		return nil, errors.New("no valid ObjectIDs provided")
+	}
+
+	filter := bson.M{"variants._id": bson.M{"$in": objectIDs}}
+
+	// Truy vấn MongoDB
+	cursor, err := pro.collection.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	if err = cursor.All(context.Background(), &products); err != nil {
+		return nil, err
+	}
+
+	return products, nil
+}
+
 func (pro *productRepository) Create(entity *models.Product) error {
 	_, err := pro.collection.InsertOne(context.Background(), entity)
 	return err
 }
 
-// 3. update
 func (pro *productRepository) Update(entity *map[string]interface{}) error {
 	id, ok := (*entity)["_id"].(primitive.ObjectID)
 	if !ok {
@@ -120,13 +149,12 @@ func (pro *productRepository) Update(entity *map[string]interface{}) error {
 	}
 
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("no document found with the provided _id: %v", id)
+		return errors.New("no document found")
 	}
 
 	return nil
 }
 
-// 4. delete product
 func (pro *productRepository) Delete(id string) error {
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -147,7 +175,6 @@ func (pro *productRepository) Delete(id string) error {
 	return nil
 }
 
-// 5. Get product by pagination
 func (pro *productRepository) GetProductsByPagination(limit int, skip int) ([]*models.Product, error) {
 	if limit <= 0 {
 		return []*models.Product{}, nil
@@ -178,8 +205,6 @@ func (pro *productRepository) GetProductsByPagination(limit int, skip int) ([]*m
 	return listProduct, nil
 }
 
-//5. search products
-
 func (pro *productRepository) GetProductsBySearch(limit int, skip int, query string) ([]*models.Product, error) {
 	if limit <= 0 {
 		return []*models.Product{}, nil
@@ -194,8 +219,10 @@ func (pro *productRepository) GetProductsBySearch(limit int, skip int, query str
 	} else {
 		filter = bson.M{
 			"$or": []bson.M{
-				{"product_name": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
-				{"description": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
+				{"nameVi": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
+				{"nameEn": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
+				{"descriptionVi": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
+				{"descriptionEn": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
 			},
 		}
 	}
@@ -337,4 +364,46 @@ func (pro *productRepository) GetProductsByCategoryID(limit, skip int, categoryI
 	}
 
 	return results, nil
+}
+
+func (pro *productRepository) GetSimilarProducts(productId string, limit int64) ([]*models.Product, error) {
+	var product models.Product
+	objectID, err := primitive.ObjectIDFromHex(productId)
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.M{"_id": objectID}
+	err = pro.collection.FindOne(context.Background(), filter).Decode(&product)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, errors.New("no document found")
+		}
+		return nil, err
+	}
+
+	similarProducts := make([]*models.Product, 0)
+
+	queryFilter := bson.M{
+		"category._id": product.Category.ID,
+		"_id":          bson.M{"$ne": objectID},
+	}
+
+	opts := options.Find().SetSort(bson.D{
+		{Key: "sale.discount_percentage", Value: -1},
+		{Key: "price", Value: -1},
+	}).SetLimit(limit)
+
+	cursor, err := pro.collection.Find(context.Background(), queryFilter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	if err = cursor.All(context.Background(), &similarProducts); err != nil {
+		return nil, err
+	}
+
+	return similarProducts, nil
 }

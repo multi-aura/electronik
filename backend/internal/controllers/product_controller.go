@@ -5,6 +5,7 @@ import (
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
 	"log"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -294,5 +295,89 @@ func (pro *ProductController) GetProductsByCategoryID(c *fiber.Ctx) error {
 		Status:  fiber.StatusOK,
 		Message: "Products retrieved successfully",
 		Data:    products,
+	})
+}
+
+func (pro *ProductController) GetProductsByIDs(c *fiber.Ctx) error {
+	var request struct {
+		IDs []string `json:"ids"`
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	if len(request.IDs) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "IDs list cannot be empty",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	products, err := pro.service.GetProductsByIDs(request.IDs)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: err.Error(),
+			// Message: "Failed to retrieve products",
+			Error: "StatusInternalServerError",
+		})
+	}
+
+	if len(products) == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusNotFound,
+			Message: "No products found for the provided IDs",
+			Error:   "StatusNotFound",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Products retrieved successfully",
+		Data:    products,
+	})
+}
+
+func (pro *ProductController) GetSimilarProducts(c *fiber.Ctx) error {
+	productId := c.Query("id")
+	limitStr := c.Query("limit")
+	var limit int64 = 4
+
+	if limitStr != "" {
+		var err error
+		limit, err = strconv.ParseInt(limitStr, 10, 64)
+		if err != nil || limit <= 0 {
+			limit = 4
+		}
+	}
+
+	similarProducts, err := pro.service.GetSimilarProducts(productId, limit)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusNotFound,
+			Message: err.Error(),
+			// Message: "Failed to retrieve similar products",
+			Error: "StatusNotFound",
+		})
+	}
+
+	if len(similarProducts) == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusNotFound,
+			Message: "No similar products found",
+			Error:   "StatusNotFound",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Retrieved similar products successfully",
+		Data:    similarProducts,
 	})
 }
