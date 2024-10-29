@@ -41,47 +41,30 @@
 - Tạo trải nghiệm mua sắm thuận tiện cho người dùng thông qua một giao diện thân thiện và dễ sử dụng.
 - Đảm bảo tính an toàn và bảo mật trong các giao dịch trực tuyến.
 
-<p>Sự cần thiết:</p>
-- Hiện tại, các mạng xã hội chủ yếu tập trung vào việc cung cấp nội dung bằng văn bản, hình ảnh và video, mà chưa hỗ trợ tốt cho người dùng muốn tiếp cận thông tin bằng âm thanh. Điều này khiến cho người dùng gặp khó khăn, đặc biệt là những người khiếm thị hoặc người lớn tuổi.
-- Multi Aura ra đời để giải quyết vấn đề này, bằng cách cung cấp giải pháp chuyển đổi văn bản thành âm thanh. Điều này giúp mọi người, bất kể khả năng đọc, đều có thể tham gia và chia sẻ nội dung một cách dễ dàng và dễ dàng hòa nhập vào một môi trường mà tại đó không có bất kì rào cản về ngôn ngữ.
-
 -----------------------------------------------
 
 ### Yêu cầu 
 <p>AI: api text to sound</p>
 <p>Web</p>
-<p>Ngôn ngữ: Java, PHP, Javascript</p>
-<p>Framework: Bootstrap,  PHP laravel, Java spring boot</p>
+<p>Ngôn ngữ: Go, Javascript</p>
+<p>Framework: Bootstrap,  Golang , Reacjs</p>
 -----------------------------------------------
 
 | Số thứ tự | Nghiệp vụ  | Phân công  | Tiến độ |
 |:---------:|:------------:|:---------------:|:-----:|
 | 1 | Login/Logout  |  | |
 | 2 | Register  | | |
-| 3 | CRUD Post  | |  |
-| 4 | Share Post  | | |
-| 5 | Save Post  | | |
-| 6 | Comment Post  | |  |
-| 7 | Post Reaction | | |
-| 8 | Chat (CRUD Message) | |  |
-| 9 | Chat (Message Reaction)  ||  |
-| 10 | Add/Delete Friend  ||  |
-| 11 | Manager Profile  ||  |
+| 3 | Danh mục sản phẩm  | |  |
+| 4 | Tìm kiếm và bộ lọc  | | |
+| 5 | Giỏ hàng và thanh toán  | | |
+| 6 | Đánh giá và nhận xét  | |  |
+| 7 | Tài khoản người dùng | | |
+| 8 | Tin tức và hướng dẫn | |  |
+| 9 | Đề xuất sản phẩm  ||  |
+| 10 | Tạo chiến dịch sale  ||  |
+| 11 | Để xuất bán sản phẩm combo  ||  |
 | 12 | Search  ||  |
 
-
-
------------------------------------------------
-<p>Winform</p>
-<p>Ngôn ngữ: C#, Javascript</p>
-<p>Framework: ADO.NET</p>
-
-| Số thứ tự | Nghiệp vụ  | Phân công  | Tiến độ |
-|:---------:|:------------:|:---------------:|:-----:|
-| 1 | Login/Logout  |  |   |
-| 2 | Register  | | |
-| 6 | Chat (CRUD Message)  ||  |
-| 7 | Chat (Message Reaction) || |
 
 
 -------------------------------------------------
