@@ -25,7 +25,7 @@ func NewCategoryService(repo repositories.CategoryRepository) CategoryService {
 
 func (c *categoryService) Create(product *models.Category) error {
 	// Kiểm tra nếu danh mục đã tồn tại hay chưa (nếu cần)
-	if product.Name == "" {
+	if product.NameVi == "" && product.NameEn == "" {
 		return errors.New("category name cannot be empty")
 	}
 	return c.repo.Create(product)

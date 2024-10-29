@@ -17,6 +17,7 @@ type User struct {
 	Avatar            string             `bson:"avatar" json:"avatar" form:"avatar"`
 	IsAdmin           bool               `bson:"isAdmin" json:"isAdmin" form:"isAdmin"`
 	DeliveryAddresses []DeliveryAddress  `bson:"deliveryAddresses" json:"deliveryAddresses" form:"deliveryAddresses"`
+	Bag               []string           `bson:"bag" json:"bag" form:"bag"`
 }
 
 type LoginRequest struct {
@@ -33,29 +34,50 @@ type RegisterRequest struct {
 }
 
 func (u *User) ToMap() map[string]interface{} {
+	deliveryAddresses := make([]map[string]interface{}, len(u.DeliveryAddresses))
+	for i, address := range u.DeliveryAddresses {
+		deliveryAddresses[i] = address.ToMap()
+	}
+
 	return map[string]interface{}{
-		"_id":      u.ID,
-		"username": u.Username,
-		"email":    u.Email,
-		"password": u.Password,
-		"phone":    u.PhoneNumber,
-		"gender":   u.Gender,
-		"avatar":   u.Avatar,
-		"isAdmin":  u.IsAdmin,
+		"_id":               u.ID,
+		"username":          u.Username,
+		"email":             u.Email,
+		"password":          u.Password,
+		"phone":             u.PhoneNumber,
+		"gender":            u.Gender,
+		"avatar":            u.Avatar,
+		"isAdmin":           u.IsAdmin,
+		"deliveryAddresses": deliveryAddresses,
+		"bag":               u.Bag,
 	}
 }
 
 func (u *User) FromMap(data map[string]interface{}) (*User, error) {
+	deliveryAddressesData, ok := data["deliveryAddresses"].([]interface{})
+	if !ok {
+		deliveryAddressesData = []interface{}{}
+	}
+
+	deliveryAddresses := make([]DeliveryAddress, len(deliveryAddressesData))
+	for i, addressData := range deliveryAddressesData {
+		if addressMap, ok := addressData.(map[string]interface{}); ok {
+			address, _ := (&DeliveryAddress{}).FromMap(addressMap)
+			deliveryAddresses[i] = *address
+		}
+	}
 
 	return &User{
-		ID:          utils.GetObjectID(data, "_id"),
-		Username:    utils.GetString(data, "username"),
-		Email:       utils.GetString(data, "email"),
-		Password:    utils.GetString(data, "password"),
-		PhoneNumber: utils.GetString(data, "phone"),
-		Gender:      utils.GetString(data, "gender"),
-		Avatar:      utils.GetString(data, "avatar"),
-		IsAdmin:     utils.GetBool(data, "isAdmin"),
+		ID:                utils.GetObjectID(data, "_id"),
+		Username:          utils.GetString(data, "username"),
+		Email:             utils.GetString(data, "email"),
+		Password:          utils.GetString(data, "password"),
+		PhoneNumber:       utils.GetString(data, "phone"),
+		Gender:            utils.GetString(data, "gender"),
+		Avatar:            utils.GetString(data, "avatar"),
+		IsAdmin:           utils.GetBool(data, "isAdmin"),
+		DeliveryAddresses: deliveryAddresses,
+		Bag:               utils.GetStringArray(data, "bag"),
 	}, nil
 }
 

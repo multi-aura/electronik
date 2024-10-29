@@ -8,9 +8,10 @@ import (
 
 type (
 	Category struct {
-		ID    primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
-		Name  string             `bson:"name" json:"name" form:"name"`
-		Image string             `bson:"image" json:"image" form:"image"`
+		ID     primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
+		NameVi string             `bson:"nameVi" json:"nameVi" form:"nameVi"`
+		NameEn string             `bson:"nameEn" json:"nameEn" form:"nameEn"`
+		Image  string             `bson:"image" json:"image" form:"image"`
 	}
 
 	CategoryRequest struct {
@@ -19,17 +20,21 @@ type (
 	}
 
 	Variant struct {
-		ID     primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
-		Color  string             `bson:"color" json:"color" validate:"required" form:"color"`
-		Stock  int                `bson:"stock" json:"stock" validate:"required,gte=0" form:"stock"`
-		Price  float64            `bson:"price" json:"price" validate:"required,gt=0" form:"price"`
-		Weight string             `bson:"weight" json:"weight" validate:"required" form:"weight"`
-		SKU    string             `bson:"sku" json:"sku" validate:"required" form:"sku"`
-		Images []Image            `bson:"images" json:"images" form:"images"`
+		ID            primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
+		Color         string             `bson:"color" json:"color" validate:"required" form:"color"`
+		Stock         int                `bson:"stock" json:"stock" validate:"required,gte=0" form:"stock"`
+		Price         float64            `bson:"price" json:"price" validate:"required,gt=0" form:"price"`
+		Weight        string             `bson:"weight" json:"weight" validate:"required" form:"weight"`
+		SKU           string             `bson:"sku" json:"sku" validate:"required" form:"sku"`
+		Images        []Image            `bson:"images" json:"images" form:"images"`
+		DescriptionVi string             `bson:"descriptionVi" json:"descriptionVi" validate:"required" form:"descriptionVi"`
+		DescriptionEn string             `bson:"descriptionEn" json:"descriptionEn" validate:"required" form:"descriptionEn"`
 	}
 
 	Image struct {
-		URL string `bson:"url" json:"url" validate:"required,url" form:"url"`
+		ID        primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
+		URL       string             `bson:"url" json:"url" validate:"required,url" form:"url"`
+		IsDefault bool               `bson:"isDefault" json:"isDefault" form:"isDefault"`
 	}
 
 	Feedback struct {
@@ -49,7 +54,8 @@ type (
 
 	Sale struct {
 		SaleID          primitive.ObjectID `bson:"sale_id" json:"sale_id" form:"sale_id"`
-		SaleName        string             `bson:"sale_name" json:"sale_name" validate:"required" form:"sale_name"`
+		SaleNameVi      string             `bson:"sale_nameVi" json:"sale_nameVi" validate:"required" form:"sale_nameVi"`
+		SaleNameEn      string             `bson:"sale_nameEn" json:"sale_nameEn" validate:"required" form:"sale_nameEn"`
 		DiscountPercent int                `bson:"discount_percentage" json:"discount_percentage" validate:"required" form:"discount_percentage"`
 		StartDate       time.Time          `bson:"start_date" json:"start_date" validate:"required" form:"start_date"`
 		EndDate         time.Time          `bson:"end_date" json:"end_date" validate:"required" form:"end_date"`
@@ -57,8 +63,10 @@ type (
 
 	Product struct {
 		ID             primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty" form:"_id"`
-		ProductName    string             `bson:"product_name" json:"product_name" validate:"required" form:"product_name"`
-		Description    string             `bson:"description" json:"description" validate:"required" form:"description"`
+		NameVi         string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
+		NameEn         string             `bson:"nameEn" json:"nameEn" validate:"required" form:"nameEn"`
+		DescriptionVi  string             `bson:"descriptionVi" json:"descriptionVi" validate:"required" form:"descriptionVi"`
+		DescriptionEn  string             `bson:"descriptionEn" json:"descriptionEn" validate:"required" form:"descriptionEn"`
 		CreatedAt      time.Time          `bson:"created_at" json:"created_at" form:"created_at"`
 		DefaultImage   string             `bson:"default_image" json:"default_image" validate:"required,url" form:"default_image"`
 		Price          float64            `bson:"price" json:"price" validate:"required,gt=0" form:"price"`
