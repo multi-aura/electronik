@@ -1,4 +1,4 @@
-<h2>Tên nhóm: Multi Gudboy</h2>
+<h2>Tên nhóm: Workajolibe</h2>
 <h3 style="text-align:center">Electronik</h3>
 
 -----------------------------------------------
@@ -87,30 +87,4 @@
 -------------------------------------------------
 
 <h2>Các quy trình nghiệp vụ</h2>
-
-<p>Quy trình đăng ký và xác thực người dùng:</p>
-
-- Mô tả: Người dùng mới cần phải đăng ký tài khoản bằng email hoặc thông tin mạng xã hội, sau đó hệ thống sẽ gửi email xác nhận để kích hoạt tài khoản.
-- Quy trình:
-  
-  1 Người dùng nhập thông tin đăng ký.
-    
-  2 Hệ thống kiểm tra thông tin người dùng nhập. 
-  
-  3 Hệ thống gửi email xác thực. 
-  
-  4 Sau khi xác thực, người dùng có thể đăng nhập vào hệ thống.
-
-<p>Quy trình đăng nhập:</p>
-
-- Mô tả: Người dùng sau khi đăng kí tài khoản có thể đăng nhập.
-- Quy trình:
-  
-  1 Người dùng nhập thông tin đăng nhập.
-  
-  2 Hệ thống kiểm tra thông tin người dùng nhập.
-  
-  3 Sau khi kiểm tra nếu:
-    - Thành công: người dùng sẽ được chuyển đến trang chủ.
-    - Thất bại: người dùng sẽ nhận được thông báo kiểm tra lại thông tin.
 
