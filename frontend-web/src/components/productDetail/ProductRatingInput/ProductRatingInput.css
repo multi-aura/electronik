@@ -1,0 +1,132 @@
+.product-rating-input {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.product-rating-input:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.rating-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.stars svg {
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.stars svg:hover {
+    color: #ff9800;
+}
+
+.rating-description {
+    font-size: 16px;
+    color: #28a745;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.review-input-container {
+    margin-top: 15px;
+}
+
+.review-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    min-height: 80px;
+    font-size: 15px;
+    transition: border 0.3s ease;
+}
+
+.review-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.image-upload-container {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.image-upload {
+    display: flex;
+    align-items: center;
+    border: 1px dashed #007bff;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #007bff;
+    transition: all 0.3s ease;
+}
+
+.image-upload:hover {
+    background-color: #f0f8ff;
+    border-color: #0056b3;
+}
+
+.upload-icon {
+    margin-right: 5px;
+}
+
+.file-input {
+    display: none;
+}
+
+.uploaded-image {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.submit-button {
+    margin-top: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+
+.submit-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
