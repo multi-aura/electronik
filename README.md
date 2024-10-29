@@ -44,8 +44,7 @@
 -----------------------------------------------
 
 ### Yêu cầu 
-<p>AI: api text to sound</p>
-<p>Web</p>
+<p>Website ứng dụng thuật toán EMHUN vào đề xuất bán sản hàng</p>
 <p>Ngôn ngữ: Go, Javascript</p>
 <p>Framework: Bootstrap,  Golang , Reacjs</p>
 -----------------------------------------------
