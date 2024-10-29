@@ -1,0 +1,105 @@
+/* FilterBar.css */
+.filter-bar {
+  padding: 5px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-title {
+  font-size: 25px;
+  font-weight: bold;
+  color: #333;
+  text-align: left;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  position: relative; /* Cho phép dropdown được đặt ở đúng vị trí */
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0;
+}
+
+.filter-icon {
+  margin-right: 5px;
+}
+
+.info-icon {
+  margin-left: 5px;
+  color: #888;
+}
+
+.price-filter-popover, .filter-dropdown {
+  position: absolute; /* Đặt dropdown bên dưới nút lọc tương ứng */
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 10;
+  min-width: 150px; /* Đảm bảo dropdown đủ rộng */
+}
+
+.price-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.price-slider input[type="range"] {
+  flex-grow: 1;
+}
+
+.price-filter-actions, .filter-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.close-button, .apply-button, .dropdown-item {
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.apply-button {
+  background-color: #e53935;
+  color: #fff;
+  border: none;
+}
+
+.close-button {
+  background-color: #f8d7da;
+  color: #e53935;
+  border: none;
+}
+
+.dropdown-item {
+  background-color: #f7f7f7;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #e0e0e0;
+}
