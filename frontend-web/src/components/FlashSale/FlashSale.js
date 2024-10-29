@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import './FlashSale.css';
-
+import { Link } from 'react-router-dom';
 const FlashSale = () => {
   const flashSaleItems = [
     { name: 'Laptop gaming ASUS Vivobook 16X', price: '29.990.000₫', discount: '-1%', imgSrc: 'https://product.hstatic.net/200000722513/product/ava1_fa4a852e3b5b40978022459ce8d8562a_medium.png' },
@@ -25,9 +25,9 @@ const FlashSale = () => {
 
   const handlePageChange = (newPage) => {
     if (newPage > totalPages) {
-      setCurrentPage(1); 
+      setCurrentPage(1);
     } else if (newPage < 1) {
-      setCurrentPage(totalPages); 
+      setCurrentPage(totalPages);
     } else {
       setCurrentPage(newPage);
     }
@@ -44,14 +44,16 @@ const FlashSale = () => {
       <div className="row position-relative">
         {currentItems.map((item, index) => (
           <div key={index} className="col-sm-6 col-md-4 col-lg-2 mb-4">
-            <div className="card h-100 border-0 shadow-sm">
-              <img src={item.imgSrc} className="card-img-top" alt={item.name} style={{ height: '150px', objectFit: 'cover' }} />
-              <div className="card-body text-center">
-                <h6 className="card-title text-truncate">{item.name}</h6>
-                <p className="card-text text-danger fw-bold">{item.price}</p>
-                <span className="badge bg-danger text-white">{item.discount}</span>
+            <Link to={`/product/123`} className="text-decoration-none">
+              <div className="card h-100 border-0 shadow-sm">
+                <img src={item.imgSrc} className="card-img-top" alt={item.name} style={{ height: '150px', objectFit: 'cover' }} />
+                <div className="card-body text-center">
+                  <h6 className="card-title text-truncate">{item.name}</h6>
+                  <p className="card-text text-danger fw-bold">{item.price}</p>
+                  <span className="badge bg-danger text-white">{item.discount}</span>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         ))}
       </div>

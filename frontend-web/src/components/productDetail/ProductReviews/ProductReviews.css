@@ -1,0 +1,38 @@
+.input-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc; /* Đường gạch chân */
+    padding: 8px 0;
+    width: 100%;
+}
+
+.input-container input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    height: 50px;
+    border: none;
+    border-radius: 10px;
+    position: relative;
+}
+
+.input-container .send-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff; /* Màu của icon gửi */
+    font-size: 20px; /* Kích thước icon */
+    position:absolute;
+    top:  0px;
+    right: 5px;
+}
+
+.input-container input:focus {
+    border-color: #007bff;
+}
+
+.input-container:hover {
+    border-bottom-color: #007bff; /* Màu gạch chân khi hover */
+}

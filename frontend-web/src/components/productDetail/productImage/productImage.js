@@ -1,11 +1,17 @@
-// src/components/productDetail/productImage/ProductImage.js
 import React from 'react';
 
-const ProductImage = ({ imageUrl, altText }) => (
-  <div className="product-image">
-    <img src={imageUrl} alt={altText} className="img-fluid" style={{ maxHeight: '500px' }} />
-  </div>
-);
+const ProductImage = ({ imageUrl }) => {
+    return (
+        <div className="product-image" style={{ width: '100%', height: '400px', overflow: 'hidden' }}>
+            <img 
+                src={imageUrl} 
+                alt="Product Main" 
+                className="img-fluid" 
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+            />
+        </div>
+    );
+};
+
 
 export default ProductImage;
-pp

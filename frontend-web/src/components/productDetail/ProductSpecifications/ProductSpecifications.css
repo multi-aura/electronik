@@ -1,0 +1,14 @@
+.product-specifications {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.product-specifications h4 {
+    color: #333;
+}
+
+.product-specifications .table {
+    margin: 0;
+}
