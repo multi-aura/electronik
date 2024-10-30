@@ -1,5 +1,5 @@
 /* ProductCardListpage.css */
-.product-card {
+.product-card-listpage {
   width: 100%;
   max-width: 300px;
   border: 1px solid #ddd;
@@ -19,7 +19,7 @@
   transform: scale(1.05);
 }
 
-.image-container {
+.image-container-listpage {
   position: relative;
   width: 100%;
   display: flex;
@@ -28,7 +28,7 @@
   margin-bottom: 10px;
 }
 
-.product-image {
+.product-image-listpage {
   width: 100%;
   height: auto;
   object-fit: contain;
@@ -47,7 +47,7 @@
   border-radius: 4px;
 }
 
-.product-name {
+.product-name-listpage {
   font-size: 16px;
   font-weight: bold;
   color: #333;

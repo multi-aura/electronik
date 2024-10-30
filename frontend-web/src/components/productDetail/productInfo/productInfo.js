@@ -26,9 +26,9 @@ function ProductInfo({
       <h2>{name}</h2>
       
       <Badge bg="warning" className="mb-2" style={{width:"30%"}}>4.8 ★ Đánh giá (123)</Badge>
-      <p className="text-muted">{description}</p>
+      <p className="text-muted" style={{margin:"0px"}}>{description}</p>
 
-      <div className="price-section mt-3">
+      <div className="mt-3">
         {oldPrice && (
           <span className="old-price text-decoration-line-through me-2 text-muted">
             {oldPrice.toLocaleString()}đ
@@ -52,7 +52,7 @@ function ProductInfo({
       <hr />
 
       {/* Lựa Chọn Màu Sắc */}
-      <div className="color-section mt-3">
+      <div className="color-section mt-2">
         <strong>Màu sắc:</strong> {selectedColor.label} - <em>{selectedColor.description}</em>
         <div className="d-flex gap-3 mt-3">
           {colorOptions.map((colorOption, index) => (

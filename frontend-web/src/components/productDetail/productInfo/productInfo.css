@@ -1,31 +1,38 @@
 .product-info h2 {
-    font-weight: bold;
-  }
-  
-  .price-section .old-price {
-    color: gray;
-  }
-  
-  .price-section .new-price {
-    font-size: 1.5rem;
-  }
-  
-  .size-section .btn, .color-section .btn {
-    width: 45px;
-    height: 45px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .size-section .btn.active, .color-section .btn.active {
-    border: 2px solid black;
-  }
-  
-  .quantity-section input {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 60px;
-    text-align: center;
-  }
-  
+  font-weight: bold;
+}
+
+.product-info .price-section .old-price {
+  color: gray;
+}
+
+.product-info .price-section .new-price {
+  font-size: 1.5rem;
+}
+
+.product-info .size-section .btn,
+.color-section .btn {
+  width: 45px;
+  height: 45px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.size-section .btn.active,
+.color-section .btn.active {
+  border: 2px solid black;
+}
+
+.product-info .price-section_info {
+  margin: 0px;
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.quantity-section input {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 60px;
+  text-align: center;
+}

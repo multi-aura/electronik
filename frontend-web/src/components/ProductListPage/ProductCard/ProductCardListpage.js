@@ -4,15 +4,15 @@ import "./ProductCardListpage.css";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="product-card">
-      <div className="image-container">
-        <img src={product.image} alt={product.name} className="product-image" />
+    <div className="product-card-listpage">
+      <div className="image-container-listpage">
+        <img src={product.image} alt={product.name} className="product-image-listpage" />
         {product.discount && (
           <div className="discount-badge">-{product.discount}%</div>
         )}
       </div>
 
-      <h3 className="product-name">{product.name}</h3>
+      <h3 className="product-name-listpage">{product.name}</h3>
 
       <div className="product-specs">
         {product.specs.map((spec, index) => (
