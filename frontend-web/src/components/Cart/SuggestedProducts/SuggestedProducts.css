@@ -1,0 +1,158 @@
+.suggested-products-slider {
+  padding: 0px 0px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.slider-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.slider-item {
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 90%; /* Đảm bảo mỗi mục chiếm tối đa 90% chiều rộng */
+  margin: 0 auto; /* Căn giữa mục trong slider */
+  box-sizing: border-box;
+}
+
+.slider-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-cart {
+  width: 100%; /* Giới hạn chiều rộng của hình ảnh */
+  max-width: 150px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+.product-info {
+  margin-top: 10px;
+}
+
+.product-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Giới hạn chiều rộng của tên sản phẩm */
+}
+
+.product-price {
+  font-size: 1.1rem;
+  color: #e60023;
+  font-weight: bold;
+}
+
+.product-variants {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 10px 0;
+}
+
+.variant-image {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  object-fit: cover;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.variant-image:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quick-add {
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #007bff;
+  background: none;
+  border: 1px solid #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.quick-add:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* CSS cho nút điều hướng */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.prev-arrow {
+  left: -35px;
+}
+
+.next-arrow {
+  right: -35px;
+}
+
+.arrow:hover {
+  color: #007bff;
+}
+.suggested-products-slider {
+  padding: 10px 0;
+  position: relative;
+  overflow: hidden; 
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  z-index: 1; 
+  background-color: rgba(255, 255, 255, 0.8); 
+  padding: 5px;
+  border-radius: 50%;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.prev-arrow {
+  left: 10px; /* Điều chỉnh vị trí vào trong slider */
+}
+
+.next-arrow {
+  right: 10px; /* Điều chỉnh vị trí vào trong slider */
+}
+
+.arrow:hover {
+  color: #007bff;
+  background-color: rgba(0, 123, 255, 0.2);
+}

@@ -1,0 +1,25 @@
+.free-shipping-progress {
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .free-shipping-text {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 5px;
+  }
+  
+  .progress-bar {
+    position: relative;
+    height: 15px; 
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .progress {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease; 
+  }
+  
