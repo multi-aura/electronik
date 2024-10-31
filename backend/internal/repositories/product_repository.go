@@ -24,6 +24,7 @@ type (
 		GetOnSaleProducts(limit int, skip int) ([]*models.Product, error)
 		GetProductsByCategoryID(limit, skip int, categoryID, manufacturer string) ([]*models.Product, error)
 		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
+		UpdateVariantStock(variantID string, quantityPurchased int) error
 	}
 
 	productRepository struct {
@@ -219,10 +220,10 @@ func (pro *productRepository) GetProductsBySearch(limit int, skip int, query str
 	} else {
 		filter = bson.M{
 			"$or": []bson.M{
-				{"nameVi": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
-				{"nameEn": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
-				{"descriptionVi": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
-				{"descriptionEn": bson.M{"$regex": query, "$options": "i"}},  // Tìm kiếm trong mô tả sản phẩm
+				{"nameVi": bson.M{"$regex": query, "$options": "i"}},        // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
+				{"nameEn": bson.M{"$regex": query, "$options": "i"}},        // Tìm kiếm theo tên sản phẩm (không phân biệt chữ hoa, chữ thường)
+				{"descriptionVi": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm trong mô tả sản phẩm
+				{"descriptionEn": bson.M{"$regex": query, "$options": "i"}}, // Tìm kiếm trong mô tả sản phẩm
 			},
 		}
 	}
@@ -406,4 +407,31 @@ func (pro *productRepository) GetSimilarProducts(productId string, limit int64) 
 	}
 
 	return similarProducts, nil
+}
+
+func (pro *productRepository) UpdateVariantStock(variantID string, quantityPurchased int) error {
+	varID, err := primitive.ObjectIDFromHex(variantID)
+	if err != nil {
+		return errors.New("invalid variant ID")
+	}
+
+	filter := bson.M{
+		"variants._id": varID,
+	}
+
+	update := bson.M{
+		"$inc": bson.M{
+			"variants.$.stock": -quantityPurchased,
+		},
+	}
+
+	result, err := pro.collection.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return err
+	}
+	if result.MatchedCount == 0 {
+		return errors.New("variant not found in product")
+	}
+
+	return nil
 }
