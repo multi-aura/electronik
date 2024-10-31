@@ -34,11 +34,11 @@ func NewUserService(repo repositories.UserRepository) UserService {
 }
 
 func (s *userService) GetByID(id string) (*models.User, error) {
-    user, err := s.repo.GetByID(id)
-    if err != nil {
-        return nil, err
-    }
-    return user, nil
+	user, err := s.repo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (s *userService) Register(req *models.RegisterRequest) error {
@@ -96,7 +96,7 @@ func (s *userService) Login(username, password string) (*models.User, error) {
 
 	if isValid := validators.IsValidateEmail(username); isValid {
 		user, err = s.repo.GetUserByEmail(username)
-		if err != nil {
+		if err != nil || user == nil {
 			return nil, errors.New("user not found with this email")
 		}
 	} else {
