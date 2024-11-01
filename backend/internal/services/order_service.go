@@ -1,7 +1,6 @@
 package services
 
 import (
-	"context"
 	"electronik/internal/models"
 	"electronik/internal/repositories"
 	"errors"
@@ -29,38 +28,7 @@ func NewOrderService(repo repositories.OrderRepository, productRepo repositories
 }
 
 func (s *orderService) Create(order *models.Order) error {
-	session, err := s.repo.StartSession()
-	if err != nil {
-		return err
-	}
-	defer session.EndSession(context.Background())
-
-	err = session.StartTransaction()
-	if err != nil {
-		return err
-	}
-
-	err = s.repo.Create(order)
-	if err != nil {
-		_ = session.AbortTransaction(context.Background())
-		return err
-	}
-
-	for _, item := range order.Details {
-		err := s.productRepo.UpdateVariantStock(item.VariantID.Hex(), item.Quantity)
-		if err != nil {
-			_ = session.AbortTransaction(context.Background())
-			return err
-		}
-	}
-
-	err = session.CommitTransaction(context.Background())
-	if err != nil {
-		_ = session.AbortTransaction(context.Background())
-		return err
-	}
-
-	return nil
+	return s.repo.Create(order)
 }
 
 func (s *orderService) Delete(id string) error {

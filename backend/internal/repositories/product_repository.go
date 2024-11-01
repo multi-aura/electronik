@@ -7,6 +7,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/bwmarrin/snowflake"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,6 +26,7 @@ type (
 		GetProductsByCategoryID(limit, skip int, categoryID, manufacturer string) ([]*models.Product, error)
 		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
 		UpdateVariantStock(variantID string, quantityPurchased int) error
+		UpdateSerialForAllVariants() error
 	}
 
 	productRepository struct {
@@ -94,8 +96,74 @@ func (pro *productRepository) GetByIDs(ids []string) ([]*models.Product, error) 
 }
 
 func (pro *productRepository) Create(entity *models.Product) error {
-	_, err := pro.collection.InsertOne(context.Background(), entity)
+	entity.ID = primitive.NewObjectID()
+
+	if entity.Category.ID == primitive.NilObjectID {
+		entity.Category.ID = primitive.NewObjectID()
+	}
+
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return err
+	}
+
+	for i := range entity.Variants {
+		// Set MongoDB ObjectID for each Variant ID
+		entity.Variants[i].ID = primitive.NewObjectID()
+
+		// Generate Snowflake ID for the Serial field of each Variant
+		entity.Variants[i].Serial = node.Generate().Int64()
+
+		// Loop through each image in the variant and assign ObjectIDs
+		for j := range entity.Variants[i].Images {
+			entity.Variants[i].Images[j].ID = primitive.NewObjectID()
+		}
+	}
+
+	_, err = pro.collection.InsertOne(context.Background(), entity)
 	return err
+}
+
+func (pro *productRepository) UpdateSerialForAllVariants() error {
+	// Tạo node Snowflake để sinh ID
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		return err
+	}
+
+	// Tìm tất cả các sản phẩm
+	cursor, err := pro.collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		return err
+	}
+	defer cursor.Close(context.Background())
+
+	// Lặp qua từng sản phẩm
+	for cursor.Next(context.Background()) {
+		var product models.Product
+		if err := cursor.Decode(&product); err != nil {
+			return err
+		}
+
+		// Cập nhật serial cho từng variant
+		for i := range product.Variants {
+			product.Variants[i].Serial = node.Generate().Int64()
+		}
+
+		// Cập nhật sản phẩm trong cơ sở dữ liệu
+		filter := bson.M{"_id": product.ID}
+		update := bson.M{"$set": bson.M{"variants": product.Variants}}
+
+		if _, err := pro.collection.UpdateOne(context.Background(), filter, update); err != nil {
+			return err
+		}
+	}
+
+	if err := cursor.Err(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (pro *productRepository) Update(entity *map[string]interface{}) error {
@@ -103,47 +171,15 @@ func (pro *productRepository) Update(entity *map[string]interface{}) error {
 	if !ok {
 		return errors.New("invalid _id type, expected ObjectID")
 	}
+
+	// Xóa `_id` khỏi `entity` để tránh update `_id`
+	delete(*entity, "_id")
+
+	// Filter theo `_id`
 	filter := bson.M{"_id": id}
-	update := bson.M{}
 
-	addUpdateField := func(field string, value interface{}) {
-		switch v := value.(type) {
-		case string:
-			if v != "" {
-				update[field] = v
-			}
-		case float64:
-			if v != 0 {
-				update[field] = v
-			}
-		case []models.Variant:
-			if v != nil && len(v) > 0 {
-				update[field] = v
-			}
-		case []models.Feedback:
-			if v != nil && len(v) > 0 {
-				update[field] = v
-			}
-		case []interface{}:
-			if v != nil && len(v) > 0 {
-				update[field] = v
-			}
-		case nil:
-			return
-		default:
-			update[field] = value
-		}
-	}
-
-	for key, value := range *entity {
-		addUpdateField(key, value)
-	}
-
-	if len(update) == 0 {
-		return errors.New("no fields to update")
-	}
-
-	updateQuery := bson.M{"$set": update}
+	// Xây dựng query update
+	updateQuery := bson.M{"$set": entity}
 	result, err := pro.collection.UpdateOne(context.Background(), filter, updateQuery)
 	if err != nil {
 		return err

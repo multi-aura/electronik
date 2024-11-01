@@ -28,6 +28,7 @@ type Order struct {
 
 type OrderDetail struct {
 	VariantID     primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
+	Serial        int64              `bson:"serial" json:"serial" validate:"required" form:"serial"`
 	NameVi        string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
 	NameEn        string             `bson:"nameEn" json:"nameEn" validate:"required" form:"nameEn"`
 	DescriptionVi string             `bson:"descriptionVi" json:"descriptionVi" validate:"required" form:"descriptionVi"`

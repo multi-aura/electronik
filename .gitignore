@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-backend/go.sum
-backend/cmd/server/__debug_bin1252979317.exe
-=======
 #BE
 backend/cmd/server/*.exe
+backend/cmd/worker/*.exe
 backend/go.sum
 node_modules
->>>>>>> dev

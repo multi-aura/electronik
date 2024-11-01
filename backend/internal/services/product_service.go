@@ -47,17 +47,17 @@ func (s *productService) NewProduct(product *models.Product) ([]ErrorResponse, e
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
 			var elem ErrorResponse
-			elem.FailedField = err.Field() // Trường bị lỗi
-			elem.Tag = err.Tag()           // Quy tắc validation bị vi phạm
-			elem.Error = true              // Xác nhận có lỗi
+			elem.FailedField = err.Field()
+			elem.Tag = err.Tag()
+			elem.Error = true
 			validationErrors = append(validationErrors, elem)
 		}
-		// Trả về các lỗi validation
+
 		return validationErrors, nil
 	}
 
 	product.CreatedAt = time.Now()
-	err = s.repo.Create(product) // Truyền trực tiếp con trỏ thay vì *product
+	err = s.repo.Create(product)
 	if err != nil {
 		return nil, err
 	}
