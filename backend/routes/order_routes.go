@@ -17,7 +17,7 @@ func SetUpOrderRoutes(app *fiber.App) {
 
 	orderGroup := app.Group("/order")
 	orderGroup.Post("/user", middlewares.AuthMiddleware(), controller.GetOrdersOfUser)
-	orderGroup.Post("/create", controller.CreateOrder)
+	orderGroup.Post("/create", middlewares.AuthMiddleware(), controller.CreateOrder)
 	orderGroup.Put("/update", controller.UpdateOrder)
 	orderGroup.Delete("/delete/:id", controller.DeleteOrder)
 	orderGroup.Get("/:id", controller.GetOrderByID)

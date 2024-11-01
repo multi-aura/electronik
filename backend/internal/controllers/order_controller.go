@@ -6,6 +6,7 @@ import (
 	APIResponse "electronik/pkg/api_response"
 
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type OrderController struct {
@@ -21,8 +22,25 @@ func (oc *OrderController) CreateOrder(c *fiber.Ctx) error {
 	if err := c.BodyParser(&order); err != nil {
 		return APIResponse.SendErrorResponse(c, fiber.StatusBadRequest, "Cannot parse JSON", err.Error())
 	}
+	userIDStr, ok := c.Locals("userID").(string)
+	if !ok || userIDStr == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusUnauthorized,
+			Message: "Unauthorized",
+			Error:   "StatusUnauthorized",
+		})
+	}
 
-	err := oc.service.Create(&order)
+	userID, err := primitive.ObjectIDFromHex(userIDStr)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusUnauthorized,
+			Message: "Invalid user ID format",
+			Error:   "StatusUnauthorized",
+		})
+	}
+	order.UserID = userID
+	err = oc.service.Create(&order)
 	if err != nil {
 		return APIResponse.SendErrorResponse(c, fiber.StatusInternalServerError, "Failed to create order", err.Error())
 	}

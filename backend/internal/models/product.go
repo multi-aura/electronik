@@ -22,6 +22,7 @@ type (
 
 	Variant struct {
 		ID            primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
+		Serial        int64              `bson:"serial" json:"serial" form:"serial"`
 		Color         string             `bson:"color" json:"color" validate:"required" form:"color"`
 		Stock         int                `bson:"stock" json:"stock" validate:"required,gte=0" form:"stock"`
 		Price         float64            `bson:"price" json:"price" validate:"required,gt=0" form:"price"`
