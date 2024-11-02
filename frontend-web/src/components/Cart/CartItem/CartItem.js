@@ -16,7 +16,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   };
 
   return (
-    <div className="cart-item row py-3 border-bottom align-items-center">
+    <div className="cart-item-page row py-3 border-bottom align-items-center">
       <div className="col-md-3 d-flex align-items-center">
         <img src={item.image} alt={item.name} className="img-fluid rounded cart-item-image" />
       </div>

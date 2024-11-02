@@ -50,11 +50,7 @@
     color: #e60023;
   }
   
-  /* Điều khiển số lượng */
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-  }
+ 
   
   .quantity {
     font-weight: bold;

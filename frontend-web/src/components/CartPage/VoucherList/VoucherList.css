@@ -1,0 +1,35 @@
+.voucher-list .input-group .form-control {
+    border-radius: 8px 0 0 8px;
+  }
+  
+  .voucher-list .input-group .btn {
+    border-radius: 0 8px 8px 0;
+  }
+  
+  .voucher-list .voucher-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .voucher-list .voucher-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+  }
+  
+  .voucher-list .voucher-item .voucher-info {
+    flex-grow: 1;
+  }
+  
+  .voucher-list .voucher-item .btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+    border-radius: 8px;
+  }
+  
+  .voucher-list .voucher-item .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+  

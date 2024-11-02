@@ -6,6 +6,7 @@ import IntroPage from '../pages/IntroPage';
 import Home from '../pages/Homepage';
 import ProductDetail from '../pages/productDetail'; // Cập nhật đường dẫn
 import ProductListPage from '../pages/ProductListPage'
+import CartPage from '../pages/Cartpage';
 function AppRoutes() {
   return (
     <Routes>
@@ -16,6 +17,9 @@ function AppRoutes() {
         <Route path="/mulregister" element={<MulRegisterPage />} />
         <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/product" element={<ProductListPage />} />
+        <Route path="/product/Cart" element={<CartPage />} />
+
+
     </Routes>
   
   );

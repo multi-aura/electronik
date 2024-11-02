@@ -1,0 +1,35 @@
+.cart-footer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .summary-title {
+    font-size: 1rem;
+    color: #000;
+    font-weight: 600;
+  }
+  
+  .btn-dark {
+    background-color: #333;
+    color: #fff;
+    border: none;
+  }
+  
+  .btn-dark:hover {
+    background-color: #555;
+  }
+  
+  .voucher-input-group .form-control {
+    border-radius: 8px 0 0 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .voucher-input-group .btn-dark {
+    border-radius: 0 8px 8px 0;
+    font-weight: 600;
+  }
+  

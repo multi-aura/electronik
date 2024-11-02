@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faTags, faShoppingCart, faUser, faSignOutAlt, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import Dropdown from 'react-bootstrap/Dropdown';
-import CartPage from '../../pages/Cartpage';
 import { logout } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import './Navigation.css';
-
+import Cart from '../../pages/Cart';
+import { Link } from 'react-router-dom';
 const Navigation = () => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -35,14 +35,17 @@ const Navigation = () => {
       </div>
       <div className="d-flex align-items-center text-white me-4" style={{ fontSize: '14px' }}>
         <FontAwesomeIcon icon={faTags} className="me-2" />
-        <span>Sản phẩm</span>
+        <Link to={`/product`} className='text-white text-decoration-none'>
+          <span>Sản phẩm</span>
+
+        </Link>
       </div>
       <div className="d-flex align-items-center text-white me-4" style={{ fontSize: '14px' }}>
         <FontAwesomeIcon icon={faShoppingCart} className="me-2" onClick={toggleCart} style={{ cursor: 'pointer' }} />
         <span onClick={toggleCart} style={{ cursor: 'pointer' }}>Giỏ hàng</span>
       </div>
 
-      {isCartOpen && <CartPage onClose={toggleCart} />}
+      {isCartOpen && <Cart onClose={toggleCart} />}
 
       {dataUser ? (
         <Dropdown align="end">
