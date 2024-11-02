@@ -24,7 +24,6 @@ func NewCategoryService(repo repositories.CategoryRepository) CategoryService {
 }
 
 func (c *categoryService) Create(product *models.Category) error {
-	// Kiểm tra nếu danh mục đã tồn tại hay chưa (nếu cần)
 	if product.NameVi == "" && product.NameEn == "" {
 		return errors.New("category name cannot be empty")
 	}
@@ -32,7 +31,6 @@ func (c *categoryService) Create(product *models.Category) error {
 }
 
 func (c *categoryService) Delete(id string) error {
-	// Kiểm tra nếu ID có hợp lệ không (nếu cần)
 	if id == "" {
 		return errors.New("category ID cannot be empty")
 	}
@@ -40,7 +38,6 @@ func (c *categoryService) Delete(id string) error {
 }
 
 func (c *categoryService) GetByID(id string) (*models.Category, error) {
-	// Kiểm tra nếu ID có hợp lệ không (nếu cần)
 	if id == "" {
 		return nil, errors.New("category ID cannot be empty")
 	}
@@ -48,8 +45,7 @@ func (c *categoryService) GetByID(id string) (*models.Category, error) {
 }
 
 func (c *categoryService) Update(categoryMap *map[string]interface{}) error {
-	// Kiểm tra nếu map có ID không (cần thiết cho việc cập nhật)
-	if _, ok := (*categoryMap)["id"]; !ok {
+	if _, ok := (*categoryMap)["_id"]; !ok {
 		return errors.New("category ID is required for update")
 	}
 	return c.repo.Update(categoryMap)
