@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import './CartFooter.css';
-
+import { Link } from 'react-router-dom';
 const CartFooter = () => {
   const [isChecked, setIsChecked] = useState(false);
 
@@ -14,7 +15,9 @@ const CartFooter = () => {
         <input type="checkbox" onChange={handleCheckboxChange} /> Tôi đồng ý với <a href="#">Điều khoản & Điều kiện</a>
       </label>
       <button className="checkout-btn" disabled={!isChecked}>THANH TOÁN</button>
-      <button className="view-cart-btn" disabled={!isChecked}>XEM GIỎ HÀNG</button>
+      <Link to="/product/Cart">
+        <button className="view-cart-btn" disabled={!isChecked}>XEM GIỎ HÀNG</button>
+      </Link>
     </div>
   );
 };

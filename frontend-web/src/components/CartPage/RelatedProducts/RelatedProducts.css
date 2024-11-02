@@ -1,0 +1,98 @@
+.related-products {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Thẻ sản phẩm */
+.related-product-card {
+  width: 100%;
+  max-width: 200px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.related-product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Ảnh sản phẩm chính */
+.main-image {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Tên sản phẩm */
+.product-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Giá giảm */
+.discounted-price {
+  color: #e60023;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Hình ảnh phụ nhỏ */
+.additional-images {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.additional-image {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  padding: 2px;
+  margin: 0 3px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.additional-image:hover {
+  transform: scale(1.1);
+}
+
+/* Nút Quick add */
+.related-product-card .btn-outline-primary {
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 4px;
+  color: #007bff;
+  border-color: #007bff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.related-product-card .btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Nút điều khiển của slick-carousel */
+.slick-prev:before, .slick-next:before {
+  color: #333;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+  opacity: 1;
+}
+
+.slick-slide {
+  padding: 10px;
+}
