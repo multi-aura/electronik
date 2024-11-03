@@ -1,0 +1,65 @@
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-back,
+.btn-confirm {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.payment-header {
+    text-align: center;
+}
+
+.icon-container {
+    font-size: 35px;
+}
+
+.payment-title {
+    font-size: 28px;
+    color: #333333;
+    font-weight: bold;
+    margin: 0;
+    margin-left: 10px;
+}
+
+.payment-subtitle {
+    font-size: 16px;
+    color: #666666;
+    line-height: 1.5;
+}
+
+.btn-back {
+    background-color: #f8f9fa;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back:hover {
+    background-color: #e2e6ea;
+    transform: translateY(-2px);
+}
+
+.btn-confirm {
+    background-color: #343a40;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-confirm:hover {
+    background-color: #23272b;
+    transform: translateY(-2px);
+}
+
+.btn-back:active,
+.btn-confirm:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
