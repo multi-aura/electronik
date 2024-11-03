@@ -22,6 +22,22 @@ const CartPage = () => {
           discountedPrice: 500000,
           originalPrice: 800000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "201-1",
+              name: "Gaming Mouse - Black",
+              discountedPrice: 500000,
+              originalPrice: 800000,
+              image: "https://product.hstatic.net/200000722513/product/black_mouse_variant.png",
+            },
+            {
+              id: "201-2",
+              name: "Gaming Mouse - White",
+              discountedPrice: 520000,
+              originalPrice: 850000,
+              image: "https://product.hstatic.net/200000722513/product/white_mouse_variant.png",
+            },
+          ]
         },
         {
           id: 202,
@@ -29,16 +45,26 @@ const CartPage = () => {
           discountedPrice: 1500000,
           originalPrice: 2000000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
-        },
-        {
-          id: 203,
-          name: "Gaming Headset",
-          discountedPrice: 990000,
-          originalPrice: 1200000,
-          image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "202-1",
+              name: "Mechanical Keyboard - Red Switch",
+              discountedPrice: 1500000,
+              originalPrice: 2000000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
 
+            },
+            {
+              id: "202-2",
+              name: "Mechanical Keyboard - Blue Switch",
+              discountedPrice: 1550000,
+              originalPrice: 2100000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+
+            },
+          ]
         },
-      ],
+      ]
     },
     {
       id: 2,
@@ -54,6 +80,22 @@ const CartPage = () => {
           discountedPrice: 600000,
           originalPrice: 900000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "204-1",
+              name: "Wireless Charger - 10W",
+              discountedPrice: 600000,
+              originalPrice: 900000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "204-2",
+              name: "Wireless Charger - 15W",
+              discountedPrice: 650000,
+              originalPrice: 950000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+          ]
         },
         {
           id: 205,
@@ -61,15 +103,91 @@ const CartPage = () => {
           discountedPrice: 150000,
           originalPrice: 300000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "205-1",
+              name: "Protective Case - Black",
+              discountedPrice: 150000,
+              originalPrice: 300000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "205-2",
+              name: "Protective Case - Transparent",
+              discountedPrice: 160000,
+              originalPrice: 320000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+          ]
         },
         {
-          id: 206,
-          name: "Screen Protector",
-          discountedPrice: 100000,
-          originalPrice: 200000,
+          id: 204,
+          name: "Wireless Charger",
+          discountedPrice: 600000,
+          originalPrice: 900000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
-        },
-      ],
+          variants: [
+            {
+              id: "204-1",
+              name: "Wireless Charger - 10W",
+              discountedPrice: 600000,
+              originalPrice: 900000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "204-2",
+              name: "Wireless Charger - 15W",
+              discountedPrice: 650000,
+              originalPrice: 950000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+          ]
+        }, {
+          id: 204,
+          name: "Wireless Charger",
+          discountedPrice: 600000,
+          originalPrice: 900000,
+          image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "204-1",
+              name: "Wireless Charger - 10W",
+              discountedPrice: 600000,
+              originalPrice: 900000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "204-2",
+              name: "Wireless Charger - 15W",
+              discountedPrice: 650000,
+              originalPrice: 950000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+          ]
+        }, {
+          id: 204,
+          name: "Wireless Charger",
+          discountedPrice: 600000,
+          originalPrice: 900000,
+          image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "204-1",
+              name: "Wireless Charger - 10W",
+              discountedPrice: 600000,
+              originalPrice: 900000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "204-2",
+              name: "Wireless Charger - 15W",
+              discountedPrice: 650000,
+              originalPrice: 950000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+          ]
+        }
+      ]
     },
     {
       id: 3,
@@ -77,7 +195,6 @@ const CartPage = () => {
       price: 18000000,
       quantity: 1,
       image: "https://product.hstatic.net/200000722513/product/ava_e10fafc0165e4a2cb5380668574e512d.png",
-
       brand: "Samsung",
       relatedProducts: [
         {
@@ -86,7 +203,22 @@ const CartPage = () => {
           discountedPrice: 2500000,
           originalPrice: 3000000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
-
+          variants: [
+            {
+              id: "207-1",
+              name: "Soundbar - Black",
+              discountedPrice: 2500000,
+              originalPrice: 3000000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "207-2",
+              name: "Soundbar - White",
+              discountedPrice: 2550000,
+              originalPrice: 3050000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+          ]
         },
         {
           id: 208,
@@ -94,17 +226,25 @@ const CartPage = () => {
           discountedPrice: 400000,
           originalPrice: 700000,
           image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
+          variants: [
+            {
+              id: "208-1",
+              name: "Wall Mount - Small",
+              discountedPrice: 380000,
+              originalPrice: 700000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
+            },
+            {
+              id: "208-2",
+              name: "Wall Mount - Large",
+              discountedPrice: 400000,
+              originalPrice: 750000,
+              image: "https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png",
 
+            },
+          ]
         },
-        {
-          id: 209,
-          name: "Streaming Device",
-          discountedPrice: 1500000,
-          originalPrice: 2000000,
-          image: "https://product.hstatic.net/200000722513/product/171679380513_7f4f7182629244cbb2da1ab6123ad183_grande.png",
-
-        },
-      ],
+      ]
     },
   ]);
 

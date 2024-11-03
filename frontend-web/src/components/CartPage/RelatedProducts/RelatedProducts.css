@@ -1,98 +1,101 @@
-.related-products {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-}
-
-/* Thẻ sản phẩm */
 .related-product-card {
-  width: 100%;
-  max-width: 200px;
-  padding: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
+  padding: 20px; 
   background-color: #fff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  margin: 0 15px; 
+  width: 260px;
 }
 
 .related-product-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
 }
 
-/* Ảnh sản phẩm chính */
+.product-image-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
 .main-image {
   width: 100%;
-  max-width: 100px;
-  height: auto;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Tên sản phẩm */
-.product-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-}
-
-/* Giá giảm */
-.discounted-price {
-  color: #e60023;
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-/* Hình ảnh phụ nhỏ */
-.additional-images {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.additional-image {
-  width: 30px;
-  height: 30px;
-  border: 1px solid #ddd;
-  padding: 2px;
-  margin: 0 3px;
-  border-radius: 50%;
+  height: 180px; 
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.additional-image:hover {
-  transform: scale(1.1);
+.product-image-container:hover .main-image {
+  transform: scale(1.1); 
 }
 
-/* Nút Quick add */
-.related-product-card .btn-outline-primary {
-  font-size: 0.8rem;
-  padding: 6px 10px;
-  border-radius: 4px;
-  color: #007bff;
-  border-color: #007bff;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.related-product-card .btn-outline-primary:hover {
-  background-color: #007bff;
-  color: #fff;
-}
-
-/* Nút điều khiển của slick-carousel */
-.slick-prev:before, .slick-next:before {
+.product-name {
+  font-size: 14px;
+  font-weight: 500;
   color: #333;
-  font-size: 20px;
-  opacity: 0.8;
 }
 
-.slick-prev:hover:before, .slick-next:hover:before {
-  opacity: 1;
+.discounted-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff0000;
 }
 
-.slick-slide {
-  padding: 10px;
+.additional-images {
+  margin-top: 8px;
+}
+
+.additional-images img {
+  width: 45px;
+  height: 45px;
+  margin: 0 4px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.additional-images img:hover {
+  transform: scale(1.1);
+  border-color: #007bff;
+}
+
+.btn-outline-primary {
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 6px 12px;
+  margin-top: 10px;
+}
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.prev-arrow {
+  left: -20px; 
+}
+
+.next-arrow {
+  right: -20px; 
+}
+
+.slider-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.7);
 }
