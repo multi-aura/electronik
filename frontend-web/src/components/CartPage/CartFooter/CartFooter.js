@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import VoucherList from '../VoucherList/VoucherList';
-
+import { Link } from 'react-router-dom';
 const CartFooter = ({ cartItems }) => {
   const [subtotal, setSubtotal] = useState(
     cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
@@ -81,7 +81,9 @@ const CartFooter = ({ cartItems }) => {
         />
       </div>
 
-      <button className="btn btn-dark w-100 mt-3" style={{ borderRadius: '8px' }}>Thanh toán ngay</button>
+      <Link to={`/product/Payment`}>
+        <button className="btn btn-dark w-100 mt-3" style={{ borderRadius: '8px' }}>Thanh toán ngay</button>
+      </Link>
     </div>
   );
 };

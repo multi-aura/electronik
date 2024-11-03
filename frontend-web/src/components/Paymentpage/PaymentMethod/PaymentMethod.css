@@ -1,0 +1,57 @@
+.payment-method {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+ 
+    background-color: #ffffff;
+}
+
+
+.payment-title {
+    color: #333333; 
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-option {
+    margin-bottom: 15px;
+}
+
+.payment-label {
+    display: flex;
+    align-items: center;
+    color: #333333;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s ease; 
+}
+
+.payment-label input {
+    margin-right: 12px; 
+}
+
+.payment-label:hover {
+    color: #007bff; 
+    font-weight: bold; 
+}
+
+.payment-icon {
+    margin-right: 10px;
+    font-size: 18px; 
+}
+
+input[type="radio"] {
+    cursor: pointer;
+    width: 16px; 
+    height: 16px;
+}
+
+input[type="radio"]:checked {
+    accent-color: #007bff; 
+}

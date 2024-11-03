@@ -1,0 +1,103 @@
+.shipping-info {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.shipping-info h5 {
+    color: #333333;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-group.half-width {
+    width: 48%;
+}
+
+.form-group.third-width {
+    width: 32%;
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #f9f9f9;
+}
+
+.form-control.error {
+    border-color: red;
+    background-color: #ffe6e6;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-back,
+.btn-confirm {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.btn-back {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.btn-back:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.02);
+}
+
+.btn-confirm {
+    background-color: #007bff;
+    color: white;
+}
+
+.detail_cart {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.btn-confirm:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
