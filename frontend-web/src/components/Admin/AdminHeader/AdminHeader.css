@@ -1,0 +1,42 @@
+
+.header {
+    border-bottom: 1px solid #ddd;
+}
+
+.toggle-sidebar-btn {
+    background-color: #000000; /* Primary color */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make it circular */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.toggle-sidebar-btn:hover {
+    background-color: #0056b3; 
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.admin-name {
+    font-size: 1rem;
+    margin-left: 10px;
+    color: #333;
+    font-weight: 500;
+}
