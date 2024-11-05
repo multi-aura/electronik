@@ -1,0 +1,22 @@
+/* components/Admin/AdminLayout.css */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.content-area {
+    flex-grow: 1; /* Makes the content area expand to push the footer down */
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+footer {
+    margin-top: auto; /* Pushes the footer to the bottom when content is short */
+}

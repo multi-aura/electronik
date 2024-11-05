@@ -8,6 +8,7 @@ import ProductDetail from '../pages/productDetail'; // Cập nhật đường d�
 import ProductListPage from '../pages/ProductListPage'
 import CartPage from '../pages/Cartpage';
 import PaymentPage from '../pages/Paymentpage';
+import AdminRoutes from './AdminRoutes';
 function AppRoutes() {
   return (
     <Routes>
@@ -21,7 +22,7 @@ function AppRoutes() {
         <Route path="/product/Cart" element={<CartPage />} />
         <Route path="/product/Payment" element={<PaymentPage />} />
 
-
+        <Route path="/admin/*" element={<AdminRoutes />} /> 
 
     </Routes>
   
