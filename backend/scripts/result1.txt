@@ -1,0 +1,8 @@
+Itemset: [4], Utility: 28.00
+Itemset: [4 3], Utility: 31.00
+Itemset: [4 3 5], Utility: 37.00
+Itemset: [4 3 5 2], Utility: 27.00
+Itemset: [4 5], Utility: 37.00
+Itemset: [2 4 5], Utility: 31.00
+Itemset: [5 2 6 4], Utility: 25.00
+Itemset: [4 2], Utility: 25.00

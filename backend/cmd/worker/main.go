@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 
 	config "electronik/internal/configs/dev"
 	"electronik/internal/databases"
+	"electronik/pkg/algorithm"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -24,14 +26,27 @@ type Order struct {
 }
 
 func main() {
-	// Nạp cấu hình từ file config.yaml
+	minUtility, err := strconv.ParseFloat(os.Args[1], 64)
+
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: main <minUtility>")
+		fmt.Printf("Running EMHUN with minUtility: %.2f\n", minUtility)
+
+		return
+	}
+
+	// Đọc `minUtility` từ tham số dòng lệnh
+	if err != nil {
+		fmt.Printf("Invalid minUtility: %v\n", err)
+		return
+	}
+	fmt.Printf("Running EMHUN with minUtility: %.2f\n", minUtility)
 	cfg, err := config.Instance()
 	if err != nil {
 		fmt.Printf("Could not load config: %v\n", err)
 		return
 	}
 
-	// Kết nối đến MongoDB
 	client, err := databases.NewMongoDB(&cfg.Mongo)
 	if err != nil {
 		fmt.Printf("Could not connect to MongoDB: %v\n", err)
@@ -39,29 +54,43 @@ func main() {
 	}
 	defer client.Disconnect()
 
-	collection := client.Database.Collection("orders")
-
-	// Tạo thư mục scripts nếu chưa tồn tại
-	scriptsDir := "scripts"
-	if err := os.MkdirAll(scriptsDir, os.ModePerm); err != nil {
-		fmt.Printf("Error creating scripts directory: %v\n", err)
+	// Đường dẫn tới file `transactions.txt`
+	filePath := "scripts/transactions.txt"
+	if err := writeTransactionsToFile(client, filePath); err != nil {
+		fmt.Printf("Error writing transactions to file: %v\n", err)
 		return
 	}
 
-	// Đường dẫn tới file
-	filePath := fmt.Sprintf("%s/transactions.txt", scriptsDir)
+	fmt.Println("Finished writing orders to file.")
+	resultFile := "scripts/result.txt"
+
+	if err := algorithm.RunEMHUN(filePath, minUtility, resultFile); err != nil {
+		fmt.Printf("Error running EMHUN: %v\n", err)
+		return
+	}
+
+	fmt.Println("EMHUN analysis complete. Results saved to", resultFile)
+}
+
+// writeTransactionsToFile ghi dữ liệu đơn hàng từ MongoDB vào file
+func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
+	// Tạo thư mục scripts nếu chưa tồn tại
+	if err := os.MkdirAll("scripts", os.ModePerm); err != nil {
+		return fmt.Errorf("Error creating scripts directory: %v", err)
+	}
+
+	// Mở file để ghi
 	file, err := os.Create(filePath)
 	if err != nil {
-		fmt.Printf("Error creating file: %v\n", err)
-		return
+		return fmt.Errorf("Error creating file: %v", err)
 	}
 	defer file.Close()
 
-	// Lấy tất cả các đơn hàng
+	// Lấy collection `orders` từ MongoDB
+	collection := client.Database.Collection("orders")
 	cursor, err := collection.Find(context.Background(), bson.M{})
 	if err != nil {
-		fmt.Printf("Error fetching orders: %v\n", err)
-		return
+		return fmt.Errorf("Error fetching orders: %v", err)
 	}
 	defer cursor.Close(context.Background())
 
@@ -80,7 +109,7 @@ func main() {
 		// Duyệt qua từng detail để xây dựng chuỗi
 		for i, detail := range order.Details {
 			if i > 0 {
-				serials += " " // Dấu cách giữa các serial
+				serials += " "
 			}
 			serials += fmt.Sprintf("%d", detail.Serial)
 		}
@@ -91,15 +120,15 @@ func main() {
 
 		resultLine := fmt.Sprintf("%s:%.2f:%s\n", serials, order.Total, totals)
 
-		// Ghi vào file
+		// Ghi vào file, giữ nguyên dòng `file.WriteString` như yêu cầu
 		if _, err := file.WriteString(resultLine); err != nil {
-			fmt.Printf("Error writing to file: %v\n", err)
+			return fmt.Errorf("Error writing to file: %v", err)
 		}
 	}
 
 	if err := cursor.Err(); err != nil {
-		fmt.Printf("Cursor error: %v\n", err)
+		return fmt.Errorf("Cursor error: %v", err)
 	}
 
-	fmt.Println("Finished writing orders to file.")
+	return nil
 }
