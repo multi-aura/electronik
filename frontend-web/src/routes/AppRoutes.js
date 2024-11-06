@@ -21,8 +21,6 @@ function AppRoutes() {
         <Route path="/product/Cart" element={<CartPage />} />
         <Route path="/product/Payment" element={<PaymentPage />} />
 
-
-
     </Routes>
   
   );
