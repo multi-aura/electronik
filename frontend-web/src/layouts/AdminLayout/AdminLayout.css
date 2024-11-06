@@ -13,7 +13,6 @@
 
 .content-area {
     flex-grow: 1; /* Makes the content area expand to push the footer down */
-    padding: 20px;
     background-color: #f8f9fa;
 }
 

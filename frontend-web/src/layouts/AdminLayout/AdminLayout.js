@@ -18,7 +18,7 @@ function AdminLayout({ children }) {
             {isSidebarOpen && <AdminSidebar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />}
             <main className={`flex-grow-1 main-content ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
                 <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-                <Container className="mt-4">
+                <Container fluid className="mt-4">
                     <Row>
                         <Col>
                             <div className="content-area">

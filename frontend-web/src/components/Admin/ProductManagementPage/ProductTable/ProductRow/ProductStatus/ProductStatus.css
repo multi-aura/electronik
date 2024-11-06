@@ -1,0 +1,33 @@
+/* ProductStatus.css */
+.status-badge {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 20px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.badge-success {
+    background-color: #28a745; /* green */
+}
+
+.badge-danger {
+    background-color: #dc3545; /* red */
+}
+
+.badge-warning {
+    background-color: #ffc107; /* yellow */
+}
+
+.badge-secondary {
+    background-color: #6c757d; /* gray */
+}

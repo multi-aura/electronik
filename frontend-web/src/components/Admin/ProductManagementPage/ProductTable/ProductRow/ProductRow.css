@@ -1,0 +1,73 @@
+/* ProductRow.css */
+
+/* Căn giữa tất cả nội dung bên trong các ô của hàng sản phẩm */
+.product-row td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+/* Style cho ảnh sản phẩm */
+.product-image img {
+    max-width: 50px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto; /* Căn giữa theo chiều ngang */
+}
+
+/* Style cho trạng thái sản phẩm */
+.product-status .status-available {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.product-status .status-unavailable {
+    background-color: #dc3545;
+    color: #ffffff;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* Style cho ActionButtons */
+.product-actions {
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-actions .btn-edit,
+.product-actions .btn-delete {
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.product-actions .btn-edit {
+    background-color: #ffc107;
+}
+
+.product-actions .btn-delete {
+    background-color: #dc3545;
+}
+
+.product-actions .btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.product-actions .btn-delete:hover {
+    background-color: #c82333;
+}
