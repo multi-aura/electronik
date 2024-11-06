@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ProductManagementPage.js
 import React, { useState } from 'react';
 import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
@@ -60,8 +61,22 @@ const ProductManagementPage = () => {
                     </div>
                 </div>
             </div>
+=======
+// App.js
+import React from 'react';
+import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
+
+const ProductManagement = () => {
+    return (
+        <AdminLayout>
+           <h1>Product</h1>
+>>>>>>> dev
         </AdminLayout>
     );
 };
 
+<<<<<<< HEAD
 export default ProductManagementPage;
+=======
+export default ProductManagement;
+>>>>>>> dev
