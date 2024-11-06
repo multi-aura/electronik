@@ -1,0 +1,47 @@
+/* ActionButtons.css */
+
+.action-buttons {
+    display: flex;
+    gap: 8px; /* Khoảng cách giữa các nút */
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Chiều cao của phần tử chứa nút để căn giữa */
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 6px 8px; /* Thu nhỏ padding để nút gọn gàng hơn */
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 35px; /* Đảm bảo nút có cùng kích thước */
+    height: 35px;
+}
+
+/* Nút Sửa */
+.btn-edit {
+    background-color: #ffc107; /* Màu vàng */
+    box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3); /* Bóng nhẹ */
+}
+
+.btn-edit:hover {
+    background-color: #e0a800;
+    transform: scale(1.05); /* Tăng nhẹ kích thước khi hover */
+}
+
+/* Nút Xóa */
+.btn-delete {
+    background-color: #dc3545; /* Màu đỏ */
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3); /* Bóng nhẹ */
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    transform: scale(1.05); /* Tăng nhẹ kích thước khi hover */
+}
