@@ -58,6 +58,7 @@ func SetupRoutes(app *fiber.App) {
 
 		// Duyệt qua từng dòng và tách `Itemset` và `Utility`
 		for _, line := range lines {
+			line = strings.TrimSuffix(line, "\r")
 			if strings.TrimSpace(line) == "" {
 				continue
 			}
