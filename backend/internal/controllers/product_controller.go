@@ -4,6 +4,7 @@ import (
 	"electronik/internal/models"
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -379,5 +380,68 @@ func (pro *ProductController) GetSimilarProducts(c *fiber.Ctx) error {
 		Status:  fiber.StatusOK,
 		Message: "Retrieved similar products successfully",
 		Data:    similarProducts,
+	})
+}
+func (pro *ProductController) GetProductsBySerials(c *fiber.Ctx) error {
+	var request struct {
+		Serials []string `json:"serials"` // Nhận chuỗi từ client
+	}
+
+	if err := c.BodyParser(&request); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	if len(request.Serials) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Serials list cannot be empty",
+			Error:   "StatusBadRequest",
+		})
+	}
+
+	// Chuyển đổi chuỗi thành int64
+	var serials []int64
+	for _, s := range request.Serials {
+		serial, err := strconv.ParseInt(s, 10, 64)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusBadRequest,
+				Message: "Invalid serial format",
+				Error:   "StatusBadRequest",
+			})
+		}
+		serials = append(serials, serial)
+	}
+
+	products, err := pro.service.GetProductsBySerials(serials)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusInternalServerError,
+			Message: err.Error(),
+			Error:   "StatusInternalServerError",
+		})
+	}
+
+	if len(products) == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusNotFound,
+			Message: "No products found for the provided serials",
+			Error:   "StatusNotFound",
+		})
+	}
+	for _, product := range products {
+		for i, variant := range product.Variants {
+			product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
+		}
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Products retrieved successfully",
+		Data:    products,
 	})
 }

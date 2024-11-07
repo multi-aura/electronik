@@ -8,6 +8,7 @@ import (
 
 	config "electronik/internal/configs/dev"
 	"electronik/internal/databases"
+	"electronik/internal/models"
 	"electronik/pkg/algorithm"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -87,8 +88,10 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 	defer file.Close()
 
 	// Lấy collection `orders` từ MongoDB
-	collection := client.Database.Collection("orders")
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	ordersCollection := client.Database.Collection("orders")
+	productsCollection := client.Database.Collection("products")
+
+	cursor, err := ordersCollection.Find(context.Background(), bson.M{})
 	if err != nil {
 		return fmt.Errorf("Error fetching orders: %v", err)
 	}
@@ -96,7 +99,7 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 
 	// Đọc từng đơn hàng và ghi vào file
 	for cursor.Next(context.Background()) {
-		var order Order
+		var order models.Order
 		if err := cursor.Decode(&order); err != nil {
 			fmt.Printf("Error decoding order: %v\n", err)
 			continue
@@ -104,23 +107,39 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 
 		// Xây dựng chuỗi để ghi vào file
 		serials := ""
-		totals := ""
+		utilities := ""
+		totalUtility := 0.0
 
-		// Duyệt qua từng detail để xây dựng chuỗi
+		// Duyệt qua từng detail để tính toán utility
 		for i, detail := range order.Details {
 			if i > 0 {
 				serials += " "
 			}
 			serials += fmt.Sprintf("%d", detail.Serial)
+
+			// Tìm sản phẩm chứa serial tương ứng
+			var product models.Product
+			err := productsCollection.FindOne(context.Background(), bson.M{"variants.serial": detail.Serial}).Decode(&product)
+			if err != nil {
+				fmt.Printf("Error fetching product for serial %d: %v\n", detail.Serial, err)
+				continue
+			}
+
+			// Tìm đúng variant trong sản phẩm và tính utility
+			for _, variant := range product.Variants {
+				if variant.Serial == detail.Serial {
+					utility := (detail.Price - variant.PurchasePrice) * float64(detail.Quantity)
+					utilities += fmt.Sprintf("%.2f ", utility)
+					totalUtility += utility
+					break
+				}
+			}
 		}
 
-		for _, detail := range order.Details {
-			totals += fmt.Sprintf("%.2f ", detail.Total)
-		}
+		// Xây dựng chuỗi kết quả để ghi vào file
+		resultLine := fmt.Sprintf("%s:%.2f:%s\n", serials, totalUtility, utilities)
 
-		resultLine := fmt.Sprintf("%s:%.2f:%s\n", serials, order.Total, totals)
-
-		// Ghi vào file, giữ nguyên dòng `file.WriteString` như yêu cầu
+		// Ghi vào file
 		if _, err := file.WriteString(resultLine); err != nil {
 			return fmt.Errorf("Error writing to file: %v", err)
 		}

@@ -5,6 +5,7 @@ import (
 	"electronik/internal/databases"
 	"electronik/internal/models"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
@@ -27,6 +28,7 @@ type (
 		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
 		UpdateVariantStock(variantID string, quantityPurchased int) error
 		UpdateSerialForAllVariants() error
+		GetBySerials(serials []int64) ([]*models.Product, error)
 	}
 
 	productRepository struct {
@@ -470,4 +472,27 @@ func (pro *productRepository) UpdateVariantStock(variantID string, quantityPurch
 	}
 
 	return nil
+}
+func (pro *productRepository) GetBySerials(serials []int64) ([]*models.Product, error) {
+	var products []*models.Product
+
+	if len(serials) == 0 {
+		return nil, errors.New("no serials provided")
+	}
+
+	filter := bson.M{"variants.serial": bson.M{"$in": serials}}
+	fmt.Printf("Searching for products with serials: %v\n", serials)
+	fmt.Printf("MongoDB filter: %v\n", filter)
+
+	cursor, err := pro.collection.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	if err = cursor.All(context.Background(), &products); err != nil {
+		return nil, err
+	}
+
+	return products, nil
 }
