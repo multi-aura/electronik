@@ -2,13 +2,16 @@ import React from 'react';
 import { Routes, Route, Router } from 'react-router-dom';
 import Dashboard from '../pages/Admin/Dashboard';
 import EMHUN from '../pages/Admin/EMHUN';
-import ProductManagement from '../pages/Admin/ProductManagement';
+import ProductManagementPage from '../pages/Admin/ProductManagement/ProductManagement';
+import ProductCreatePage from '../pages/Admin/ProductManagement/createProductPage';
 function AdminRoutes() {
   return (
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/Emhun" element={<EMHUN />} />
-        <Route path="/ProductManagement" element={<ProductManagement />} />
+        <Route path="/ProductManagement" element={<ProductManagementPage />} />
+        <Route path="/ProductManagement/create" element={<ProductCreatePage />} />
+
 
       </Routes>
   );

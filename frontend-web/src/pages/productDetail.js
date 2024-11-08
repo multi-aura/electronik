@@ -68,7 +68,7 @@ const ProductDetail = () => {
 
                 </Row>
             </Container>
-            <FlashSale />
+            <FlashSale />   
             <CategoryGrid />
         </Layout>
     );

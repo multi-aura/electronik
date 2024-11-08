@@ -12,10 +12,11 @@
 }
 
 .content-area {
-    flex-grow: 1; /* Makes the content area expand to push the footer down */
+    flex-grow: 1; 
     background-color: #f8f9fa;
+    padding: 0px !important ;
 }
 
 footer {
-    margin-top: auto; /* Pushes the footer to the bottom when content is short */
+    margin-top: auto; 
 }

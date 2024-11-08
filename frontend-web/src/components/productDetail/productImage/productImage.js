@@ -2,7 +2,7 @@ import React from 'react';
 
 const ProductImage = ({ imageUrl }) => {
     return (
-        <div className="product-image" style={{ width: '100%', height: '400px', overflow: 'hidden' }}>
+        <div className="product-images" style={{ width: '100%', height: '400px', overflow: 'hidden' }}>
             <img 
                 src={imageUrl} 
                 alt="Product Main" 
