@@ -1,0 +1,32 @@
+.custom-tabs {
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-content {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+}
+
+.form-group-custom {
+    margin-bottom: 20px;
+}
+
+.form-label-custom {
+    font-weight: bold;
+    color: #333;
+}
+
+.form-control-custom {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s;
+}
+
+.form-control-custom:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+    

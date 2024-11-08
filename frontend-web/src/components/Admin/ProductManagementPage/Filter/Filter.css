@@ -1,7 +1,6 @@
 /* Filter.css */
 
 .filter-container {
-    padding: 15px 0px;
     display: flex;
     align-items: center; /* Căn giữa theo chiều dọc */
     justify-content: space-between;

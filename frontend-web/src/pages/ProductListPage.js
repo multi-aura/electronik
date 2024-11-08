@@ -12,7 +12,6 @@ const ProductListPage = () => {
   const [totalPages, setTotalPages] = useState(5); // Giới hạn 5 trang giả lập
   const [loading, setLoading] = useState(false);
 
-  // Chỉ gọi `fetchProducts` khi `currentPage` thay đổi và khi còn trang để tải
   useEffect(() => {
     if (currentPage <= totalPages && !loading) {
       fetchProducts();
