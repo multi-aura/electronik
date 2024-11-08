@@ -27,7 +27,53 @@ const ProductCreatePage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProduct({ ...product, [name]: value });
+        setProduct(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const handleSpecificationChange = (e, index) => {
+        const { name, value } = e.target;
+        setProduct(prevState => {
+            const updatedSpecifications = [...prevState.specifications];
+            updatedSpecifications[index] = { ...updatedSpecifications[index], [name]: value };
+            return { ...prevState, specifications: updatedSpecifications };
+        });
+    };
+
+    const addSpecification = () => {
+        setProduct(prevState => ({
+            ...prevState,
+            specifications: [...prevState.specifications, { name: '', value: '' }]
+        }));
+    };
+
+    const removeSpecification = (index) => {
+        setProduct(prevState => ({
+            ...prevState,
+            specifications: prevState.specifications.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleVariantChange = (e, index) => {
+        const { name, value } = e.target;
+        setProduct(prevState => {
+            const updatedVariants = [...prevState.variants];
+            updatedVariants[index] = { ...updatedVariants[index], [name]: value };
+            return { ...prevState, variants: updatedVariants };
+        });
+    };
+
+    const addVariant = () => {
+        setProduct(prevState => ({
+            ...prevState,
+            variants: [...prevState.variants, { color: '', stock: '', price: '', sku: '' }]
+        }));
+    };
+
+    const removeVariant = (index) => {
+        setProduct(prevState => ({
+            ...prevState,
+            variants: prevState.variants.filter((_, i) => i !== index)
+        }));
     };
 
     return (
@@ -55,12 +101,22 @@ const ProductCreatePage = () => {
                     </Tab>
                     <Tab eventKey="specifications" title="Thông số kỹ thuật">
                         <div className="p-3 bg-white shadow-sm rounded">
-                            <ProductSpecifications specifications={product.specifications} />
+                            <ProductSpecifications
+                                specifications={product.specifications}
+                                handleSpecChange={handleSpecificationChange}
+                                addSpecification={addSpecification}
+                                removeSpecification={removeSpecification}
+                            />
                         </div>
                     </Tab>
                     <Tab eventKey="variants" title="Biến thể sản phẩm">
                         <div className="p-3 bg-white shadow-sm rounded">
-                            <ProductVariants variants={product.variants} />
+                            <ProductVariants
+                                variants={product.variants}
+                                handleVariantChange={handleVariantChange}
+                                addVariant={addVariant}
+                                removeVariant={removeVariant}
+                            />
                         </div>
                     </Tab>
                 </Tabs>

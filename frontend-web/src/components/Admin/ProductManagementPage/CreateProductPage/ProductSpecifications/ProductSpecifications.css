@@ -1,0 +1,46 @@
+.product-specifications-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.specifications-header {
+    font-size: 1.5rem;
+    color: #343a40;
+    font-weight: bold;
+}
+
+.specification-row {
+    align-items: center;
+}
+
+.specification-group {
+    margin-bottom: 0;
+}
+
+.specification-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.specification-input {
+    border-radius: 5px;
+}
+
+.remove-specification-btn {
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.no-specification-message {
+    color: #6c757d;
+    text-align: center;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.add-specification-btn {
+    font-size: 1rem;
+    padding: 8px 16px;
+}
