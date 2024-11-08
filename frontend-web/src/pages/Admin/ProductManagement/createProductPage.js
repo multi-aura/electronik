@@ -65,7 +65,7 @@ const ProductCreatePage = () => {
     const addVariant = () => {
         setProduct(prevState => ({
             ...prevState,
-            variants: [...prevState.variants, { color: '', stock: '', price: '', sku: '' }]
+            variants: [...prevState.variants, { color: '', stock: '', price: '', sku: '', purchasePrice: '' }]
         }));
     };
 
@@ -78,11 +78,11 @@ const ProductCreatePage = () => {
 
     return (
         <AdminLayout>
-            <Container fluid className="product-create-page p-4 bg-light rounded">
+            <Container fluid className="product-create-page p-4 bg-light rounded shadow">
                 <Row className="mb-4">
                     <Col>
                         <div className="d-flex justify-content-between align-items-center header_create">
-                            <h2 className="page-title display-5">Tạo sản phẩm mới</h2>
+                            <h2 className="page-title">Tạo sản phẩm mới</h2>
                             <ProductHeader />
                         </div>
                     </Col>
