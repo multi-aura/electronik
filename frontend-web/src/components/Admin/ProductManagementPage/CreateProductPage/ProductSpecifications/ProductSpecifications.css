@@ -1,46 +1,77 @@
 .product-specifications-container {
-    background-color: #f8f9fa;
-    border-radius: 10px;
+    background-color: #ffffff; /* Pure white background for clarity */
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.product-specifications-container:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
 }
 
 .specifications-header {
     font-size: 1.5rem;
-    color: #343a40;
     font-weight: bold;
+    color: #2c3e50; /* Darker gray-blue for better readability */
+    margin-bottom: 15px; /* Spacing for better section separation */
 }
 
 .specification-row {
     align-items: center;
-}
-
-.specification-group {
-    margin-bottom: 0;
-}
-
-.specification-label {
-    font-weight: 500;
-    color: #495057;
+    margin-bottom: 10px; /* Spacing between rows */
 }
 
 .specification-input {
+    border-radius: 8px;
+    border: 1px solid #b0bec5; /* Soft gray-blue border */
+    padding: 10px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth input focus effect */
+}
+
+.specification-input:focus {
+    border-color: #42a5f5; /* Blue border on focus */
+    box-shadow: 0 0 5px rgba(66, 165, 245, 0.4); /* Light blue glow */
+}
+
+.remove-spec-btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
     border-radius: 5px;
+    background-color: #f44336; /* Red for remove button */
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Button transition */
 }
 
-.remove-specification-btn {
-    width: 100%;
-    font-size: 0.9rem;
+.remove-spec-btn:hover {
+    background-color: #d32f2f; /* Darker red for hover */
+    transform: scale(1.05); /* Slight enlargement on hover */
 }
 
-.no-specification-message {
-    color: #6c757d;
+.no-specifications-message {
+    color: #757575; /* Medium gray for neutral tone */
     text-align: center;
-    margin-top: 15px;
     font-style: italic;
+    margin-top: 10px;
 }
 
-.add-specification-btn {
-    font-size: 1rem;
+.add-spec-btn {
+    background-color: #42a5f5; /* Light blue for add button */
+    color: #fff;
+    border-radius: 6px;
     padding: 8px 16px;
+    font-size: 1rem;
+    width: auto; /* Compact width */
+    display: inline-block; /* Keeps the button width smaller */
+    margin-top: 15px; /* More spacing */
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth button transition */
+}
+
+.add-spec-btn:hover {
+    background-color: #1e88e5; /* Darker blue for hover */
+    transform: translateY(-2px); /* Lift effect */
 }

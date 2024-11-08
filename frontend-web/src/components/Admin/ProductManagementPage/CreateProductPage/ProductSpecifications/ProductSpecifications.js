@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Row, Col, Button } from 'react-bootstrap';
-import './ProductSpecifications.css'; // Custom CSS for additional styling
+import './ProductSpecifications.css'; // Ensure this file has the necessary styles
 
 const ProductSpecifications = ({ specifications, handleSpecChange, addSpecification, removeSpecification }) => (
     <div className="product-specifications-container">
@@ -9,11 +9,10 @@ const ProductSpecifications = ({ specifications, handleSpecChange, addSpecificat
             specifications.map((spec, index) => (
                 <Row key={index} className="specification-row mb-3">
                     <Col md={5}>
-                        <Form.Group controlId={`specName-${index}`} className="specification-group">
-                            <Form.Label className="specification-label">Tên thông số</Form.Label>
+                        <Form.Group controlId={`specName-${index}`}>
                             <Form.Control
                                 type="text"
-                                placeholder="Nhập tên thông số"
+                                placeholder="Tên thông số"
                                 name="name"
                                 value={spec.name}
                                 onChange={(e) => handleSpecChange(e, index)}
@@ -22,11 +21,10 @@ const ProductSpecifications = ({ specifications, handleSpecChange, addSpecificat
                         </Form.Group>
                     </Col>
                     <Col md={5}>
-                        <Form.Group controlId={`specValue-${index}`} className="specification-group">
-                            <Form.Label className="specification-label">Giá trị</Form.Label>
+                        <Form.Group controlId={`specValue-${index}`}>
                             <Form.Control
                                 type="text"
-                                placeholder="Nhập giá trị"
+                                placeholder="Giá trị"
                                 name="value"
                                 value={spec.value}
                                 onChange={(e) => handleSpecChange(e, index)}
@@ -34,19 +32,20 @@ const ProductSpecifications = ({ specifications, handleSpecChange, addSpecificat
                             />
                         </Form.Group>
                     </Col>
-                    <Col md={2} className="text-center">
-                        <Button variant="outline-danger" onClick={() => removeSpecification(index)} className="remove-specification-btn">
+                    <Col md={2} className="text-end">
+                        <Button variant="outline-danger" onClick={() => removeSpecification(index)} className="remove-spec-btn">
                             Xóa
                         </Button>
                     </Col>
                 </Row>
             ))
         ) : (
-            <p className="no-specification-message">Chưa có thông số kỹ thuật nào.</p>
+            <p className="no-specifications-message">Chưa có thông số kỹ thuật nào.</p>
         )}
-        <Button variant="primary" onClick={addSpecification} className="add-specification-btn mt-4">
+        <Button variant="primary" onClick={addSpecification} className="add-spec-btn mt-3">
             Thêm thông số
         </Button>
+
     </div>
 );
 
