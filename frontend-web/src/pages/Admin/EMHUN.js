@@ -1,62 +1,100 @@
 // src/pages/Admin/EMHUN.js
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
 import AnalysisChart from '../../components/Admin/EMHUN/AnalysisChart/AnalysisChart';
 import InputField from '../../components/Admin/EMHUN/InputField/InputField';
 import RecommendedProducts from '../../components/Admin/EMHUN/RecommendedProducts/RecommendedProducts';
-
+import { fetchAnalysisResult, fetchProductBySerials,fetchEMHUNAnalysis } from '../../services/emhunService';
 const EMHUN = () => {
-    const [minUtility, setMinUtility] = useState(5000); 
-    const [analysisResults, setAnalysisResults] = useState(null);
+    const [minUtility, setMinUtility] = useState(() => {
+        const savedMinUtility = localStorage.getItem('minUtility');
+        return savedMinUtility ? Number(savedMinUtility) : 5000;
+    });
+    const [analysisResults, setAnalysisResults] = useState([]);
+    const [productData, setProductData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // Dữ liệu sản phẩm mẫu
-    const productData = Array.from({ length: 10 }, (_, index) => ({
-        id: index + 1,
-        name: `ASUS Vivobook S 14 OLED - Sản phẩm ${index + 1}`,
-        specs: ["Ultra i5 125H", "Intel Arc", "16GB", "512GB"],
-        originalPrice: "26.990.000",
-        discountedPrice: "24.290.000",
-        discountPercentage: 10,
-        image: "https://product.hstatic.net/200000722513/product/s5406ma-pp046ws_opi_1__c32544a0a1924215842dca8aaf3df95a_1024x1024.jpg",
-        ratingStars: 5,
-        reviewCount: 10,
-    }));
+    const handleAnalyze = async () => {
+        setIsLoading(true);
+        try {
+            window.alert('Phân tích đang được thực hiện. Vui lòng chờ...');
+            localStorage.setItem('minUtility', minUtility);
 
-    // Hàm giả lập để sinh ra dữ liệu phân tích
-    const calculateItemsets = (minUtility) => {
-        const results = [
-            { itemset: [4], utility: 28000.0 },
-            { itemset: [4, 3], utility: 31000.0 },
-            { itemset: [4, 3, 5], utility: 37000.0 },
-            { itemset: [4, 3, 5, 2], utility: 27000.0 },
-            { itemset: [4, 5], utility: 37000.0 },
-            { itemset: [4, 5, 2], utility: 31000.0 },
-            { itemset: [4, 5, 2, 6], utility: 25000.0 },
-            { itemset: [4, 2], utility: 25000.0 },
-        ];
+            const results = await fetchEMHUNAnalysis(minUtility);
+            setAnalysisResults(results);
+            console.log('Analysis Results:', results);
 
-        // Lọc kết quả dựa trên giá trị minUtility
-        return results.filter(item => item.utility >= minUtility);
+            const serials = results.flatMap(result => result.itemset);
+            console.log('Extracted serials:', serials);
+
+            if (serials.length > 0) {
+                const formattedSerials = serials.map(serial => serial.toString());
+                console.log('Formatted serials:', formattedSerials);
+
+                const productInfo = await fetchProductBySerials(formattedSerials);
+                setProductData(productInfo);
+                console.log('Product Information:', productInfo);
+            } else {
+                console.log('No serials found to fetch product information');
+            }
+        } catch (error) {
+            console.error('Error fetching analysis or product data:', error);
+        } finally {
+            console.log("Setting isLoading to false");
+            setIsLoading(false); 
+        }
     };
+    useEffect(() => {
+        const getData = async () => {
+            try {
 
-    // Hàm xử lý khi nhấn nút "Phân Tích"
-    const handleAnalyze = () => {
-        const results = calculateItemsets(minUtility);
-        setAnalysisResults(results);
-    };
+                const results = await fetchAnalysisResult();
+                setAnalysisResults(results);
+                console.log('Analysis Results:', results);
+    
+                const serials = results.flatMap(result => result.itemset);
+                console.log('Extracted serials:', serials);
+    
+                if (serials.length > 0) {
+                    // Kiểm tra xem các serials đã được chuyển đổi đúng cách chưa
+                    const formattedSerials = serials.map(serial => serial.toString());
+                    console.log('Formatted serials:', formattedSerials);
+    
+                    const productInfo = await fetchProductBySerials(formattedSerials);
+                    setProductData(productInfo);
+                    console.log('Product Information:', productInfo);
+                } else {
+                    console.log('No serials found to fetch product information');
+                }
+            } catch (error) {
+                console.error('Error fetching analysis or product data:', error);
+            }
+        };
+    
+        getData();
+
+        const interval = setInterval(() => {
+            getData();
+        }, 10000); 
+
+        return () => clearInterval(interval);
+    }, []);
+    
+    
 
     return (
         <AdminLayout>
             <div className="emhun-container">
                 <h2>Phân Tích EMHUN</h2>
 
-                {/* Biểu đồ phân tích */}
                 <AnalysisChart data={analysisResults} />
 
-                {/* Ô nhập min utility và nút phân tích */}
-                <InputField minUtility={minUtility} setMinUtility={setMinUtility} handleAnalyze={handleAnalyze} />
-
-                {/* Hiển thị danh sách kết quả phân tích */}
+                <InputField 
+                    minUtility={minUtility} 
+                    setMinUtility={setMinUtility} 
+                    handleAnalyze={handleAnalyze} 
+                    isLoading={isLoading} 
+                />
                 <div className="analysis-results">
                     <h3>Kết Quả Phân Tích</h3>
                     {analysisResults && analysisResults.length > 0 ? (

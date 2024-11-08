@@ -1,7 +1,7 @@
 import React from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap';
 
-const InputField = ({ minUtility, setMinUtility, handleAnalyze }) => {
+const InputField = ({ minUtility, setMinUtility, handleAnalyze, isLoading }) => {
     return (
         <div className="analyze-input-container">
             <Form inline>
@@ -19,6 +19,11 @@ const InputField = ({ minUtility, setMinUtility, handleAnalyze }) => {
                     Phân Tích
                 </Button>
             </Form>
+            {isLoading && (
+                <Alert variant="info" className="mt-3">
+                    Đang trong quá trình phân tích, vui lòng chờ...
+                </Alert>
+            )}
         </div>
     );
 };
