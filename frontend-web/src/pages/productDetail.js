@@ -12,6 +12,7 @@ import SimilarProducts from '../components/productDetail/SimilarProducts/Similar
 import TechNewsList from '../components/productDetail/TechNewsList/TechNewsList';
 import FlashSale from '../components/FlashSale/FlashSale';
 import CategoryGrid from '../components/CategoryGrid/CategoryGrid'
+import '../assets/css/productDetail.css'
 const ProductDetail = () => {
     const [activeTab, setActiveTab] = useState(null);
     const handleSelect = (selectedTab) => {
@@ -35,7 +36,8 @@ const ProductDetail = () => {
                     <Col md={7} style={{ justifyContent: 'center', marginBottom: '20px', padding: '10px', backgroundColor: 'white' }}>
 
                         <Tab.Container defaultActiveKey="description">
-                            <Nav variant="tabs" style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+                            <Nav className="product-detail-tab-nav" variant="tabs" style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+
                                 <Nav.Item>
                                     <Nav.Link eventKey="description">Mô Tả</Nav.Link>
                                 </Nav.Item>
@@ -68,7 +70,7 @@ const ProductDetail = () => {
 
                 </Row>
             </Container>
-            <FlashSale />   
+            <FlashSale />
             <CategoryGrid />
         </Layout>
     );

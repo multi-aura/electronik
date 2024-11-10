@@ -104,19 +104,16 @@ function ProductInfo({
         </div>
       </div>
 
-      {/* Tổng Cộng */}
       <div className="subtotal-section mt-3">
         <strong>Tổng cộng:</strong> {`${(price * quantity).toLocaleString()}đ`}
       </div>
 
-      {/* Nút Hành Động */}
       <div className="d-flex gap-2 mt-4">
         <Button variant="danger" className="flex-grow-1">MUA NGAY</Button>
         <Button variant="outline-secondary"><FaHeart /></Button>
         <Button variant="outline-secondary"><FaShareAlt /></Button>
       </div>
 
-      {/* Bảo hành và Chế độ đổi trả */}
       <div className="additional-info mt-4">
         <p><strong>Bảo hành:</strong> 12 tháng</p>
         <p><strong>Chính sách đổi trả:</strong> Đổi trả trong 30 ngày nếu có lỗi kỹ thuật</p>
