@@ -28,6 +28,7 @@ function Home() {
                   setCategories([]);
               }
           } catch (error) {
+            
               console.error('Error loading categories:', error);
               setCategories([]); 
           }
