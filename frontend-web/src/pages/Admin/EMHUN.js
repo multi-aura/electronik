@@ -1,4 +1,3 @@
-// src/pages/Admin/EMHUN.js
 import React, { useState , useEffect } from 'react';
 import AdminLayout from '../../layouts/AdminLayout/AdminLayout';
 import AnalysisChart from '../../components/Admin/EMHUN/AnalysisChart/AnalysisChart';
