@@ -1,0 +1,22 @@
+.order-details {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+}
+
+.customer-info {
+    margin-bottom: 15px;
+}
+
+.order-products {
+    margin-top: 15px;
+}
+
+.order-products ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.order-products li {
+    margin-bottom: 5px;
+}

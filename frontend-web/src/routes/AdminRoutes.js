@@ -4,6 +4,7 @@ import Dashboard from '../pages/Admin/Dashboard';
 import EMHUN from '../pages/Admin/EMHUN';
 import ProductManagementPage from '../pages/Admin/ProductManagement/ProductManagement';
 import ProductCreatePage from '../pages/Admin/ProductManagement/createProductPage';
+import OrderManagement from '../pages/Admin/OrderListPage'
 function AdminRoutes() {
   return (
       <Routes>
@@ -11,6 +12,7 @@ function AdminRoutes() {
         <Route path="/Emhun" element={<EMHUN />} />
         <Route path="/ProductManagement" element={<ProductManagementPage />} />
         <Route path="/ProductManagement/create" element={<ProductCreatePage />} />
+        <Route path="/OrderManagement" element={<OrderManagement />} />
 
 
       </Routes>
