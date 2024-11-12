@@ -23,8 +23,7 @@ const ProductDetail = () => {
     const [description, setDescription] = useState('');
     const [specifications, setSpecifications] = useState([]);
     const [reviews, setReviews] = useState([]);
-    const { serialID } = useParams();
-
+    const [serialID] = useParams();
     const { productId } = useParams();
     const handleSelect = (selectedTab) => {
         setActiveTab(activeTab === selectedTab ? null : selectedTab);
@@ -38,13 +37,14 @@ const ProductDetail = () => {
                 setProductData(productDetail.data);
 
                 setSelectedImage(productDetail.data?.default_image || '');
+
                 // Gán hình ảnh từ biến thể vào carouselImages
                 const variantImages = productDetail.data?.variants?.flatMap(variant => variant.images || []) || [];
                 setCarouselImages(variantImages);
 
-                setDescription(productDetail.data || '');
+                setDescription(productDetail.data?.descriptionEn || '');
                 setSpecifications(productDetail.data?.specifications || []);
-                setReviews(productDetail.data || []);
+                setReviews(productDetail.data?.feedbacks || []);
             } catch (error) {
                 console.error('Failed to fetch product details', error);
             }
@@ -61,7 +61,6 @@ const ProductDetail = () => {
         if (serialID) {
             getInformationBySerial();
         }
-       
     }, [serialID])
     return (
         <Layout>
@@ -72,11 +71,7 @@ const ProductDetail = () => {
                         <ProductImageCarousel images={carouselImages} onSelectImage={setSelectedImage} />
                     </Col>
                     <Col md={6}>
-                        <ProductInfo
-                            product={productData}
-                            onSelectImage={setSelectedImage} // Truyền hàm callback
-                        />
-
+                        <ProductInfo product={productData} />
                     </Col>
                 </Row>
                 <Row className="product-detail-content-row mt-4">

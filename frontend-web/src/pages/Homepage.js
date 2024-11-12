@@ -14,7 +14,6 @@ function Home() {
       const loadCategories = async () => {
           try {
               const categoryData = await fetchAllCategories();
-              console.log('Fetched category data:', categoryData);
 
               // Check if the data property is an array
               if (Array.isArray(categoryData.data)) {
@@ -56,7 +55,7 @@ function Home() {
       </div>
       <FlashSale />
       <BestSellingProducts />
-     <CategoryGrid categories={categories} />
+     <CategoryGrid  />
 
     </Layout>
   );

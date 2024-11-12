@@ -5,7 +5,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { logout } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import './Navigation.css';
-import Cart from '../../pages/Cart';
+import Cart from '../../pages/Cart';  
 import { Link } from 'react-router-dom';
 const Navigation = () => {
   const navigate = useNavigate();

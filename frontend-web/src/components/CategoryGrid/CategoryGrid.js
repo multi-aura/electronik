@@ -1,7 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './CategoryGrid.css';
+import { fetchAllCategories } from '../../services/categoryService';
 
-const CategoryGrid = ({ categories }) => {
+const CategoryGrid = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const categoryData = await fetchAllCategories();
+
+        // Check if the data property is an array
+        if (Array.isArray(categoryData.data)) {
+          setCategories(categoryData.data.map(cat => ({
+            label: cat.category.nameVi,
+            imgSrc: cat.category.image,
+            link: `/category/${cat.category._id}`,
+            subcategories: cat.manufacturers,
+          })));
+        } else {
+          console.warn('Expected an array, but got:', categoryData.data);
+          setCategories([]);
+        }
+      } catch (error) {
+        console.error('Error loading categories:', error);
+        setCategories([]);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
   return (
     <div className="category-grid-container p-4 rounded">
       <h4 className="category-title text-danger fw-bold">Danh mục sản phẩm</h4>

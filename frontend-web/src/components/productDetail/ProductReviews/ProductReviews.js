@@ -4,43 +4,19 @@ import { FaStar } from 'react-icons/fa';
 import './ProductReviews.css';
 import ProductRatingInput from '../ProductRatingInput/ProductRatingInput';
 
-const ProductReviews = ({
-    initialReviews = [
-        {
-            id: 1,
-            username: 'Trọng Thắng',
-            avatar: 'https://i.pinimg.com/564x/ba/cc/a2/bacca2f413feec96e248866fe3078556.jpg',
-            content: 'Sản phẩm rất tốt, vượt ngoài mong đợi!',
-            rating: 5,
-            timeAgo: '4 năm trước',
-        },
-        {
-            id: 2,
-            username: 'Huy Hon',
-            avatar: 'https://i.pinimg.com/564x/ba/cc/a2/bacca2f413feec96e248866fe3078556.jpg',
-            content: 'Chất lượng tốt, giá cả hợp lý. Sẽ quay lại mua lần nữa.',
-            rating: 4,
-            timeAgo: '5 năm trước',
-        },
-        {
-            id: 3,
-            username: 'Minh Hí',
-            avatar: 'https://i.pinimg.com/564x/ba/cc/a2/bacca2f413feec96e248866fe3078556.jpg',
-            content: 'Giao hàng nhanh chóng, nhân viên nhiệt tình.',
-            rating: 3,
-            timeAgo: '4 năm trước',
-        },
-    ],
-}) => {
-    const [reviews, setReviews] = useState(initialReviews);
+const ProductReviews = ({ reviews }) => {
+    // Access the `feedbacks` property
+    const feedbacks = reviews.feedbacks || [];
+
+    const [reviewList, setReviewList] = useState(feedbacks);
     const [showReviewForm, setShowReviewForm] = useState(false);
     const reviewFormRef = useRef(null);
 
-    // Hàm đếm số lượng đánh giá theo mức sao
+    // Function to count the number of reviews by star rating
     const getStarCounts = () => {
-        const counts = { 5: 0, 4: 20, 3: 10, 2: 1, 1: 0 };
-        reviews.forEach(review => {
-            const roundedRating = Math.round(review.rating);
+        const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        reviewList.forEach(review => {
+            const roundedRating = Math.round(review.number_star);
             counts[roundedRating] = (counts[roundedRating] || 0) + 1;
         });
         return counts;
@@ -50,18 +26,18 @@ const ProductReviews = ({
 
     const handleAddReview = (newReview) => {
         const newReviewData = {
-            id: reviews.length + 1,
+            id: reviewList.length + 1,
             username: 'Người dùng mới',
-            avatar: 'https://i.pinimg.com/564x/ba/cc/a2/bacca2f413feec96e248866fe3078556.jpg',
-            content: newReview.content,
-            rating: newReview.rating,
-            timeAgo: 'vừa xong',
+            avatar: 'https://via.placeholder.com/60', // Placeholder avatar
+            content_rated: newReview.content,
+            number_star: newReview.rating,
+            feedback_date: 'vừa xong',
         };
-        setReviews([newReviewData, ...reviews]);
+        setReviewList([newReviewData, ...reviewList]);
         setShowReviewForm(false);
     };
 
-    // Hàm kiểm tra khi click ra ngoài form
+    // Handle clicks outside the review form to close it
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (reviewFormRef.current && !reviewFormRef.current.contains(event.target)) {
@@ -78,8 +54,7 @@ const ProductReviews = ({
     return (
         <div className="product-reviews mt-4">
             <div style={{ display: "flex", justifyContent: "space-around" }}>
-                <h4 className="mb-3">Đánh Giá Sản Phẩm (4,5<FaStar className="star-icon" />)</h4>
-
+                <h4 className="mb-3">Đánh Giá Sản Phẩm (4.5 <FaStar className="star-icon" />)</h4>
                 <button
                     className="btn btn-primary mb-3"
                     style={{ width: "40%" }}
@@ -89,10 +64,7 @@ const ProductReviews = ({
                 </button>
             </div>
 
-
-
-
-            {/* Form đánh giá sản phẩm */}
+            {/* Product review form */}
             {showReviewForm && (
                 <div ref={reviewFormRef}>
                     <ProductRatingInput onSubmitReview={handleAddReview} />
@@ -110,16 +82,15 @@ const ProductReviews = ({
                 ))}
             </div>
 
-
-            {/* Danh Sách Đánh Giá */}
-            {reviews.length > 0 ? (
+            {/* Review list */}
+            {reviewList.length > 0 ? (
                 <ListGroup variant="flush">
-                    {reviews.map((review) => (
-                        <ListGroup.Item key={review.id} className="p-3">
+                    {reviewList.map((review) => (
+                        <ListGroup.Item key={review._id} className="p-3">
                             <Card className="border-0">
                                 <div className="d-flex align-items-start">
                                     <Image
-                                        src={review.avatar}
+                                        src={'https://via.placeholder.com/60'} // Placeholder avatar
                                         roundedCircle
                                         width={60}
                                         height={60}
@@ -131,13 +102,12 @@ const ProductReviews = ({
                                             <h5 className="mb-0">{review.username}</h5>
                                             <span className="text-warning ms-2">
                                                 {[...Array(5)].map((_, index) => (
-                                                    <FaStar key={index} color={index < Math.round(review.rating) ? '#ffc107' : '#e4e5e9'} />
+                                                    <FaStar key={index} color={index < Math.round(review.number_star) ? '#ffc107' : '#e4e5e9'} />
                                                 ))}
                                             </span>
-                                            <span className="ms-2">{review.rating}</span>
                                         </div>
-                                        <small className="text-muted">{review.timeAgo}</small>
-                                        <p className="mt-2">{review.content}</p>
+                                        <small className="text-muted">{review.feedback_date}</small>
+                                        <p className="mt-2">{review.content_rated}</p>
                                     </div>
                                 </div>
                             </Card>

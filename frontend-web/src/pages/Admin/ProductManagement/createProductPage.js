@@ -7,7 +7,6 @@ import ProductSpecifications from '../../../components/Admin/ProductManagementPa
 import ProductVariants from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductVariants/ProductVariants';
 import ProductHeader from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductHeader/ProductHeader';
 import '../../../assets/css/ProductCreatePage.css';
-
 const ProductCreatePage = () => {
     const [product, setProduct] = useState({
         code: '',
@@ -78,29 +77,29 @@ const ProductCreatePage = () => {
 
     return (
         <AdminLayout>
-            <Container fluid className="product-create-page p-4 bg-light rounded shadow">
+            <Container fluid className="admin-product-create-page p-4 bg-light rounded shadow">
                 <Row className="mb-4">
                     <Col>
-                        <div className="d-flex justify-content-between align-items-center header_create">
-                            <h2 className="page-title">Tạo sản phẩm mới</h2>
+                        <div className="d-flex justify-content-between align-items-center admin-header-create">
+                            <h2 className="admin-page-title">Tạo sản phẩm mới</h2>
                             <ProductHeader />
                         </div>
                     </Col>
                 </Row>
 
-                <Tabs defaultActiveKey="details" id="product-create-tabs" className="mb-4">
+                <Tabs defaultActiveKey="details" id="admin-product-create-tabs" className="admin-product-create-tabs mb-4" >
                     <Tab eventKey="details" title="Thông tin sản phẩm">
-                        <div className="p-3 bg-white shadow-sm rounded">
+                        <div className="p-3 bg-white shadow-sm rounded admin-tab-content">
                             <ProductOverview product={product} handleChange={handleChange} />
                         </div>
                     </Tab>
                     <Tab eventKey="images" title="Hình ảnh sản phẩm">
-                        <div className="p-3 bg-white shadow-sm rounded">
+                        <div className="p-3 bg-white shadow-sm rounded admin-tab-content">
                             <ProductImageUpload handleImageUpload={handleChange} />
                         </div>
                     </Tab>
                     <Tab eventKey="specifications" title="Thông số kỹ thuật">
-                        <div className="p-3 bg-white shadow-sm rounded">
+                        <div className="p-3 bg-white shadow-sm rounded admin-tab-content">
                             <ProductSpecifications
                                 specifications={product.specifications}
                                 handleSpecChange={handleSpecificationChange}
@@ -110,7 +109,7 @@ const ProductCreatePage = () => {
                         </div>
                     </Tab>
                     <Tab eventKey="variants" title="Biến thể sản phẩm">
-                        <div className="p-3 bg-white shadow-sm rounded">
+                        <div className="p-3 bg-white shadow-sm rounded admin-tab-content">
                             <ProductVariants
                                 variants={product.variants}
                                 handleVariantChange={handleVariantChange}
