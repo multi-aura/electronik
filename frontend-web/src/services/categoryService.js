@@ -13,7 +13,6 @@ export const fetchAllCategories = async () => {
         });
 
         if (response.status === 200) {
-            console.log('Categories fetched successfully:', response.data);
             return response.data;
         } else {
             throw new Error('Failed to fetch categories');

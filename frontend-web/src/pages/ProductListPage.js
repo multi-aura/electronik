@@ -5,78 +5,85 @@ import FilterSidebar from "../components/ProductListPage/FilterSidebar/FilterSid
 import ProductGrid from "../components/ProductListPage/ProductGrid/ProductGrid";
 import "../assets/css/ProductListPage.css";
 import CategoryGrid from '../components/CategoryGrid/CategoryGrid';
+import { useParams } from "react-router-dom";
+import { fetchProductsByCategory } from "../services/productService";
 
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(5); // Giới hạn 5 trang giả lập
+  const [totalPages, setTotalPages] = useState(100);
   const [loading, setLoading] = useState(false);
+  const [manufacturer, setManufacturer] = useState(""); // Thêm state để lưu manufacturer
+  const { categoryID } = useParams();
+  const limit = 8; // Giới hạn số sản phẩm mỗi trang
+
+  const listProductByCategoryID = async (page) => {
+    if (!categoryID) return;
+
+    setLoading(true);
+    try {
+      console.log('Fetching products for category ID:', categoryID, 'Page:', page, 'Manufacturer:', manufacturer);
+      const productsData = await fetchProductsByCategory(categoryID, page, limit, manufacturer);
+      
+      if (productsData.data) {
+        setProducts(prevProducts => page === 1 ? productsData.data : [...prevProducts, ...productsData.data]);
+        setCurrentPage(page); // Cập nhật trang hiện tại
+      }
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (currentPage <= totalPages && !loading) {
-      fetchProducts();
+    if (categoryID) {
+      listProductByCategoryID(1); // Tải dữ liệu trang đầu tiên khi `categoryID` thay đổi
     }
-  }, [currentPage]);
+  }, [categoryID, manufacturer]); // Thêm `manufacturer` vào mảng phụ thuộc nếu cần lọc sản phẩm theo manufacturer
 
-  // Hàm tải thêm sản phẩm khi cuộn đến cuối trang
+  const loadMoreProducts = () => {
+    if (!loading && currentPage < totalPages) {
+      listProductByCategoryID(currentPage + 1); // Tải trang tiếp theo
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100 &&
-        !loading &&
-        currentPage < totalPages
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 200 // Giảm khoảng cách để kích hoạt sớm hơn
       ) {
-        setCurrentPage((prevPage) => prevPage + 1);
+        loadMoreProducts();
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, currentPage, totalPages]);
-
-  // Hàm giả lập lấy dữ liệu sản phẩm
-  const fetchProducts = () => {
-    setLoading(true);
-
-    const sampleProducts = Array.from({ length: 10 }, (_, index) => ({
-      id: index + currentPage * 10,
-      name: `ASUS Vivobook S 14 OLED - Trang ${currentPage}`,
-      specs: ["Ultra i5 125H", "Intel Arc", "16GB", "512GB"],
-      oldPrice: "26.990.000",
-      newPrice: "24.290.000",
-      discount: 10,
-      image: "https://product.hstatic.net/200000722513/product/s5406ma-pp046ws_opi_1__c32544a0a1924215842dca8aaf3df95a_1024x1024.jpg",
-      rating: 5,
-      reviews: 10,
-    }));
-
-    // Cập nhật danh sách sản phẩm và dừng trạng thái tải
-    setProducts((prevProducts) => [...prevProducts, ...sampleProducts]);
-    setLoading(false);
-  };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentPage, loading, totalPages]);
 
   return (
     <Layout>
       <div className="container product-list-page my-3">
         <div className="row mt-4">
           <div>
-            <FilterSidebar />
+            <FilterSidebar setManufacturer={setManufacturer} /> {/* Truyền `setManufacturer` để cập nhật giá trị */}
             <TopFilterBar />
           </div>
 
           <div>
-            <ProductGrid products={products} />
+            {/* Hiển thị sản phẩm nếu có `categoryID` */}
+            {categoryID ? (
+              <ProductGrid products={products} />
+            ) : (
+              <span>Chọn một danh mục để xem sản phẩm</span>
+            )}
           </div>
         </div>
 
         {loading && (
           <div className="d-flex justify-content-center mt-4">
             <span>Đang tải thêm...</span>
-          </div>
-        )}
-        {currentPage >= totalPages && (
-          <div className="d-flex justify-content-center mt-4">
-            <span>Đã tải hết sản phẩm.</span>
           </div>
         )}
       </div>

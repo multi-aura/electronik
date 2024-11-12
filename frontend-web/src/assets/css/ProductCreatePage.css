@@ -1,50 +1,52 @@
-
-
-.header_create {
+.admin-header-create {
     background-color: #ffffff;
     padding: 10px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.page-title {
+.admin-page-title {
     color: #2c3e50;
     font-size: 2.2rem;
     margin: 0;
 }
-
-.nav-tabs {
-    background-color: #3498db;
-    border-radius: 12px 12px 0 0;
+.admin-product-create-tabs {
     display: flex;
+    border-bottom: 2px solid #dcdde1; /* Đường viền dưới màu sáng */
+    background-color: #f5f6fa; /* Màu nền tổng thể của tabs */
 }
 
-.nav-tabs .nav-link {
-    color: white;
-    font-weight: bold;
-    flex: 1;
-    text-align: center;
-    padding: 15px;
-    min-width: 150px;
+.admin-product-create-tabs .nav-link {
+    background-color: transparent; /* Xóa màu nền mặc định */
+    color: #34495e; /* Màu chữ tối */
+    font-weight: 600; /* Chữ đậm hơn */
+    padding: 12px 18px; /* Căn chỉnh padding để tạo không gian */
+    border-radius: 12px 12px 0 0; /* Bo tròn cạnh trên */
+    transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Hiệu ứng mượt */
+    margin-right: 8px; /* Khoảng cách giữa các tab */
 }
 
-.nav-tabs .nav-link.active {
-    background-color: #2980b9;
-    border-color: #2980b9;
+.admin-product-create-tabs .nav-link:hover {
+    background-color: #dcdde1; /* Màu nền nhẹ khi hover */
+    color: #2980b9; /* Màu chữ xanh đậm khi hover */
+    transform: translateY(-1px); /* Hiệu ứng nâng nhẹ */
 }
-
-.nav-tabs .nav-link:hover {
-    background-color: #1f6392;
+.admin-product-create-tabs .nav-link.active {
+    background-color: #2980b9; /* Màu nền khi tab được chọn */
+    color: #ffffff; /* Màu chữ trắng khi tab được chọn */
+    border: none; /* Xóa viền mặc định */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ để tạo chiều sâu */
+    transform: translateY(-2px); /* Hiệu ứng nâng khi tab được chọn */
 }
-
-.tab-content {
+.admin-tab-content {
     background-color: #ffffff;
     padding: 25px;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: -2px; /* Đưa tab-content lên sát với các tab */
 }
 
-.form-control {
+.admin-form-control {
     border-radius: 10px;
     border: 1px solid #bdc3c7;
     padding: 15px;
@@ -53,7 +55,7 @@
     margin-bottom: 15px;
 }
 
-.form-control:focus {
+.admin-form-control:focus {
     border-color: #3498db;
     box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
 }
@@ -80,16 +82,16 @@ button:hover {
     opacity: 0.9;
 }
 
-.btn {
+.admin-btn {
     margin-top: 10px;
 }
 
-.btn-outline-danger {
+.admin-btn-outline-danger {
     color: #e74c3c;
     border-color: #e74c3c;
 }
 
-.btn-outline-danger:hover {
+.admin-btn-outline-danger:hover {
     background-color: #e74c3c;
     color: white;
 }

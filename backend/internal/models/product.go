@@ -259,7 +259,7 @@ func (p *Product) ToMap() map[string]interface{} {
 		"default_image":  p.DefaultImage,
 		"price":          p.Price,
 		"category":       p.Category.ToMap(),
-		"variants":       variants,
+		"variants":        variants,
 		"feedbacks":      feedbacks,
 		"dimensions":     p.Dimensions,
 		"manufacturer":   p.Manufacturer,

@@ -1,5 +1,6 @@
 // components/EMHUN/AnalysisChart/AnalysisChart.js
-import React from 'react';
+import React, { useRef } from 'react';
+
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 
