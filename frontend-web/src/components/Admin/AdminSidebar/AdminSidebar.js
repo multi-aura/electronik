@@ -16,7 +16,7 @@ const AdminSidebar = ({ toggleSidebar, isOpen }) => {
             <nav className="nav flex-column flex-grow-1">
                 <a className="nav-link d-flex align-items-center text-white" href="/admin">
                     <div className="icon"><FontAwesomeIcon icon={faHome} /></div>
-                    <span>dashboard</span>
+                    <span>Dashboard</span>
                 </a>
                 <a className="nav-link d-flex align-items-center text-white" href="/admin/Emhun">
                     <div className="icon"><FontAwesomeIcon icon={faFileAlt} /></div>
@@ -26,7 +26,7 @@ const AdminSidebar = ({ toggleSidebar, isOpen }) => {
                     <div className="icon"><FontAwesomeIcon icon={faCube} /></div>
                     <span>Products</span>
                 </a>
-                <a className="nav-link d-flex align-items-center text-white" href="/orders">
+                <a className="nav-link d-flex align-items-center text-white" href="/admin/OrderManagement">
                     <div className="icon"><FontAwesomeIcon icon={faFileAlt} /></div>
                     <span>Orders</span>
                 </a>
