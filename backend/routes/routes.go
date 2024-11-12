@@ -88,6 +88,118 @@ func SetupRoutes(app *fiber.App) {
 		})
 
 	})
+	app.Post("/recommend", func(c *fiber.Ctx) error {
+		// Đường dẫn tới file `result.txt`
+		resultFilePath := "scripts/result.txt"
+
+		// Đọc nội dung file
+		data, err := os.ReadFile(resultFilePath)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Could not read result file")
+		}
+
+		// Parse the request body for `page` and `limit`
+		var requestBody struct {
+			Page  int `json:"page"`
+			Limit int `json:"limit"`
+		}
+
+		if err := c.BodyParser(&requestBody); err != nil {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+		}
+
+		// Validate page and limit values
+		if requestBody.Page <= 0 {
+			requestBody.Page = 1
+		}
+		if requestBody.Limit <= 0 {
+			requestBody.Limit = 10
+		}
+
+		// Lấy serials từ query parameter
+		serialsParam := c.Query("serials")
+		if serialsParam == "" {
+			return c.Status(fiber.StatusBadRequest).SendString("Missing serials parameter")
+		}
+
+		// Chuyển đổi serials thành slice
+		serials := strings.Split(serialsParam, ",")
+		serialsMap := make(map[string]bool)
+		for _, s := range serials {
+			trimmedSerial := strings.TrimSpace(s)
+			serialsMap[trimmedSerial] = true
+		}
+
+		lines := strings.Split(string(data), "\n")
+		var results []map[string]interface{}
+
+		// Duyệt qua từng dòng và tách `Itemset` và `Utility`
+		for _, line := range lines {
+			line = strings.TrimSuffix(line, "\r")
+			if strings.TrimSpace(line) == "" {
+				continue
+			}
+
+			// Tìm kiếm `Itemset` và `Utility` trong mỗi dòng
+			parts := strings.Split(line, ", Utility: ")
+			if len(parts) != 2 {
+				continue
+			}
+
+			itemsetStr := strings.TrimPrefix(parts[0], "Itemset: ")
+			itemsetStr = strings.Trim(itemsetStr, "[]")
+			// Tách Itemset thành slice và chuẩn hóa các phần tử
+			itemset := strings.Fields(itemsetStr)
+			for i := range itemset {
+				itemset[i] = strings.TrimSpace(itemset[i])
+			}
+
+			// Kiểm tra nếu itemset chứa ít nhất một serial trong serialsMap
+			shouldInclude := false
+			remainingItems := []string{}
+			for _, item := range itemset {
+				if serialsMap[item] {
+					shouldInclude = true
+				} else {
+					remainingItems = append(remainingItems, item)
+				}
+			}
+
+			fmt.Printf("Serials map: %v\n", serialsMap)
+			fmt.Printf("Checking itemset: %v\n", itemset)
+			fmt.Printf("Should include: %v\n", shouldInclude)
+
+			// Nếu itemset chứa serials và có phần tử khác, thêm vào kết quả
+			if shouldInclude && len(remainingItems) > 0 {
+				result := map[string]interface{}{
+					"remainingItems": remainingItems, // Các phần tử khác trong itemset, trừ serials
+				}
+				results = append(results, result)
+			}
+		}
+
+		// Paginate results
+		startIndex := (requestBody.Page - 1) * requestBody.Limit
+		endIndex := startIndex + requestBody.Limit
+		if startIndex >= len(results) {
+			return c.JSON(fiber.Map{
+				"status":  "success",
+				"message": "No more results",
+				"data":    []map[string]interface{}{},
+			})
+		}
+		if endIndex > len(results) {
+			endIndex = len(results)
+		}
+		paginatedResults := results[startIndex:endIndex]
+
+		return c.JSON(fiber.Map{
+			"status":  "success",
+			"message": "Filtered recommendation result retrieved",
+			"data":    paginatedResults,
+		})
+	})
+
 }
 
 func runWorker(minUtility float64) error {
