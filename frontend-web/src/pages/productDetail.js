@@ -38,14 +38,13 @@ const ProductDetail = () => {
                 setProductData(productDetail.data);
 
                 setSelectedImage(productDetail.data?.default_image || '');
-
                 // Gán hình ảnh từ biến thể vào carouselImages
                 const variantImages = productDetail.data?.variants?.flatMap(variant => variant.images || []) || [];
                 setCarouselImages(variantImages);
 
-                setDescription(productDetail.data?.descriptionEn || '');
+                setDescription(productDetail.data || '');
                 setSpecifications(productDetail.data?.specifications || []);
-                setReviews(productDetail.data?.feedbacks || []);
+                setReviews(productDetail.data || []);
             } catch (error) {
                 console.error('Failed to fetch product details', error);
             }
@@ -62,6 +61,7 @@ const ProductDetail = () => {
         if (serialID) {
             getInformationBySerial();
         }
+       
     }, [serialID])
     return (
         <Layout>

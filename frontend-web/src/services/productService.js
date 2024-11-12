@@ -37,20 +37,3 @@ export const fetchProductDetailsByID = async (productID) => {
         throw error;
     }
 }
-export const fetchInformationProductBySerial = async (serialID) => {
-    try {
-        const response = await axios.post(`${API_URL}/product/informationBySerial`,{
-            serials: [serialID]
-        });
-        if (response.data === 200) {
-            console.log("Thanh cong:", response.data);
-        }
-        else {
-            console.log('Failed to fetch information by serial');
-        }
-
-    } catch (error) {
-        console.log('Error fetching information by serial:', error);
-        throw error;
-    }
-}

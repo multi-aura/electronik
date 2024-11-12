@@ -4,7 +4,6 @@ import { FaHeart, FaShareAlt, FaShippingFast } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 function ProductInfo({ product, onSelectImage }) {
-  console.log(product);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
   const [mainImage, setMainImage] = useState('');
