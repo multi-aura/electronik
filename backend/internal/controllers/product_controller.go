@@ -50,24 +50,26 @@ func (pro *ProductController) CreateProduct(c *fiber.Ctx) error {
 }
 func (pro *ProductController) GetProductByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	product, er := pro.service.GetProductByID(id)
-	if er != nil {
+	product, err := pro.service.GetProductByID(id)
+	if err != nil || product == nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "Product not found",
 		})
 	}
-	if product == nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "Product not found",
-		})
+
+	// Chuyển đổi `Serial` thành chuỗi cho từng variant trong `product`
+	for i, variant := range product.Variants {
+		product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
 	}
+
+	// Trả về kết quả thành công
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
 		Message: "Get product successful",
 		Data:    product,
 	})
-
 }
+
 func (pro *ProductController) UpdateProduct(c *fiber.Ctx) error {
 	var product models.Product
 
@@ -329,6 +331,11 @@ func (pro *ProductController) GetProductsByIDs(c *fiber.Ctx) error {
 			Error: "StatusInternalServerError",
 		})
 	}
+	for _, product := range products {
+		for i, variant := range product.Variants {
+			product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
+		}
+	}
 
 	if len(products) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
@@ -384,7 +391,7 @@ func (pro *ProductController) GetSimilarProducts(c *fiber.Ctx) error {
 }
 func (pro *ProductController) GetProductsBySerials(c *fiber.Ctx) error {
 	var request struct {
-		Serials []string `json:"serials"` // Nhận chuỗi từ client
+		Serials []string `json:"serials"`
 	}
 
 	if err := c.BodyParser(&request); err != nil {

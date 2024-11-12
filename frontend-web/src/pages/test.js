@@ -23,8 +23,7 @@ const ProductDetail = () => {
     const [description, setDescription] = useState('');
     const [specifications, setSpecifications] = useState([]);
     const [reviews, setReviews] = useState([]);
-    const { serialID } = useParams();
-
+    const [serialID] = useParams();
     const { productId } = useParams();
     const handleSelect = (selectedTab) => {
         setActiveTab(activeTab === selectedTab ? null : selectedTab);
@@ -72,11 +71,7 @@ const ProductDetail = () => {
                         <ProductImageCarousel images={carouselImages} onSelectImage={setSelectedImage} />
                     </Col>
                     <Col md={6}>
-                        <ProductInfo
-                            product={productData}
-                            onSelectImage={setSelectedImage} // Truyền hàm callback
-                        />
-
+                        <ProductInfo product={productData} />
                     </Col>
                 </Row>
                 <Row className="product-detail-content-row mt-4">

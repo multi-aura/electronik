@@ -1,47 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import './ProductImageCarousel.css';
 
-const ProductImageCarousel = ({ images = [
-    { url: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/l/a/laptop_msi_2__2_2.png' },
-    { url: 'https://cdn2.cellphones.com.vn/x/media/catalog/product/l/a/laptop_msi_6__1_2.png' },
-    { url: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/l/a/laptop_msi_2__2_2.png' },
-    { url: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/l/a/laptop_msi_1__2_2.png' },
-    { url: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/l/a/laptop_msi_1__2_2.png' },
+const CustomPrevArrow = (props) => {
+    const { onClick } = props;
+    return (
+        <button className="slick-prev" onClick={onClick}>
+            <FaArrowLeft size={20} color="#333" />
+        </button>
+    );
+};
 
-], onSelectImage }) => {
+const CustomNextArrow = (props) => {
+    const { onClick } = props;
+    return (
+        <button className="slick-next" onClick={onClick}>
+            <FaArrowRight size={20} color="#333" />
+        </button>
+    );
+};
+
+const ProductImageCarousel = ({ images, onSelectImage }) => {
+    const [selectedIndex, setSelectedIndex] = useState(0);
 
     const settings = {
         dots: false,
-        infinite: true,
+        infinite: false,
         speed: 500,
-        slidesToShow: 5,
+        slidesToShow: Math.min(images.length, 5),
         slidesToScroll: 1,
-        focusOnSelect: true,
         arrows: true,
-        afterChange: (current) => onSelectImage(images[current].url)
+        variableWidth: true,
+        centerMode: false,
+        prevArrow: <CustomPrevArrow />,
+        nextArrow: <CustomNextArrow />,
+    };
+
+    const handleImageClick = (index) => {
+        setSelectedIndex(index);
+        onSelectImage(images[index].url);
     };
 
     return (
-        <div className="product-image-gallery">
-            {/* Hiển thị các ảnh thumbnail trượt ngang */}
-            <Slider {...settings} className="thumbnail-carousel" style={{ maxWidth: '400px', margin: '0 auto', marginTop: '10px' }}>
+        <div className="custom-product-image-gallery">
+            <Slider {...settings} className="custom-thumbnail-carousel">
                 {images.map((image, index) => (
-                    <div key={index} className="thumbnail-item" style={{ padding: '5px' }}>
+                    <div
+                        key={image._id || index}
+                        className={`custom-thumbnail-item ${selectedIndex === index ? 'selected' : ''}`}
+                        onClick={() => handleImageClick(index)}
+                    >
                         <img
                             src={image.url}
                             alt={`Product variant ${index + 1}`}
-                            onClick={() => {
-                                onSelectImage(image.url);
-                            }}
-                            className="img-thumbnail"
-                            style={{
-                                cursor: 'pointer',
-                                width: '60px',
-                                height: '60px',
-                                objectFit: 'cover',
-                            }}
+                            className="custom-img-thumbnail"
                         />
                     </div>
                 ))}

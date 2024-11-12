@@ -55,7 +55,7 @@ function Home() {
       </div>
       <FlashSale />
       <BestSellingProducts />
-     <CategoryGrid categories={categories} />
+     <CategoryGrid  />
 
     </Layout>
   );

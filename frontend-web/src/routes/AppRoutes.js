@@ -18,6 +18,7 @@ function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/mulregister" element={<MulRegisterPage />} />
         <Route path="/product/:productId" element={<ProductDetail />} />
+        <Route path="/product/:serialID" element={<ProductDetail />} />
         <Route path="/product" element={<ProductListPage />} />
         <Route path="/category/:categoryID" element={<ProductListPage />} />
         <Route path="/product/Cart" element={<CartPage />} />
