@@ -37,3 +37,27 @@ export const fetchProductDetailsByID = async (productID) => {
         throw error;
     }
 }
+export const fetchProductsBySearch = async (page, limit) => {
+    try {
+        const response = await axios.post(
+            `${API_URL}/product/search`,
+            {
+                page,
+                limit,
+            }
+        );
+
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            throw new Error('Failed to fetch products');
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error response status:', error.response.status);
+            console.error('Error response data:', error.response.data);
+        }
+        console.error('Error fetching products by search:', error);
+        throw error;
+    }
+};
