@@ -52,7 +52,7 @@ const Cart = ({ onClose }) => {
                     </h2>
                 </div>
                 <p>{items.length} mặt hàng</p>
-                <FreeShippingProgress subtotal={subtotal} freeShippingThreshold={5000000} />
+                <FreeShippingProgress subtotal={subtotal} freeShippingThreshold={15000000} />
                 <div className="cart-item-list mb-4">
                     {items.map((item) => (
                         <CartItem

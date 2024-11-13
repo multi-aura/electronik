@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import VoucherList from '../VoucherList/VoucherList';
 import { Link } from 'react-router-dom';
+import './CartFooter.css'
 const CartFooter = ({ cartItems }) => {
   const [subtotal, setSubtotal] = useState(
     cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
@@ -8,81 +9,76 @@ const CartFooter = ({ cartItems }) => {
   const [voucherCode, setVoucherCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [additionalComments, setAdditionalComments] = useState('');
-  const [showVoucherList, setShowVoucherList] = useState(false); // Khai báo state showVoucherList
+  const [showVoucherList, setShowVoucherList] = useState(false);
 
   const handleApplyVoucher = (code, discountValue) => {
     setVoucherCode(code);
     setDiscount(discountValue);
     alert(`Mã giảm giá "${code}" đã được áp dụng!`);
-    setShowVoucherList(false); // Ẩn danh sách voucher sau khi áp dụng
+    setShowVoucherList(false);
   };
 
   const total = subtotal - subtotal * discount;
-
+  const formatPrice = (price) => {
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  }
   return (
-    <div className="cart-footer p-4" style={{ backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)' }}>
-      <div className="d-flex justify-content-between mb-3">
-        <span className="summary-title">Tạm tính:</span>
-        <span>{subtotal.toFixed(2)} đ</span>
+    <div className="cart-footer-container p-4">
+      <div className="cart-footer-summary mb-3">
+        <span className="cart-footer-summary-title">Tạm tính:</span>
+        <span>{formatPrice(subtotal)} </span>
       </div>
 
       {discount > 0 && (
-        <div className="d-flex justify-content-between mb-3">
-          <span className="summary-title text-success">Giảm giá:</span>
-          <span className="text-success">- {(subtotal * discount).toFixed(2)} đ</span>
+        <div className="cart-footer-summary mb-3">
+          <span className="cart-footer-discount-title">Giảm giá:</span>
+          <span className="cart-footer-discount-value">- {formatPrice(subtotal * discount)} </span>
         </div>
       )}
 
-      <div className="d-flex justify-content-between mb-3">
-        <span className="summary-title">Tổng cộng:</span>
-        <span>{total.toFixed(2)} đ</span>
+      <div className="cart-footer-summary mb-3">
+        <span className="cart-footer-total-title">Tổng cộng:</span>
+        <span>{formatPrice(total)} </span>
       </div>
 
-      {/* Nút để hiển thị danh sách voucher */}
       <button
-        className="btn btn-dark w-100 mb-3"
-        style={{ borderRadius: '8px' }}
+        className="cart-footer-voucher-btn btn btn-dark w-100 mb-3"
         onClick={() => setShowVoucherList(!showVoucherList)}
       >
         {showVoucherList ? "Ẩn danh sách mã giảm giá ▲" : "Sử dụng mã giảm giá ▼"}
       </button>
 
-      {/* Hiển thị VoucherList khi showVoucherList là true */}
       {showVoucherList && <VoucherList onApplyVoucher={handleApplyVoucher} />}
 
-
-
-      <div className="voucher-input-group mb-3 d-flex">
+      <div className="cart-footer-voucher-input-group mb-3 d-flex">
         <input
           type="text"
-          className="form-control"
+          className="cart-footer-voucher-input form-control"
           placeholder="Mã giảm giá"
           value={voucherCode}
           onChange={(e) => setVoucherCode(e.target.value)}
-          style={{ borderRadius: '8px 0 0 8px', borderColor: '#ddd' }}
         />
         <button
-          className="btn btn-dark"
+          className="cart-footer-apply-btn btn btn-dark"
           onClick={() => handleApplyVoucher(voucherCode, discount)}
-          style={{ borderRadius: '0 8px 8px 0' }}
         >
           Áp dụng mã
         </button>
       </div>
-      <div className="additional-comments mb-3">
-        <label className="form-label fw-bold">Ghi chú bổ sung <span className="badge bg-light text-muted">Lưu ý</span></label>
+      
+      <div className="cart-footer-comments mb-3">
+        <label className="cart-footer-comments-label">Ghi chú bổ sung <span className="badge bg-light text-muted">Lưu ý</span></label>
         <textarea
-          className="form-control"
+          className="cart-footer-comments-textarea form-control"
           placeholder="Nhập ghi chú của bạn"
           value={additionalComments}
           onChange={(e) => setAdditionalComments(e.target.value)}
           rows="3"
-          style={{ borderRadius: '8px', borderColor: '#ddd' }}
         />
       </div>
 
       <Link to={`/product/Payment`}>
-        <button className="btn btn-dark w-100 mt-3" style={{ borderRadius: '8px' }}>Thanh toán ngay</button>
+        <button className="cart-footer-checkout-btn btn btn-dark w-100 mt-3">Thanh toán ngay</button>
       </Link>
     </div>
   );

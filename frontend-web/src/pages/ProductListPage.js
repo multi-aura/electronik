@@ -21,9 +21,7 @@ const ProductListPage = () => {
   const fetchProducts = async (page) => {
     setLoading(true);
     try {
-      console.log('Fetching products:', { categoryID, page, manufacturer });
       
-      // Kiểm tra `categoryID` để quyết định gọi API phù hợp
       const productsData = categoryID
         ? await fetchProductsByCategory(categoryID, page, limit, manufacturer)
         : await fetchProductNoQuery(page, limit, manufacturer);
