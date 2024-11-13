@@ -39,7 +39,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, relatedProducts }) => {
         </button>
       </div>
 
-      {/* Hiển thị sản phẩm mua kèm */}
       {relatedProducts && relatedProducts.length > 0 && (
         <RelatedProducts relatedProducts={relatedProducts} />
       )}
