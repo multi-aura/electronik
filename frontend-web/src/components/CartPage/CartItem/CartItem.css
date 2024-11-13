@@ -1,58 +1,81 @@
 /* Đặt cho các nút tăng giảm số lượng */
-.quantity-controls button {
-    border: none;
-    background-color: #f8f9fa;
-    font-size: 1.2rem;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease;
-  }
-  
-  .quantity-controls button:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .quantity-controls .quantity {
-    margin: 0 10px;
-    font-size: 1rem;
-  }
-  
-  /* Đặt cho nút xóa */
-  .remove-btn {
-    color: #dc3545;
-    border: none;
-    background-color: transparent;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  
-  .remove-btn:hover {
-    color: #bd2130;
-  }
-  
-  .price-section,
-  .total-price {
-    font-weight: bold;
-    color: #333;
-  }
-  .related-products {
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-  }
-  
-  .related-product-card {
-    width: 100px;
-    font-size: 0.9rem;
-  }
-  
-  .related-product-card img {
-    width: 50px;
-    height: 50px;
-  }
-  
+.cart-item-custom-quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 10px; 
+}
+
+.cart-item-custom-quantity-controls .cart-item-custom-quantity-btn {
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  width: 5px !important;
+  height: 5px;
+}
+
+
+
+.cart-item-custom-quantity-controls .cart-item-custom-quantity-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.cart-item-custom-quantity-controls .cart-item-custom-quantity {
+  margin: 0 10px;
+  font-size: 1rem;
+}
+
+/* Đặt cho nút xóa */
+.cart-item-custom-remove-btn {
+  color: #dc3545;
+  border: none;
+  background-color: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.cart-item-custom-remove-btn:hover {
+  color: #bd2130;
+}
+
+.cart-item-custom-price-section,
+.cart-item-custom-total-price {
+  font-weight: bold;
+  color: #333;
+}
+
+.cart-item-custom-image {
+  max-width: 60px;
+  border-radius: 5px;
+}
+
+.cart-item-custom-title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.cart-item-custom-brand {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* CSS cho sản phẩm liên quan */
+.related-products {
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.related-product-card {
+  width: 100px;
+  font-size: 0.9rem;
+}
+
+.related-product-card img {
+  width: 50px;
+  height: 50px;
+}

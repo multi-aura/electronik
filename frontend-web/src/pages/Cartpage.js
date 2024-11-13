@@ -265,16 +265,16 @@ const CartPage = () => {
   return (
     <Layout>
       <div className="container cart-page mt-5">
-        <div className='row'>
-          <div className='col-8'>
-            <h2 className="text-center mb-4">Giỏ Hàng</h2>
-
+      <h2 className="text-center mb-4">Giỏ Hàng</h2>
             <FreeShippingProgress subtotal={subtotal} freeShippingThreshold={500000} />
 
+        <div className='row'>
+          <div className='col-8'>
+   
             <div className="row text-center fw-bold py-3 border-bottom">
               <div className="col-6 col-md-4">Sản Phẩm</div>
               <div className="col-2">Giá</div>
-              <div className="col-2">Số Lượng</div>
+              <div className="col-3">Số Lượng</div>
               <div className="col-2">Tổng</div>
               <div className="col-1">Xóa</div>
             </div>
@@ -289,7 +289,7 @@ const CartPage = () => {
               />
             ))}
           </div>
-          <div className='col-4'>
+          <div className='col-4 mt-5'>
             <CartFooter cartItems={cartItems} />
           </div>
         </div>
