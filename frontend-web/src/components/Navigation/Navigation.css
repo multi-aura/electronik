@@ -15,13 +15,38 @@ a {
 }
 
 .avatar_login {
-    width: 40px; 
+    width: 40px;
     height: 40px;
-    border-radius: 50%; 
+    border-radius: 50%;
     object-fit: cover;
     margin-left: 10px;
 }
+
 .dropdown-toggle::after {
     display: none !important;
-  }
-  
+}
+
+.cart-icon-wrapper {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-size: 14px;
+    position: relative;
+}
+
+.badge-count {
+    font-size: 10px;
+    padding: 2px 6px;
+    background-color: #FF4136; /* Màu đỏ nổi bật */
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    position: absolute;
+    top: -10px; 
+    right: 51px; 
+}
+
+
+.cart-icon-wrapper:hover {
+    color: #ddd;
+}

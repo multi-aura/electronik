@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Badge, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { FaHeart, FaShareAlt, FaShippingFast } from 'react-icons/fa';
+import { FaHeart, FaShareAlt, FaShippingFast, FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { addToCart } from '../../../services/cartService';
 
 function ProductInfo({ product, onSelectImage }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
-  const [mainImage, setMainImage] = useState('');
-  // Gán giá trị mặc định cho `selectedColor` khi `product` có dữ liệu
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (product && product.variants && product.variants.length > 0) {
       setSelectedColor(product.variants[0]);
-
     }
   }, [product]);
 
@@ -20,24 +19,37 @@ function ProductInfo({ product, onSelectImage }) {
   }
 
   const price = selectedColor ? selectedColor.price : (product.price || 0);
-  const oldPrice = product.sale
-    ? product.sale.discountPercentage > 0
-      ? price / (1 - product.sale.discountPercentage / 100)
-      : null
-    : null;
+  const priceSale = product.sale && product.sale.discountPercentage > 0
+    ? price * (1 - product.sale.discountPercentage / 100)
+    : price;
 
   const handleQuantityChange = (value) => {
     setQuantity(Math.max(1, quantity + value));
   };
+
   const handleVariantClick = (variant) => {
+    setQuantity(1);
     setSelectedColor(variant);
     const newImage = variant.images && variant.images[0] ? variant.images[0].url : product.default_image;
-
     if (onSelectImage) {
       onSelectImage(newImage);
     }
   };
-  const priceSale= product.sale && product.sale.discountPercentage >0? (price*(1-product.sale.discountPercentage/100)):price
+
+  const handleAddToCart = () => {
+    const productToAdd = {
+      id: product._id,
+      name: product.nameEn || 'Product Name',
+      price: priceSale,
+      quantity: quantity,
+      image: selectedColor ? selectedColor.images[0].url : product.default_image,
+      serial: selectedColor ? selectedColor.serial : product.serial || 'N/A',
+      sku: selectedColor ? selectedColor.sku : product.sku || 'N/A',
+    };
+    
+    addToCart(productToAdd);
+    alert('Sản phẩm đã được thêm vào giỏ hàng!');
+  };
 
   return (
     <div className="product-info">
@@ -69,8 +81,6 @@ function ProductInfo({ product, onSelectImage }) {
             <span className="new-price text-danger fs-4">{price.toLocaleString()}đ</span>
           )}
         </div>
-
-
       </div>
 
       <OverlayTrigger overlay={<Tooltip>Giao hàng nhanh trong 24 giờ</Tooltip>}>
@@ -91,7 +101,7 @@ function ProductInfo({ product, onSelectImage }) {
               <Link
                 to={`/product/${variant._id}`}
                 key={index}
-                onClick={() => handleVariantClick(variant)} // Gọi hàm khi click
+                onClick={() => handleVariantClick(variant)}
                 style={{ textDecoration: 'none' }}
               >
                 <div
@@ -147,9 +157,15 @@ function ProductInfo({ product, onSelectImage }) {
       </div>
 
       <div className="d-flex gap-2 mt-4">
-        <Button variant="danger" className="flex-grow-1">MUA NGAY</Button>
-        <Button variant="outline-secondary"><FaHeart /></Button>
-        <Button variant="outline-secondary"><FaShareAlt /></Button>
+        <Button variant="danger" className="flex-grow-1" onClick={handleAddToCart}>
+          <FaShoppingCart className="me-2" /> Thêm vào giỏ hàng
+        </Button>
+        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center">
+          <FaHeart />
+        </Button>
+        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center">
+          <FaShareAlt />
+        </Button>
       </div>
 
       <div className="additional-info mt-4">

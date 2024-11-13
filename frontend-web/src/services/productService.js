@@ -37,3 +37,17 @@ export const fetchProductDetailsByID = async (productID) => {
         throw error;
     }
 }
+
+export const fetchProductBySimilar = async (productID, limit = 4) => {
+    try {
+        const response = await axios.get(`${API_URL}/product/similar?id=${productID}&limit=${limit}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            console.log('Failed to fetch similar products');
+        }
+    } catch (error) {
+        console.log('Error fetching similar products:', error);
+        throw error;
+    }
+};
