@@ -56,14 +56,7 @@ type (
 		Value string             `bson:"value" json:"value" validate:"required" form:"value"`
 	}
 
-	Sale struct {
-		ID                 primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
-		SaleNameVi         string             `bson:"saleNameVi" json:"saleNameVi" validate:"required" form:"saleNameVi"`
-		SaleNameEn         string             `bson:"saleNameEn" json:"saleNameEn" validate:"required" form:"saleNameEn"`
-		DiscountPercentage int                `bson:"discountPercentage" json:"discountPercentage" validate:"required" form:"discountPercentage"`
-		StartDate          time.Time          `bson:"startDate" json:"startDate" validate:"required" form:"startDate"`
-		EndDate            time.Time          `bson:"endDate" json:"endDate" validate:"required" form:"endDate"`
-	}
+	
 	// VariantSummary struct {
 	// 	ID            primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty" form:"_id"`
 	// 	NameVi        string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`

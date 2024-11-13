@@ -27,57 +27,48 @@ type Order struct {
 }
 
 type OrderDetail struct {
-	VariantID     primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
-	Serial        int64              `bson:"serial" json:"serial" validate:"required" form:"serial"`
-	NameVi        string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
-	NameEn        string             `bson:"nameEn" json:"nameEn" validate:"required" form:"nameEn"`
-	DescriptionVi string             `bson:"descriptionVi" json:"descriptionVi" validate:"required" form:"descriptionVi"`
-	DescriptionEn string             `bson:"descriptionEn" json:"descriptionEn" validate:"required" form:"descriptionEn"`
-	Color         string             `bson:"color" json:"color" validate:"required" form:"color"`
-	Images        []*Image           `bson:"images" json:"images" validate:"required" form:"images"`
-	Sale          *Sale              `bson:"sale" json:"sale" validate:"required" form:"sale"`
-	Price         float64            `bson:"price" json:"price" validate:"required,gte=0" form:"price"`
-	Quantity      int                `bson:"quantity" json:"quantity" validate:"required,gte=0" form:"quantity"`
-	Total         float64            `bson:"total" json:"total" validate:"required,gte=0" form:"total"`
+	VariantID primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
+	Serial    int64              `bson:"serial" json:"serial" validate:"required" form:"serial"`
+	NameVi    string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
+	Color     string             `bson:"color" json:"color" validate:"required" form:"color"`
+	Image     string             `bson:"image" json:"image" validate:"required" form:"image"`
+	Sale      *SaleInfo          `bson:"sale" json:"sale" validate:"required" form:"sale"`
+	Price     float64            `bson:"price" json:"price" validate:"required,gte=0" form:"price"`
+	Quantity  int                `bson:"quantity" json:"quantity" validate:"required,gte=0" form:"quantity"`
+	Total     float64            `bson:"total" json:"total" validate:"required,gte=0" form:"total"`
+}
+
+type SaleInfo struct {
+	SaleID             primitive.ObjectID `bson:"saleID" json:"saleID" form:"saleID"`
+	SaleNameVi         string             `bson:"saleNameVi" json:"saleNameVi" form:"saleNameVi"`
+	DiscountPercentage int                `bson:"discountPercentage" json:"discountPercentage" form:"discountPercentage"`
 }
 
 func (sp *OrderDetail) ToMap() (map[string]interface{}, error) {
 	return map[string]interface{}{
-		"variantID":     sp.VariantID,
-		"nameVi":        sp.NameVi,
-		"nameEn":        sp.NameEn,
-		"descriptionVi": sp.DescriptionVi,
-		"descriptionEn": sp.DescriptionEn,
-		"color":         sp.Color,
-		"images":        sp.Images,
-		"sale":          sp.Sale,
-		"price":         sp.Price,
-		"quantity":      sp.Quantity,
-		"total":         sp.Total,
+		"variantID": sp.VariantID,
+		"nameVi":    sp.NameVi,
+		"color":     sp.Color,
+		"image":     sp.Image,
+		"sale":      sp.Sale,
+		"price":     sp.Price,
+		"quantity":  sp.Quantity,
+		"total":     sp.Total,
 	}, nil
 }
 
 func (sp *OrderDetail) FromMap(data map[string]interface{}) {
 	sp.VariantID = utils.GetObjectID(data, "variantID")
 	sp.NameVi = utils.GetString(data, "nameVi")
-	sp.NameEn = utils.GetString(data, "nameEn")
-	sp.DescriptionVi = utils.GetString(data, "descriptionVi")
-	sp.DescriptionEn = utils.GetString(data, "descriptionEn")
 	sp.Color = utils.GetString(data, "color")
-
-	if images, ok := data["images"].([]interface{}); ok {
-		for _, img := range images {
-			if imageMap, ok := img.(map[string]interface{}); ok {
-				image := &Image{}
-				image.FromMap(imageMap)
-				sp.Images = append(sp.Images, image)
-			}
-		}
-	}
+	sp.Image = utils.GetString(data, "image")
 
 	if saleData, ok := data["sale"].(map[string]interface{}); ok {
-		sp.Sale = &Sale{}
-		sp.Sale.FromMap(saleData)
+		sp.Sale = &SaleInfo{
+			SaleID:             utils.GetObjectID(saleData, "saleID"),
+			SaleNameVi:         utils.GetString(saleData, "saleNameVi"),
+			DiscountPercentage: utils.GetInt(saleData, "discountPercentage"),
+		}
 	}
 
 	sp.Price = utils.GetFloat64(data, "price")
