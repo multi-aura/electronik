@@ -51,3 +51,17 @@ export const fetchProductBySimilar = async (productID, limit = 4) => {
         throw error;
     }
 };
+
+
+export const fetchProductNoQuery = async (page = 1, limit = 10) => {
+    try {
+        const response = await axios.post(
+            `${API_URL}/product/search`,
+            { page, limit }
+        );
+        return response.data; 
+    } catch (error) {
+        console.error('Error fetching product no query:', error);
+        throw error; // Ném lỗi ra để xử lý bên ngoài nếu cần
+    }
+};
