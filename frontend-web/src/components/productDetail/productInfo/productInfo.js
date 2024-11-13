@@ -4,15 +4,16 @@ import { FaHeart, FaShareAlt, FaShippingFast, FaShoppingCart } from 'react-icons
 import { Link } from 'react-router-dom';
 import { addToCart } from '../../../services/cartService';
 
-function ProductInfo({ product, onSelectImage }) {
+function ProductInfo({ product, onSelectImage, onSelectSerial }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
 
   useEffect(() => {
     if (product && product.variants && product.variants.length > 0) {
       setSelectedColor(product.variants[0]);
+      onSelectSerial(product.variants[0].serial);
     }
-  }, [product]);
+  }, [product, onSelectSerial]);
 
   if (!product) {
     return <div>Product information is not available.</div>;
@@ -30,11 +31,18 @@ function ProductInfo({ product, onSelectImage }) {
   const handleVariantClick = (variant) => {
     setQuantity(1);
     setSelectedColor(variant);
+
     const newImage = variant.images && variant.images[0] ? variant.images[0].url : product.default_image;
     if (onSelectImage) {
       onSelectImage(newImage);
     }
+
+    const selectedSerial = variant.serial;
+    if (selectedSerial) {
+      onSelectSerial(selectedSerial);
+    }
   };
+
 
   const handleAddToCart = () => {
     const productToAdd = {
@@ -46,7 +54,7 @@ function ProductInfo({ product, onSelectImage }) {
       serial: selectedColor ? selectedColor.serial : product.serial || 'N/A',
       sku: selectedColor ? selectedColor.sku : product.sku || 'N/A',
     };
-    
+
     addToCart(productToAdd);
     alert('Sản phẩm đã được thêm vào giỏ hàng!');
   };

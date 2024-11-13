@@ -2,9 +2,6 @@ import React from 'react';
 import './FreeShippingProgress.css';
 
 const FreeShippingProgress = ({ subtotal, freeShippingThreshold}) => {
-  // Tính phần trăm tiến trình
-  console.log(subtotal);
-  console.log(freeShippingThreshold);
   const progress = subtotal >= freeShippingThreshold 
     ? 100 
     : (subtotal / freeShippingThreshold) * 100;

@@ -9,12 +9,12 @@ import ProductSpecifications from '../components/productDetail/ProductSpecificat
 import ProductReviews from '../components/productDetail/ProductReviews/ProductReviews';
 import ProductImageCarousel from '../components/productDetail/ProductImageCarousel/ProductImageCarousel';
 import SimilarProducts from '../components/productDetail/SimilarProducts/SimilarProducts';
-import TechNewsList from '../components/productDetail/TechNewsList/TechNewsList';
 import FlashSale from '../components/FlashSale/FlashSale';
 import CategoryGrid from '../components/CategoryGrid/CategoryGrid';
 import '../assets/css/productDetail.css';
 
 import { fetchProductBySimilar, fetchProductDetailsByID } from '../services/productService';
+import SuggestedProducts from '../components/productDetail/SuggestedProducts/SuggestedProducts';
 
 const ProductDetail = () => {
     const [activeTab, setActiveTab] = useState(null);
@@ -25,6 +25,7 @@ const ProductDetail = () => {
     const [specifications, setSpecifications] = useState([]);
     const [similar, SetSimilar] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [serial, setSerial] = useState(null);
 
     const { productId } = useParams();
     const handleSelect = (selectedTab) => {
@@ -41,7 +42,6 @@ const ProductDetail = () => {
                 setSelectedImage(productDetail.data?.default_image || '');
                 const variantImages = productDetail.data?.variants?.flatMap(variant => variant.images || []) || [];
                 setCarouselImages(variantImages);
-
                 setDescription(productDetail.data || '');
                 setSpecifications(productDetail.data?.specifications || []);
                 setReviews(productDetail.data || []);
@@ -69,7 +69,6 @@ const ProductDetail = () => {
         }
 
     }, [productId])
- 
     return (
         <Layout>
             <Container className="product-detail-container my-2">
@@ -81,8 +80,10 @@ const ProductDetail = () => {
                     <Col md={6}>
                         <ProductInfo
                             product={productData}
-                            onSelectImage={setSelectedImage} // Truyền hàm callback
+                            onSelectImage={setSelectedImage}
+                            onSelectSerial={setSerial}
                         />
+
 
                     </Col>
                 </Row>
@@ -115,8 +116,9 @@ const ProductDetail = () => {
                     </Col>
                     <Col md={5} className="product-detail-side-col">
                         <SimilarProducts similarProducts={similar} />
+
                         <div className="product-detail-news-section" style={{ marginTop: '20px' }}>
-                            <TechNewsList />
+                            <SuggestedProducts serial={serial} />
                         </div>
                     </Col>
                 </Row>
