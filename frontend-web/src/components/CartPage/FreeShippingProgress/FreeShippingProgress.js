@@ -1,10 +1,20 @@
 import React from 'react';
 import './FreeShippingProgress.css';
 
-const FreeShippingProgress = ({ subtotal, freeShippingThreshold = 500 }) => {
-  const progress = Math.min((subtotal / freeShippingThreshold) * 100, 100);
-  const amountLeft = Math.max(freeShippingThreshold - subtotal, 0);
+const FreeShippingProgress = ({ subtotal, freeShippingThreshold}) => {
+  // Tính phần trăm tiến trình
+  console.log(subtotal);
+  console.log(freeShippingThreshold);
+  const progress = subtotal >= freeShippingThreshold 
+    ? 100 
+    : (subtotal / freeShippingThreshold) * 100;
 
+  // Tính số tiền còn lại
+  const amountLeft = subtotal >= freeShippingThreshold 
+    ? 0 
+    : freeShippingThreshold - subtotal;
+
+  // Đặt màu cho thanh tiến trình
   let progressColor;
   if (progress < 34) {
     progressColor = 'red';
@@ -32,7 +42,7 @@ const FreeShippingProgress = ({ subtotal, freeShippingThreshold = 500 }) => {
       </span>
       <p className="progress-text">
         {amountLeft > 0
-          ? `Chỉ còn ${amountLeft.toFixed(2)} đ để được miễn phí vận chuyển`
+          ? `Chỉ còn ${amountLeft.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} để được miễn phí vận chuyển`
           : "Chúc mừng! Bạn đã được miễn phí vận chuyển"}
       </p>
     </div>

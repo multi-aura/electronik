@@ -4,8 +4,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CartItem.css';
 
-const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
-  const handleDecrease = () => {
+const CartItem = ({ item, onUpdateQuantity, onRemove }) => {  const handleDecrease = () => {
     if (item.quantity > 1) {
       onUpdateQuantity(item.id, item.quantity - 1);
     }
@@ -14,6 +13,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const handleIncrease = () => {
     onUpdateQuantity(item.id, item.quantity + 1);
   };
+  const formatPrice = (price) => {
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  }
 
   return (
     <div className="cart-item-page row py-3 border-bottom align-items-center">
@@ -46,14 +48,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           </div>
           <div className="col-md-6 d-flex align-items-center justify-content-end">
             <div className="price-section-cart  me-3">
-              {item.oldPrice && <span className="old-price text-muted me-2">${item.oldPrice}</span>}
-              <span className="current-price text-danger fw-bold">{item.price.toFixed(3)} VND</span>
+             
+              <span className="current-price text-danger fw-bold">{formatPrice(item.price)}</span>
             </div>
           </div>
         </div>
       </div>
       <div className="col-md-1 d-flex align-items-center justify-content-end">
-        <button className="btn btn-outline-danger btn-sm" onClick={() => onRemove(item.id)}>
+        <button className="btn btn-outline-danger btn-sm" onClick={() => onRemove(item.serial)}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
       </div>

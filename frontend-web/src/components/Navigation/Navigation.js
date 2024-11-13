@@ -5,13 +5,14 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { logout } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import './Navigation.css';
-import Cart from '../../pages/Cart';  
+import Cart from '../../pages/Cart';
 import { Link } from 'react-router-dom';
+import { getTotalQuantity } from '../../services/cartService';
 const Navigation = () => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [dataUser, setDataUser] = useState(null);
-
+  const [totalQuantity, setTotalQuantity] = useState(getTotalQuantity());
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -26,7 +27,14 @@ const Navigation = () => {
   };
 
   const toggleCart = () => setIsCartOpen(!isCartOpen);
+  useEffect(() => {
+    const updateTotalQuantity = () => setTotalQuantity(getTotalQuantity());
+    window.addEventListener('cartUpdated', updateTotalQuantity);
 
+    return () => {
+      window.removeEventListener('cartUpdated', updateTotalQuantity);
+    };
+  }, []);
   return (
     <div className="navigation-container d-flex align-items-center">
       <div className="d-flex align-items-center text-white me-4" style={{ fontSize: '14px' }}>
@@ -40,10 +48,20 @@ const Navigation = () => {
 
         </Link>
       </div>
-      <div className="d-flex align-items-center text-white me-4" style={{ fontSize: '14px' }}>
-        <FontAwesomeIcon icon={faShoppingCart} className="me-2" onClick={toggleCart} style={{ cursor: 'pointer' }} />
-        <span onClick={toggleCart} style={{ cursor: 'pointer' }}>Giỏ hàng</span>
+      <div className="cart-icon-wrapper d-flex align-items-center position-relative text-white me-4" style={{ fontSize: '14px' }}>
+        <div className="d-flex align-items-center" onClick={toggleCart} style={{ cursor: 'pointer' }}>
+          <FontAwesomeIcon icon={faShoppingCart} className="me-2" />
+          <span>Giỏ hàng</span>
+        </div>
+        {totalQuantity > 0 && (
+          <span
+            className="badge-count position-absolute rounded-circle"
+          >
+            {totalQuantity}
+          </span>
+        )}
       </div>
+
 
       {isCartOpen && <Cart onClose={toggleCart} />}
 

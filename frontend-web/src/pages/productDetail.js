@@ -13,7 +13,8 @@ import TechNewsList from '../components/productDetail/TechNewsList/TechNewsList'
 import FlashSale from '../components/FlashSale/FlashSale';
 import CategoryGrid from '../components/CategoryGrid/CategoryGrid';
 import '../assets/css/productDetail.css';
-import { fetchProductDetailsByID } from '../services/productService';
+
+import { fetchProductBySimilar, fetchProductDetailsByID } from '../services/productService';
 
 const ProductDetail = () => {
     const [activeTab, setActiveTab] = useState(null);
@@ -22,8 +23,8 @@ const ProductDetail = () => {
     const [carouselImages, setCarouselImages] = useState([]);
     const [description, setDescription] = useState('');
     const [specifications, setSpecifications] = useState([]);
+    const [similar, SetSimilar] = useState(null);
     const [reviews, setReviews] = useState([]);
-    const { serialID } = useParams();
 
     const { productId } = useParams();
     const handleSelect = (selectedTab) => {
@@ -38,7 +39,6 @@ const ProductDetail = () => {
                 setProductData(productDetail.data);
 
                 setSelectedImage(productDetail.data?.default_image || '');
-                // Gán hình ảnh từ biến thể vào carouselImages
                 const variantImages = productDetail.data?.variants?.flatMap(variant => variant.images || []) || [];
                 setCarouselImages(variantImages);
 
@@ -54,15 +54,22 @@ const ProductDetail = () => {
             getProductDetails();
         }
     }, [productId]);
+
     useEffect(() => {
-        const getInformationBySerial = async () => {
-            alert(serialID);
+        const GetProductBysimilar = async () => {
+            try {
+                const productSimilar = await fetchProductBySimilar(productId);
+                SetSimilar(productSimilar.data);
+            } catch (error) {
+                console.error('Failed to fetch product details', error);
+            }
         }
-        if (serialID) {
-            getInformationBySerial();
+        if (productId) {
+            GetProductBysimilar();
         }
-       
-    }, [serialID])
+
+    }, [productId])
+ 
     return (
         <Layout>
             <Container className="product-detail-container my-2">
@@ -107,7 +114,7 @@ const ProductDetail = () => {
                         </Tab.Container>
                     </Col>
                     <Col md={5} className="product-detail-side-col">
-                        <SimilarProducts />
+                        <SimilarProducts similarProducts={similar} />
                         <div className="product-detail-news-section" style={{ marginTop: '20px' }}>
                             <TechNewsList />
                         </div>
