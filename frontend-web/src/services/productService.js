@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { API_URL } from '../config/config';
+import Cookies from 'js-cookie';
 
 
 export const fetchProductsByCategory = async (categoryId, page, limit) => {
     try {
+        
         const response = await axios.post(
             `${API_URL}/product/category/${categoryId}`,
             { page, limit } // Thêm dữ liệu `body` như trong Postman
@@ -58,6 +60,33 @@ export const fetchProductsBySearch = async (page, limit) => {
             console.error('Error response data:', error.response.data);
         }
         console.error('Error fetching products by search:', error);
+        throw error;
+    }
+};
+
+export const createProduct = async (productData) => {
+    try {
+        const token = Cookies.get('authToken');
+        const response = await axios.post(
+            `${API_URL}/product/create`,
+            productData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        if (response.status === 200 || response.status === 201) {
+            return response.data;
+        } else {
+            throw new Error('Failed to create product');
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error response status:', error.response.status);
+            console.error('Error response data:', error.response.data);
+        }
+        console.error('Error creating product:', error);
         throw error;
     }
 };

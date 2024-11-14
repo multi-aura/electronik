@@ -31,8 +31,8 @@ type (
 		Weight        string             `bson:"weight" json:"weight" validate:"required" form:"weight"`
 		SKU           string             `bson:"sku" json:"sku" validate:"required" form:"sku"`
 		Images        []Image            `bson:"images" json:"images" form:"images"`
-		DescriptionVi string             `bson:"descriptionVi" json:"descriptionVi" validate:"required" form:"descriptionVi"`
-		DescriptionEn string             `bson:"descriptionEn" json:"descriptionEn" validate:"required" form:"descriptionEn"`
+		DescriptionVi string             `bson:"descriptionVi" json:"descriptionVi" validate:"-" form:"descriptionVi"`
+		DescriptionEn string             `bson:"descriptionEn" json:"descriptionEn" validate:"-" form:"descriptionEn"`
 	}
 
 	Image struct {
@@ -78,10 +78,10 @@ type (
 
 	Product struct {
 		ID             primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty" form:"_id"`
-		NameVi         string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
-		NameEn         string             `bson:"nameEn" json:"nameEn" validate:"required" form:"nameEn"`
-		DescriptionVi  string             `bson:"descriptionVi" json:"descriptionVi" validate:"required" form:"descriptionVi"`
-		DescriptionEn  string             `bson:"descriptionEn" json:"descriptionEn" validate:"required" form:"descriptionEn"`
+		NameVi         string             `bson:"nameVi" json:"nameVi" validate:"-" form:"nameVi"`
+		NameEn         string             `bson:"nameEn" json:"nameEn" validate:"-" form:"nameEn"`
+		DescriptionVi  string             `bson:"descriptionVi" json:"descriptionVi" validate:"-" form:"descriptionVi"`
+		DescriptionEn  string             `bson:"descriptionEn" json:"descriptionEn" validate:"-" form:"descriptionEn"`
 		CreatedAt      time.Time          `bson:"created_at" json:"created_at" form:"created_at"`
 		DefaultImage   string             `bson:"default_image" json:"default_image" validate:"required,url" form:"default_image"`
 		Price          float64            `bson:"price" json:"price" validate:"required,gt=0" form:"price"`
@@ -259,7 +259,7 @@ func (p *Product) ToMap() map[string]interface{} {
 		"default_image":  p.DefaultImage,
 		"price":          p.Price,
 		"category":       p.Category.ToMap(),
-		"variants":        variants,
+		"variants":       variants,
 		"feedbacks":      feedbacks,
 		"dimensions":     p.Dimensions,
 		"manufacturer":   p.Manufacturer,
