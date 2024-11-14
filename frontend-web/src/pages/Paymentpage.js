@@ -87,6 +87,7 @@ const PaymentPage = () => {
             addressLine: shippingInfo.address,
             contactPhone: shippingInfo.telephone,
             deliveryFee: shippingCost,
+            email: shippingInfo.email,
             orderDate: new Date().toISOString(),
             paymentMethod: "Cash on Delivery",
             paymentStatus: "Not yet paid",
@@ -103,7 +104,7 @@ const PaymentPage = () => {
                 quantity: item.quantity,
                 total: item.price * item.quantity,
                 sale: {
-                    _id: item.sale.saleID,
+                    saleID: item.sale.saleID,
                     saleNameVi: item.sale.saleName,
                     discountPercentage: item.sale.discountPercentage,
                 },
