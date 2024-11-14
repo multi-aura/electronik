@@ -16,7 +16,7 @@ const CartFooter = () => {
       </label>
       <button className="checkout-btn" disabled={!isChecked}>THANH TOÁN</button>
       <Link to="/product/Cart">
-        <button className="view-cart-btn" disabled={!isChecked}>XEM GIỎ HÀNG</button>
+        <button className="view-cart-btn" >XEM GIỎ HÀNG</button>
       </Link>
     </div>
   );
