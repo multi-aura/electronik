@@ -3,11 +3,12 @@ import "./ProductCardListpage.css";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+ 
   return (
     <div className="product-card-listpage">
       <Link to={`/product/${product._id}`} className="product-link">
         <div className="image-container-listpage">
-          <img 
+        <img 
             src={product.default_image} 
             alt={product.nameVi} 
             className="product-image-listpage" 

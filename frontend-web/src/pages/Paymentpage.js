@@ -1,50 +1,133 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import ShippingInfo from '../components/Paymentpage/ShippingInfo/ShippingInfo';
 import OrderDetails from '../components/Paymentpage/OrderDetails/OrderDetails';
 import PaymentMethod from '../components/Paymentpage/PaymentMethod/PaymentMethod';
 import Layout from '../layouts/Layout';
 import '../assets/css/PaymentPage.css';
-
-const userData = { name: 'Alex Korobov' };
+import { calculateTotal, clearCart, getCart, removeFromCart } from '../services/cartService';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { fetchCreateOrder } from '../services/paymentService';
 
 const PaymentPage = () => {
     const [shippingInfo, setShippingInfo] = useState({
         firstName: '',
         lastName: '',
-        company: '',
+        email: '',
         address: '',
-        apartment: '',
-        city: '',
-        country: 'Lithuania',
-        zip: '',
+        province: '',
+        district: '',
+        ward: '',
         telephone: '',
+        note: ''
     });
 
-    const orderItems = [
-        { id: 1, name: 'Chrono Gunmetal', quantity: 1, price: 10821, image: 'https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png' },
-        { id: 2, name: 'Chrono Silver', quantity: 2, price: 9500, image: 'https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png' },
-        { id: 3, name: 'Chrono Gold', quantity: 1, price: 12000, image: 'https://product.hstatic.net/200000722513/product/artboard_1_d8717d1e98e249fab1a09833bf8cd654_medium.png' }
-    ];
+    const [errors, setErrors] = useState({});
+    const [shippingCost, setShippingCost] = useState(0);
+    const [orderItems, setOrderItems] = useState(getCart());
 
-    const totalAmount = orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const vatAmount = totalAmount * 0.2;
-    const shippingCost = 0;
-    const discountAmount = 0;
-    const grandTotal = totalAmount + vatAmount - discountAmount + shippingCost;
+    const handleShippingCostChange = (cost) => {
+        setShippingCost(cost);
+    };
 
     const handleShippingInfoChange = (info) => {
         setShippingInfo(info);
+        setErrors({}); // Reset lỗi khi thay đổi thông tin giao hàng
     };
 
+    useEffect(() => {
+        const handleCartUpdate = () => {
+            setOrderItems(getCart()); // Cập nhật lại giỏ hàng từ sessionStorage
+        };
+
+        window.addEventListener('cartUpdated', handleCartUpdate);
+
+        return () => {
+            window.removeEventListener('cartUpdated', handleCartUpdate);
+        };
+    }, []);
+
+    const validateShippingInfo = () => {
+        const newErrors = {};
+
+        if (!shippingInfo.firstName) newErrors.firstName = "Họ không được để trống";
+        else if (!/^[A-Za-zÀ-ỹ\s]+$/.test(shippingInfo.firstName)) newErrors.firstName = "Họ chỉ chứa chữ cái";
+
+        if (!shippingInfo.lastName) newErrors.lastName = "Tên không được để trống";
+        else if (!/^[A-Za-zÀ-ỹ\s]+$/.test(shippingInfo.lastName)) newErrors.lastName = "Tên chỉ chứa chữ cái";
+
+        if (!shippingInfo.address) newErrors.address = "Địa chỉ không được để trống";
+        if (!shippingInfo.district) newErrors.district = "Quận/Huyện không được để trống";
+
+        if (!shippingInfo.province) newErrors.province = "Thành phố không được để trống";
+
+        if (!shippingInfo.ward) newErrors.ward = "Xã/Phường không được để trống";
+
+        if (!shippingInfo.telephone) newErrors.telephone = "Điện thoại không được để trống";
+        else if (!/^\d{10,15}$/.test(shippingInfo.telephone)) newErrors.telephone = "Số điện thoại không hợp lệ";
+
+        if (!shippingInfo.email) newErrors.email = "Email không được để trống";
+        else if (!/\S+@\S+\.\S+/.test(shippingInfo.email)) newErrors.email = "Email không hợp lệ";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+    const handleCreateOrder = async () => {
+        if (!validateShippingInfo()) {
+            console.log("Thông tin không hợp lệ, vui lòng kiểm tra lại.");
+            return;
+        }
+
+        const orderData = {
+            ward: shippingInfo.wardName,
+            district: shippingInfo.districtName,
+            province: shippingInfo.provinceName,
+            status: "Pending",
+            addressLine: shippingInfo.address,
+            contactPhone: shippingInfo.telephone,
+            deliveryFee: shippingCost,
+            orderDate: new Date().toISOString(),
+            paymentMethod: "Cash on Delivery",
+            paymentStatus: "Not yet paid",
+            recipientName: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+            total: calculateTotal(),
+            details: orderItems.map((item) => ({
+                productID: item.id,
+                serial: parseInt(item.serial, 10),
+                nameVi: item.name,
+                variantID: item.variantID,
+                color: item.color,
+                image: item.image,
+                price: item.price,
+                quantity: item.quantity,
+                total: item.price * item.quantity,
+                sale: {
+                    _id: item.sale.saleID,
+                    saleNameVi: item.sale.saleName,
+                    discountPercentage: item.sale.discountPercentage,
+                },
+            }))
+        };
+        try {
+            const response = await fetchCreateOrder(orderData);
+            alert('Đơn hàng đã được tạo thành công!');
+            clearCart();
+            // window.location.href = '/order-confirmation';
+        } catch (error) {
+            console.error('Error creating order:', error);
+            alert('Tạo đơn hàng không thành công. Vui lòng kiểm tra lại thông tin và thử lại.');
+        }
+        
+    };
+    // console.log(orderItems);
     return (
-        <Layout userData={userData}>
+        <Layout>
             <div className="payment-page container">
                 <div className="payment-header">
                     <div className="icon-container">
                         <i className="fas fa-credit-card"></i>
                         <span className="payment-title">Thanh toán</span>
-
                     </div>
                     <p className="payment-subtitle">
                         Vui lòng kiểm tra thông tin Khách hàng, thông tin Giỏ hàng trước khi Đặt hàng.
@@ -54,19 +137,33 @@ const PaymentPage = () => {
                 <div className="row">
                     <div className="col-md-7">
                         <div className="section">
-                            <ShippingInfo onShippingInfoChange={handleShippingInfoChange} />
+                            <ShippingInfo
+                                onShippingInfoChange={handleShippingInfoChange}
+                                errors={errors}
+                            />
+                            <div className="button-container">
+                                <Link to={`/product/Cart`}>
+                                    <button className="btn-back">Trở lại giỏ hàng</button>
+                                </Link>
+                                <button onClick={handleCreateOrder} className="btn-confirm">Đặt hàng</button>
+
+                            </div>
                         </div>
+
                     </div>
 
                     <div className="col-md-5">
                         <div className="section">
-                            <OrderDetails items={orderItems} />
+                            <OrderDetails items={orderItems} onHandleOrderChange={handleShippingCostChange} />
                         </div>
                         <div className="section">
                             <PaymentMethod />
                         </div>
                     </div>
+
                 </div>
+
+
             </div>
         </Layout>
     );

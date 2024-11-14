@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { addToCart } from '../../../services/cartService';
 
 function ProductInfo({ product, onSelectImage, onSelectSerial }) {
+
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
 
@@ -43,18 +44,26 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
     }
   };
 
-
   const handleAddToCart = () => {
     const productToAdd = {
       id: product._id,
       name: product.nameEn || 'Product Name',
       price: priceSale,
+      priceold: price,
       quantity: quantity,
       image: selectedColor ? selectedColor.images[0].url : product.default_image,
       serial: selectedColor ? selectedColor.serial : product.serial || 'N/A',
       sku: selectedColor ? selectedColor.sku : product.sku || 'N/A',
-    };
+      color: selectedColor ? selectedColor.color : product.color || 'N/A',
+      variantID: selectedColor._id,
+      sale: {
+        saleID: product.sale._id,
+        saleName: product.sale.saleNameVi,
+        discountPercentage: product.sale.discountPercentage,
+      }
 
+    };
+    console.log('de', productToAdd);
     addToCart(productToAdd);
     alert('Sản phẩm đã được thêm vào giỏ hàng!');
   };
