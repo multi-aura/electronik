@@ -2,25 +2,31 @@ import React, { useState } from 'react';
 import { Table, Button, Form } from 'react-bootstrap';
 import './ProductImageUpload.css'; // Custom CSS for additional styling
 
-const ProductImageUpload = () => {
+const ProductImageUpload = ({ handleImageUpload }) => {
     const [images, setImages] = useState([]);
 
-    const handleImageUpload = (e) => {
+    const onImageChange = (e) => {
         const files = Array.from(e.target.files);
         const newImages = files.map((file, index) => ({
             id: images.length + index + 1,
             url: URL.createObjectURL(file),
-            isDefault: false
+            file: file, // Include the file for parent component handling
+            isDefault: false,
         }));
         setImages((prevImages) => [...prevImages, ...newImages]);
+
+        // Pass the files to the parent component via handleImageUpload
+        handleImageUpload(newImages.map(image => image.file));
     };
 
     const handleDefaultChange = (id) => {
-        setImages((prevImages) =>
-            prevImages.map((img) =>
-                img.id === id ? { ...img, isDefault: true } : { ...img, isDefault: false }
-            )
+        const updatedImages = images.map((img) =>
+            img.id === id ? { ...img, isDefault: true } : { ...img, isDefault: false }
         );
+        setImages(updatedImages);
+
+        // Pass the updated images to the parent component
+        handleImageUpload(updatedImages);
     };
 
     const handleDelete = (id) => {
@@ -31,7 +37,7 @@ const ProductImageUpload = () => {
         <div className="custom-product-image-upload p-4 bg-light rounded shadow-sm">
             <Form.Group controlId="formFileMultiple" className="mb-4">
                 <Form.Label className="custom-upload-label">Tải lên hình ảnh</Form.Label>
-                <Form.Control type="file" multiple onChange={handleImageUpload} className="custom-upload-input" />
+                <Form.Control type="file" multiple onChange={onImageChange} className="custom-upload-input" />
             </Form.Group>
 
             {images.length > 0 && (
