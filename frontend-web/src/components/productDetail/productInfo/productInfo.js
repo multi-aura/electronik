@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { addToCart } from '../../../services/cartService';
 
 function ProductInfo({ product, onSelectImage, onSelectSerial }) {
-
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
 
@@ -44,10 +43,11 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
     }
   };
 
+    console.log(product);
   const handleAddToCart = () => {
     const productToAdd = {
       id: product._id,
-      name: product.nameEn || 'Product Name',
+      name: product.nameVi,
       price: priceSale,
       priceold: price,
       quantity: quantity,
@@ -57,20 +57,20 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
       color: selectedColor ? selectedColor.color : product.color || 'N/A',
       variantID: selectedColor._id,
       sale: {
-        saleID: product.sale._id,
-        saleName: product.sale.saleNameVi,
-        discountPercentage: product.sale.discountPercentage,
+        saleID: product && product.sale && product.sale._id ? product.sale._id : ' ',
+        saleName: product && product.sale && product.sale.saleNameVi ? product.sale.saleNameVi : ' ',
+        discountPercentage: product && product.sale && product.sale.discountPercentage ? product.sale.discountPercentage : 0,
       }
 
     };
-    console.log('de', productToAdd);
+    console.log(productToAdd)
     addToCart(productToAdd);
     alert('Sản phẩm đã được thêm vào giỏ hàng!');
   };
 
   return (
     <div className="product-info">
-      <h2>{product.nameEn || 'Product Name'}</h2>
+      <h2>{product.nameVi || 'Product Name'}</h2>
 
       <Badge bg="warning" className="mb-2" style={{ width: "30%" }}>4.8 ★ Đánh giá (123)</Badge>
 
