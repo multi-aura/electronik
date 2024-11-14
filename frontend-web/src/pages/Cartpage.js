@@ -25,7 +25,7 @@ const CartPage = () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
     };
   }, []);
-
+  console.log("cart",cartItems);
   const handleUpdateQuantity = (productId, newQuantity) => {
     updateQuantity(productId, newQuantity);
     setCartItems(getCart());
