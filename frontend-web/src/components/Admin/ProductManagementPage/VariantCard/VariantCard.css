@@ -1,0 +1,26 @@
+.variant-card {
+    width: 100%;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.variant-card:hover {
+    transform: scale(1.02);
+}
+
+.variant-image {
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}

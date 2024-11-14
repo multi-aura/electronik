@@ -95,12 +95,22 @@ const ProductVariants = ({ variants, handleVariantChange, addVariant, removeVari
                             </Col>
                         </Row>
                         <Row className="mt-2">
-                            <Col md={6}>
-                                <Button variant="success" onClick={() => setPrimaryVariant(index)} className="mt-2">
-                                    Chọn làm sản phẩm chính
-                                </Button>
+                            <Col md={12}>
+                                <Form.Group controlId={`variantDescription-${index}`}>
+                                    <Form.Label>Mô tả</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={2}
+                                        placeholder="Nhập mô tả biến thể"
+                                        name="description"
+                                        value={variant.descriptionVi}
+                                        onChange={(e) => handleVariantChange(e, index)}
+                                    />
+                                </Form.Group>
                             </Col>
-                            <Col md={6} className="text-end">
+                        </Row>
+                        <Row className="mt-2">
+                            <Col className="text-end">
                                 <Button variant="outline-danger" onClick={() => removeVariant(index)} className="mt-3">
                                     Xóa
                                 </Button>
