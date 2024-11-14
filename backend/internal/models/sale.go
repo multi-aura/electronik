@@ -12,7 +12,7 @@ type Sale struct {
 	SaleNameEn         string             `bson:"saleNameEn" json:"saleNameEn" validate:"required" form:"saleNameEn"`
 	StartDate          time.Time          `bson:"start_date" json:"startDate" validate:"required" form:"startDate"`
 	EndDate            time.Time          `bson:"end_date" json:"endDate" validate:"required" form:"endDate"`
-	DiscountPercentage int                `bson:"discount_percentage" json:"discountPercentage" validate:"required,gte=0,lte=100" form:"discountPercentage"`
+	DiscountPercentage int                `bson:"discountPercentage" json:"discountPercentage" validate:"required" form:"discountPercentage"`
 	Products           []SaleProduct      `bson:"products" json:"products" validate:"required,dive" form:"products"`
 }
 

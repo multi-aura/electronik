@@ -56,7 +56,6 @@ type (
 		Value string             `bson:"value" json:"value" validate:"required" form:"value"`
 	}
 
-	
 	// VariantSummary struct {
 	// 	ID            primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty" form:"_id"`
 	// 	NameVi        string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
@@ -252,7 +251,7 @@ func (p *Product) ToMap() map[string]interface{} {
 		"default_image":  p.DefaultImage,
 		"price":          p.Price,
 		"category":       p.Category.ToMap(),
-		"variants":        variants,
+		"variants":       variants,
 		"feedbacks":      feedbacks,
 		"dimensions":     p.Dimensions,
 		"manufacturer":   p.Manufacturer,

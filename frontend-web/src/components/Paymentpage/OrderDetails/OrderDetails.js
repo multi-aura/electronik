@@ -1,16 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './OrderDetails.css';
+import { calculateTotal, calculateTotal_current } from '../../../services/cartService';
 
-const OrderDetails = ({ items }) => {
+const OrderDetails = ({ items, onHandleOrderChange }) => {
+    const [shippingCost, setShippingCost] = useState(0);
+    const [priceCurrent, setPriceCurrent] = useState(0);
+    const [priceSale, setPriceSale] = useState(0);
+
+    useEffect(() => {
+        const updatePrices = () => {
+            const currentPrice = calculateTotal_current();
+            const salePrice = calculateTotal();
+
+            setPriceCurrent(currentPrice);
+            setPriceSale(salePrice);
+
+            const calculatedShippingCost = salePrice > 15000000 ? 0 : 100000;
+            setShippingCost(calculatedShippingCost);
+            onHandleOrderChange(calculatedShippingCost);
+        };
+
+        window.addEventListener('cartUpdated', updatePrices);
+
+        updatePrices();
+
+        return () => {
+            window.removeEventListener('cartUpdated', updatePrices);
+        };
+    }, []);
+
     if (!Array.isArray(items) || items.length === 0) {
         return <div className="order-details-container">Không có sản phẩm nào trong giỏ hàng.</div>;
     }
 
-    const subtotal = items.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const vatAmount = subtotal * 0.2; // Giả sử VAT là 20%
-    const discountAmount = 0; // Giảm giá
-    const shippingCost = 0; // Phí vận chuyển
-    const totalAmount = subtotal + vatAmount - discountAmount + shippingCost; // Tổng số tiền
+    const formatPrice = (price) => {
+        return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    };
+
+    const vatAmount = priceCurrent * 0.1; // Giả sử VAT là 10%
 
     return (
         <div className="order-details-container">
@@ -22,7 +49,7 @@ const OrderDetails = ({ items }) => {
                     </div>
                     <div className="order-details-item-info">
                         <span className="order-details-item-name">{item.name}</span>
-                        <span className="order-details-item-price">{(item.price * item.quantity).toLocaleString('vi-VN')}đ</span>
+                        <span className="order-details-item-price">{formatPrice(item.priceold)}</span>
                     </div>
                     <span className="order-details-item-quantity">x {item.quantity}</span>
                 </div>
@@ -30,28 +57,28 @@ const OrderDetails = ({ items }) => {
 
             <div className="order-details-summary">
                 <div className="order-details-summary-row">
-                    <span>Tổng sản phẩm:</span>
-                    <span>{subtotal.toLocaleString('vi-VN')}đ</span>
+                    <span>Tổng tiền sản phẩm:</span>
+                    <span>{formatPrice(priceCurrent)}</span>
                 </div>
                 <div className="order-details-summary-row">
-                    <span>Giảm giá:</span>
-                    <span>{discountAmount.toLocaleString('vi-VN')}đ</span>
+                    <span>Tổng tiền sau giảm giá:</span>
+                    <span>{formatPrice(priceSale)}</span>
                 </div>
                 <div className="order-details-summary-row">
                     <span>VAT:</span>
-                    <span>{vatAmount.toLocaleString('vi-VN')}đ</span>
+                    <span>{formatPrice(vatAmount)}</span>
                 </div>
                 <div className="order-details-summary-row">
                     <span>Phí vận chuyển:</span>
-                    <span>{shippingCost.toLocaleString('vi-VN')}đ</span>
+                    <span>{formatPrice(shippingCost)}</span>
                 </div>
                 <div className="order-details-summary-row order-details-total">
                     <span><strong>Tổng cộng:</strong></span>
-                    <span><strong>{totalAmount.toLocaleString('vi-VN')}đ</strong></span>
+                    <span><strong>{formatPrice(priceSale + vatAmount + shippingCost)}</strong></span>
                 </div>
             </div>
         </div>
     );
 };
 
-export default OrderDetails;
+export default OrderDetails

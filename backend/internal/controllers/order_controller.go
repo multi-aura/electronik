@@ -19,6 +19,7 @@ func NewOrderController(service services.OrderService) *OrderController {
 
 func (oc *OrderController) CreateOrder(c *fiber.Ctx) error {
 	var order models.Order
+
 	if err := c.BodyParser(&order); err != nil {
 		return APIResponse.SendErrorResponse(c, fiber.StatusBadRequest, "Cannot parse JSON", err.Error())
 	}

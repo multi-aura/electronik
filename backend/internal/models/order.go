@@ -16,7 +16,6 @@ type Order struct {
 	Ward          string             `bson:"ward" json:"ward" validate:"required" form:"ward"`
 	District      string             `bson:"district" json:"district" validate:"required" form:"district"`
 	Province      string             `bson:"province" json:"province" validate:"required" form:"province"`
-	Country       string             `bson:"country" json:"country" validate:"required" form:"country"`
 	PaymentMethod string             `bson:"paymentMethod" json:"paymentMethod" validate:"required" form:"paymentMethod"`
 	PaymentStatus string             `bson:"paymentStatus" json:"paymentStatus" validate:"required" form:"paymentStatus"`
 	OrderDate     time.Time          `bson:"orderDate" json:"orderDate" validate:"required" form:"orderDate"`
@@ -27,12 +26,13 @@ type Order struct {
 }
 
 type OrderDetail struct {
+	ProductID primitive.ObjectID `bson:"productID" json:"productID" validate:"required" form:"productID"`
 	VariantID primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
 	Serial    int64              `bson:"serial" json:"serial" validate:"required" form:"serial"`
 	NameVi    string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
 	Color     string             `bson:"color" json:"color" validate:"required" form:"color"`
 	Image     string             `bson:"image" json:"image" validate:"required" form:"image"`
-	Sale      *SaleInfo          `bson:"sale" json:"sale" validate:"required" form:"sale"`
+	Sale      *SaleInfo          `bson:"sale" json:"sale" form:"sale"`
 	Price     float64            `bson:"price" json:"price" validate:"required,gte=0" form:"price"`
 	Quantity  int                `bson:"quantity" json:"quantity" validate:"required,gte=0" form:"quantity"`
 	Total     float64            `bson:"total" json:"total" validate:"required,gte=0" form:"total"`
@@ -44,46 +44,58 @@ type SaleInfo struct {
 	DiscountPercentage int                `bson:"discountPercentage" json:"discountPercentage" form:"discountPercentage"`
 }
 
-func (sp *OrderDetail) ToMap() (map[string]interface{}, error) {
+// ToMap converts an OrderDetail struct to a map
+func (od *OrderDetail) ToMap() map[string]interface{} {
+	saleMap := map[string]interface{}{}
+	if od.Sale != nil {
+		saleMap = map[string]interface{}{
+			"saleID":             od.Sale.SaleID,
+			"saleNameVi":         od.Sale.SaleNameVi,
+			"discountPercentage": od.Sale.DiscountPercentage,
+		}
+	}
+
 	return map[string]interface{}{
-		"variantID": sp.VariantID,
-		"nameVi":    sp.NameVi,
-		"color":     sp.Color,
-		"image":     sp.Image,
-		"sale":      sp.Sale,
-		"price":     sp.Price,
-		"quantity":  sp.Quantity,
-		"total":     sp.Total,
-	}, nil
+		"productID": od.ProductID,
+		"variantID": od.VariantID,
+		"serial":   od.Serial,
+		"nameVi":   od.NameVi,
+		"color":    od.Color,
+		"image":    od.Image,
+		"sale":     saleMap,
+		"price":    od.Price,
+		"quantity": od.Quantity,
+		"total":    od.Total,
+	}
 }
 
-func (sp *OrderDetail) FromMap(data map[string]interface{}) {
-	sp.VariantID = utils.GetObjectID(data, "variantID")
-	sp.NameVi = utils.GetString(data, "nameVi")
-	sp.Color = utils.GetString(data, "color")
-	sp.Image = utils.GetString(data, "image")
+// FromMap populates an OrderDetail struct from a map
+func (od *OrderDetail) FromMap(data map[string]interface{}) {
+	od.ProductID = utils.GetObjectID(data, "productID")
+	od.VariantID = utils.GetObjectID(data, "variantID")
+
+	od.NameVi = utils.GetString(data, "nameVi")
+	od.Color = utils.GetString(data, "color")
+	od.Image = utils.GetString(data, "image")
 
 	if saleData, ok := data["sale"].(map[string]interface{}); ok {
-		sp.Sale = &SaleInfo{
+		od.Sale = &SaleInfo{
 			SaleID:             utils.GetObjectID(saleData, "saleID"),
 			SaleNameVi:         utils.GetString(saleData, "saleNameVi"),
 			DiscountPercentage: utils.GetInt(saleData, "discountPercentage"),
 		}
 	}
 
-	sp.Price = utils.GetFloat64(data, "price")
-	sp.Quantity = utils.GetInt(data, "quantity")
-	sp.Total = utils.GetFloat64(data, "total")
+	od.Price = utils.GetFloat64(data, "price")
+	od.Quantity = utils.GetInt(data, "quantity")
+	od.Total = utils.GetFloat64(data, "total")
 }
 
 // ToMap converts an Order struct to a map
 func (o *Order) ToMap() (map[string]interface{}, error) {
 	details := []map[string]interface{}{}
 	for _, detail := range o.Details {
-		detailMap, err := detail.ToMap()
-		if err != nil {
-			return nil, err
-		}
+		detailMap := detail.ToMap()
 		details = append(details, detailMap)
 	}
 
@@ -96,7 +108,6 @@ func (o *Order) ToMap() (map[string]interface{}, error) {
 		"ward":          o.Ward,
 		"district":      o.District,
 		"province":      o.Province,
-		"country":       o.Country,
 		"paymentMethod": o.PaymentMethod,
 		"paymentStatus": o.PaymentStatus,
 		"orderDate":     o.OrderDate,
@@ -117,7 +128,6 @@ func (o *Order) FromMap(data map[string]interface{}) error {
 	o.Ward = utils.GetString(data, "ward")
 	o.District = utils.GetString(data, "district")
 	o.Province = utils.GetString(data, "province")
-	o.Country = utils.GetString(data, "country")
 	o.PaymentMethod = utils.GetString(data, "paymentMethod")
 	o.PaymentStatus = utils.GetString(data, "paymentStatus")
 	o.OrderDate = utils.GetTime(data, "orderDate")

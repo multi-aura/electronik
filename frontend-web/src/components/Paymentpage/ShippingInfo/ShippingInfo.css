@@ -14,7 +14,6 @@
 .form-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
 }
 
 .form-group {
@@ -26,9 +25,7 @@
     width: 48%;
 }
 
-.form-group.third-width {
-    width: 32%;
-}
+
 
 .form-group:last-child {
     margin-right: 0;
