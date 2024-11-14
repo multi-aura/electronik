@@ -22,32 +22,43 @@ func NewProductController(service services.ProductService) *ProductController {
 func (pro *ProductController) CreateProduct(c *fiber.Ctx) error {
 	var product models.Product
 
+	// Parse the request body into the product struct
 	if err := c.BodyParser(&product); err != nil {
+		log.Printf("Error parsing request body: %v\n", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid request body",
+			"error":   "Invalid request body",
+			"details": err.Error(),
 		})
 	}
 
+	// Validate and create the product using the service
 	validationErrors, err := pro.service.NewProduct(&product)
 	if err != nil {
+		log.Printf("Error creating product: %v\n", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to create product",
+			"error":   "Failed to create product",
+			"details": err.Error(),
 		})
 	}
-	log.Printf("product created successfully:%v\n", product)
 
+	// Check if there were validation errors
 	if validationErrors != nil {
+		log.Printf("Validation errors: %v\n", validationErrors)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"validation_errors": validationErrors,
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(APIResponse.SuccessResponse{
-		Status:  fiber.StatusCreated,
-		Message: "Create product successful",
-		Data:    product,
+	log.Printf("Product created successfully: %v\n", product)
+
+	// Return success response
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"status":  fiber.StatusCreated,
+		"message": "Create product successful",
+		"data":    product,
 	})
 }
+
 func (pro *ProductController) GetProductByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	product, err := pro.service.GetProductByID(id)
