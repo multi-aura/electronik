@@ -12,6 +12,7 @@ type Order struct {
 	UserID        primitive.ObjectID `bson:"userID" json:"userID" form:"userID"`
 	RecipientName string             `bson:"recipientName" json:"recipientName" validate:"required" form:"recipientName"`
 	ContactPhone  string             `bson:"contactPhone" json:"contactPhone" validate:"required" form:"contactPhone"`
+	Email         string             `bson:"email" json:"email" validate:"required" form:"email"`
 	AddressLine   string             `bson:"addressLine" json:"addressLine" validate:"required" form:"addressLine"`
 	Ward          string             `bson:"ward" json:"ward" validate:"required" form:"ward"`
 	District      string             `bson:"district" json:"district" validate:"required" form:"district"`
@@ -58,14 +59,14 @@ func (od *OrderDetail) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"productID": od.ProductID,
 		"variantID": od.VariantID,
-		"serial":   od.Serial,
-		"nameVi":   od.NameVi,
-		"color":    od.Color,
-		"image":    od.Image,
-		"sale":     saleMap,
-		"price":    od.Price,
-		"quantity": od.Quantity,
-		"total":    od.Total,
+		"serial":    od.Serial,
+		"nameVi":    od.NameVi,
+		"color":     od.Color,
+		"image":     od.Image,
+		"sale":      saleMap,
+		"price":     od.Price,
+		"quantity":  od.Quantity,
+		"total":     od.Total,
 	}
 }
 
@@ -78,12 +79,15 @@ func (od *OrderDetail) FromMap(data map[string]interface{}) {
 	od.Color = utils.GetString(data, "color")
 	od.Image = utils.GetString(data, "image")
 
+	// Check if "sale" data exists and is of the correct type
 	if saleData, ok := data["sale"].(map[string]interface{}); ok {
 		od.Sale = &SaleInfo{
 			SaleID:             utils.GetObjectID(saleData, "saleID"),
 			SaleNameVi:         utils.GetString(saleData, "saleNameVi"),
 			DiscountPercentage: utils.GetInt(saleData, "discountPercentage"),
 		}
+	} else {
+		od.Sale = nil // Set to nil if "sale" data does not exist
 	}
 
 	od.Price = utils.GetFloat64(data, "price")
@@ -105,6 +109,7 @@ func (o *Order) ToMap() (map[string]interface{}, error) {
 		"recipientName": o.RecipientName,
 		"contactPhone":  o.ContactPhone,
 		"addressLine":   o.AddressLine,
+		"email":         o.Email,
 		"ward":          o.Ward,
 		"district":      o.District,
 		"province":      o.Province,
@@ -126,6 +131,7 @@ func (o *Order) FromMap(data map[string]interface{}) error {
 	o.ContactPhone = utils.GetString(data, "contactPhone")
 	o.AddressLine = utils.GetString(data, "addressLine")
 	o.Ward = utils.GetString(data, "ward")
+	o.Email = utils.GetString(data, "email")
 	o.District = utils.GetString(data, "district")
 	o.Province = utils.GetString(data, "province")
 	o.PaymentMethod = utils.GetString(data, "paymentMethod")
