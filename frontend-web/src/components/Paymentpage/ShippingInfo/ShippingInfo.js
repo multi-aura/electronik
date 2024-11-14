@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ShippingInfo.css';
 import { Link } from 'react-router-dom';
-const ShippingInfo = ({ onShippingInfoChange }) => {
+import { fetchAdressDistrict, fetchAdressProvince, fetchAdressWard } from '../../../services/paymentService';
+
+const ShippingInfo = ({ onShippingInfoChange, onPlaceOrder, validateShippingInfo, errors }) => {
     const [shippingInfo, setShippingInfo] = useState({
         firstName: '',
         lastName: '',
         address: '',
+        province: '',
         district: '',
         city: '',
         ward: '',
@@ -13,69 +16,82 @@ const ShippingInfo = ({ onShippingInfoChange }) => {
         email: '',
         note: ''
     });
+    const [provinces, setProvinces] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [wards, setWards] = useState([]);
 
-    const [errors, setErrors] = useState({});
+    // Load provinces on component mount
+    useEffect(() => {
+        const loadProvinces = async () => {
+            try {
+                const dataProvince = await fetchAdressProvince();
+                setProvinces(dataProvince.results);
+            } catch (error) {
+                console.error('Error fetching address province', error);
+            }
+        };
+        loadProvinces();
+    }, []);
+
+    // Load districts when city changes
+    useEffect(() => {
+        if (shippingInfo.province) {
+            const loadDistricts = async () => {
+                try {
+                    const dataDistrict = await fetchAdressDistrict(shippingInfo.province);
+                    setDistricts(dataDistrict.results);
+                    setWards([]); // Reset wards when city changes
+                } catch (error) {
+                    console.error('Error fetching address district', error);
+                }
+            };
+            loadDistricts();
+        } else {
+            setDistricts([]); // Reset districts if no city selected
+        }
+    }, [shippingInfo.province]);
+
+    // Load wards when district changes
+    useEffect(() => {
+        if (shippingInfo.district) {
+            const loadWards = async () => {
+                try {
+                    const dataWard = await fetchAdressWard(shippingInfo.district);
+                    setWards(dataWard.results);
+                } catch (error) {
+                    console.error('Error fetching address ward', error);
+                }
+            };
+            loadWards();
+        } else {
+            setWards([]); // Reset wards if no district selected
+        }
+    }, [shippingInfo.district]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         const updatedInfo = { ...shippingInfo, [name]: value };
+    
+        if (name === 'province') {
+            const selectedProvince = provinces.find(province => province.province_id === value);
+            updatedInfo.provinceName = selectedProvince ? selectedProvince.province_name : '';
+        } else if (name === 'district') {
+            const selectedDistrict = districts.find(district => district.district_id === value);
+            updatedInfo.districtName = selectedDistrict ? selectedDistrict.district_name : '';
+        } else if (name === 'ward') {
+            const selectedWard = wards.find(ward => ward.ward_id === value);
+            updatedInfo.wardName = selectedWard ? selectedWard.ward_name : '';
+        }
+    
         setShippingInfo(updatedInfo);
         onShippingInfoChange(updatedInfo);
-
-        // Reset lỗi khi có sự thay đổi
-        setErrors((prev) => ({ ...prev, [name]: '' }));
     };
-
-    const validate = () => {
-        const newErrors = {};
-
-        // Kiểm tra họ và tên
-        if (!shippingInfo.firstName) {
-            newErrors.firstName = "Họ không được để trống";
-        } else if (!/^[A-Za-zÀ-ỹ\s]+$/.test(shippingInfo.firstName)) {
-            newErrors.firstName = "Họ chỉ chứa chữ cái";
-        }
-
-        if (!shippingInfo.lastName) {
-            newErrors.lastName = "Tên không được để trống";
-        } else if (!/^[A-Za-zÀ-ỹ\s]+$/.test(shippingInfo.lastName)) {
-            newErrors.lastName = "Tên chỉ chứa chữ cái";
-        }
-
-        // Kiểm tra địa chỉ
-        if (!shippingInfo.address) {
-            newErrors.address = "Địa chỉ không được để trống";
-        } else if (/[^A-Za-z0-9\s,-]/.test(shippingInfo.address)) {
-            newErrors.address = "Địa chỉ không hợp lệ";
-        }
-
-        // Kiểm tra quận/huyện, thành phố và xã/phường
-        if (!shippingInfo.district) newErrors.district = "Quận/Huyện không được để trống";
-        if (!shippingInfo.city) newErrors.city = "Thành phố không được để trống";
-        if (!shippingInfo.ward) newErrors.ward = "Xã/Phường không được để trống";
-
-        // Kiểm tra số điện thoại
-        if (!shippingInfo.telephone) {
-            newErrors.telephone = "Điện thoại không được để trống";
-        } else if (!/^\d{10,15}$/.test(shippingInfo.telephone)) {
-            newErrors.telephone = "Số điện thoại không hợp lệ";
-        }
-
-        // Kiểm tra email
-        if (!shippingInfo.email) {
-            newErrors.email = "Email không được để trống";
-        } else if (!/\S+@\S+\.\S+/.test(shippingInfo.email)) {
-            newErrors.email = "Email không hợp lệ";
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+    
 
     const handleConfirm = (e) => {
         e.preventDefault();
-        if (validate()) {
-            console.log("Thông tin hợp lệ, tiếp tục đặt hàng...");
+        if (validateShippingInfo()) {
+            onPlaceOrder(); // Gọi hàm đặt hàng từ PaymentPage nếu thông tin hợp lệ
         } else {
             console.log("Thông tin không hợp lệ, vui lòng kiểm tra lại.");
         }
@@ -83,7 +99,7 @@ const ShippingInfo = ({ onShippingInfoChange }) => {
 
     return (
         <div className="shipping-info">
-            <h3 className='detail_cart'>Địa chỉ giao hàng</h3>
+            <h3 className="detail_cart">Địa chỉ giao hàng</h3>
 
             <div className="form-row">
                 <div className="form-group half-width">
@@ -140,40 +156,57 @@ const ShippingInfo = ({ onShippingInfoChange }) => {
 
             <div className="form-row">
                 <div className="form-group third-width">
-                    <input
-                        type="text"
-                        name="ward"
-                        placeholder="Xã/Phường"
-                        value={shippingInfo.ward}
+                    <select
+                        name="province"
+                        value={shippingInfo.province}
                         onChange={handleChange}
-                        className={`form-control ${errors.ward ? 'error' : ''}`}
+                        className={`form-control ${errors.province ? 'error' : ''}`}
                         required
-                    />
-                    {errors.ward && <span className="error-message">{errors.ward}</span>}
+                    >
+                        <option value="">Chọn thành phố</option>
+                        {provinces.map((province) => (
+                            <option key={province.province_id} value={province.province_id}>
+                                {province.province_name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.province && <span className="error-message">{errors.province}</span>}
                 </div>
+
                 <div className="form-group third-width">
-                    <input
-                        type="text"
+                    <select
                         name="district"
-                        placeholder="Quận/Huyện"
                         value={shippingInfo.district}
                         onChange={handleChange}
                         className={`form-control ${errors.district ? 'error' : ''}`}
                         required
-                    />
+                    >
+                        <option value="">Chọn quận huyện</option>
+                        {districts.map((district) => (
+                            <option key={district.district_id} value={district.district_id}>
+                                {district.district_name}
+                            </option>
+                        ))}
+                    </select>
                     {errors.district && <span className="error-message">{errors.district}</span>}
                 </div>
+
                 <div className="form-group third-width">
-                    <input
-                        type="text"
-                        name="city"
-                        placeholder="Thành phố"
-                        value={shippingInfo.city}
+                    <select
+                        name="ward"
+                        value={shippingInfo.ward}
                         onChange={handleChange}
-                        className={`form-control ${errors.city ? 'error' : ''}`}
+                        className={`form-control ${errors.ward ? 'error' : ''}`}
                         required
-                    />
-                    {errors.city && <span className="error-message">{errors.city}</span>}
+                    >
+                        <option value="">Chọn xã phường</option>
+                        {wards.map((ward) => (
+                            <option key={ward.ward_id} value={ward.ward_id}>
+                                {ward.ward_name}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.ward && <span className="error-message">{errors.ward}</span>}
                 </div>
             </div>
 
@@ -200,13 +233,7 @@ const ShippingInfo = ({ onShippingInfoChange }) => {
                 />
             </div>
 
-            <div className="button-container">
-                <Link to={`/product/Cart`}>
-                    <button className="btn-back">Trở lại giỏ hàng</button>
-
-                </Link>
-                <button onClick={handleConfirm} className="btn-confirm">Đặt hàng</button>
-            </div>
+          
         </div>
     );
 };

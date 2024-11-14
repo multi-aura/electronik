@@ -14,6 +14,13 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.button-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
 .payment-header {
     text-align: center;
 }

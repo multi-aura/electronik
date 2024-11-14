@@ -1,15 +1,20 @@
 
-export const createCartItem = (id, name, price, quantity, image, serial, sku) => {
+export const createCartItem = (id, name, variantID, priceold, price, quantity, image, serial, sku, color, sale) => {
     return {
         id,
         name,
+        priceold,
         price,
         quantity,
         image,
         serial,
-        sku
+        variantID,
+        sku,
+        color,
+        sale,
     };
 };
+
 
 // Lấy giỏ hàng từ sessionStorage
 export const getCart = () => {
@@ -62,6 +67,14 @@ export const removeFromCart = (productId) => {
 export const calculateTotal = () => {
     const cart = getCart();
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+};
+export const calculateTotal_current = () => {
+    const cart = getCart();
+    return cart.reduce((total, item) => total + item.priceold * item.quantity, 0);
+};
+export const clearCart = () => {
+    sessionStorage.removeItem('cart'); // Xóa giỏ hàng khỏi sessionStorage
+    window.dispatchEvent(new Event('cartUpdated')); // Gửi sự kiện để cập nhật lại giao diện
 };
 
 // tính tổng số lượng sản phẩm trong giỏ hàng
