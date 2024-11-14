@@ -55,7 +55,6 @@ const EMHUN = () => {
                 console.log('Extracted serials:', serials);
     
                 if (serials.length > 0) {
-                    // Kiểm tra xem các serials đã được chuyển đổi đúng cách chưa
                     const formattedSerials = serials.map(serial => serial.toString());
                     console.log('Formatted serials:', formattedSerials);
     

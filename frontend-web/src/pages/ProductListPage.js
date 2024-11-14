@@ -6,28 +6,29 @@ import ProductGrid from "../components/ProductListPage/ProductGrid/ProductGrid";
 import "../assets/css/ProductListPage.css";
 import CategoryGrid from '../components/CategoryGrid/CategoryGrid';
 import { useParams } from "react-router-dom";
-import { fetchProductsByCategory } from "../services/productService";
+import { fetchProductsByCategory, fetchProductNoQuery } from "../services/productService";
 
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(100);
   const [loading, setLoading] = useState(false);
-  const [manufacturer, setManufacturer] = useState(""); // Thêm state để lưu manufacturer
+  const [manufacturer, setManufacturer] = useState("");
   const { categoryID } = useParams();
-  const limit = 8; // Giới hạn số sản phẩm mỗi trang
+  const limit = 8;
 
-  const listProductByCategoryID = async (page) => {
-    if (!categoryID) return;
-
+  // Hàm tải sản phẩm, có kiểm tra categoryID để quyết định gọi API nào
+  const fetchProducts = async (page) => {
     setLoading(true);
     try {
-      console.log('Fetching products for category ID:', categoryID, 'Page:', page, 'Manufacturer:', manufacturer);
-      const productsData = await fetchProductsByCategory(categoryID, page, limit, manufacturer);
+      
+      const productsData = categoryID
+        ? await fetchProductsByCategory(categoryID, page, limit, manufacturer)
+        : await fetchProductNoQuery(page, limit, manufacturer);
       
       if (productsData.data) {
         setProducts(prevProducts => page === 1 ? productsData.data : [...prevProducts, ...productsData.data]);
-        setCurrentPage(page); // Cập nhật trang hiện tại
+        setCurrentPage(page);
       }
     } catch (error) {
       console.error('Error loading products:', error);
@@ -36,15 +37,15 @@ const ProductListPage = () => {
     }
   };
 
+  // Tải lại sản phẩm khi `categoryID` hoặc `manufacturer` thay đổi
   useEffect(() => {
-    if (categoryID) {
-      listProductByCategoryID(1); // Tải dữ liệu trang đầu tiên khi `categoryID` thay đổi
-    }
-  }, [categoryID, manufacturer]); // Thêm `manufacturer` vào mảng phụ thuộc nếu cần lọc sản phẩm theo manufacturer
+    fetchProducts(1);
+  }, [categoryID, manufacturer]);
 
+  // Tải thêm sản phẩm khi người dùng cuộn xuống cuối trang
   const loadMoreProducts = () => {
     if (!loading && currentPage < totalPages) {
-      listProductByCategoryID(currentPage + 1); // Tải trang tiếp theo
+      fetchProducts(currentPage + 1);
     }
   };
 
@@ -52,7 +53,7 @@ const ProductListPage = () => {
     const handleScroll = () => {
       if (
         window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 200 // Giảm khoảng cách để kích hoạt sớm hơn
+        document.documentElement.offsetHeight - 200
       ) {
         loadMoreProducts();
       }
@@ -72,8 +73,7 @@ const ProductListPage = () => {
           </div>
 
           <div>
-            {/* Hiển thị sản phẩm nếu có `categoryID` */}
-            {categoryID ? (
+            {products.length > 0 ? (
               <ProductGrid products={products} />
             ) : (
               <span>Chọn một danh mục để xem sản phẩm</span>
