@@ -18,7 +18,7 @@ func NewOrderController(service services.OrderService) *OrderController {
 }
 
 func (oc *OrderController) CreateOrder(c *fiber.Ctx) error {
-		var order models.Order
+	var order models.Order
 
 	if err := c.BodyParser(&order); err != nil {
 		return APIResponse.SendErrorResponse(c, fiber.StatusBadRequest, "Cannot parse JSON", err.Error())
@@ -41,6 +41,16 @@ func (oc *OrderController) CreateOrder(c *fiber.Ctx) error {
 		})
 	}
 	order.UserID = userID
+
+	for i := range order.Details {
+		if err := order.Details[i].SetSerialFromString(); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusBadRequest,
+				Message: "Invalid serial format",
+				Error:   err.Error(),
+			})
+		}
+	}
 	err = oc.service.Create(&order)
 	if err != nil {
 		return APIResponse.SendErrorResponse(c, fiber.StatusInternalServerError, "Failed to create order", err.Error())
