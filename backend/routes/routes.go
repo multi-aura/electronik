@@ -28,7 +28,7 @@ func SetupRoutes(app *fiber.App) {
 	SetUpProductRoutes(app)
 	SetUpCategoryRoutes(app)
 	SetUpOrderRoutes(app)
-
+	SetUpImageRoutes(app)
 	app.Get("/analysis-with-emhun", func(c *fiber.Ctx) error {
 		minUtilityStr := c.Query("minUtility", "50000")
 		minUtility, err := strconv.ParseFloat(minUtilityStr, 64)

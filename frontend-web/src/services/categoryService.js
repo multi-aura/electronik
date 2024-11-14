@@ -7,9 +7,7 @@ export const fetchAllCategories = async () => {
         const token = Cookies.get('authToken');
 
         const response = await axios.get(`${API_URL}/category/all`, {
-            headers: {
-                Authorization: `Bearer ${token}` 
-            }
+
         });
 
         if (response.status === 200) {
