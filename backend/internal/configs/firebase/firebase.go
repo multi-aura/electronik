@@ -11,7 +11,7 @@ import (
 var FirebaseStorageBucketName = "multi-aura.appspot.com"
 
 func InitializeFirebaseApp() *firebase.App {
-	opt := option.WithCredentialsFile("./internal/configs/firebase/multi-aura-firebase-adminsdk-uo278-937c77c9e8.json")
+	opt := option.WithCredentialsFile("./internal/configs/firebase/multi-aura-firebase-adminsdk-uo278-0e6b4550b4.json")
 
 	app, err := firebase.NewApp(context.Background(), &firebase.Config{
 		StorageBucket: FirebaseStorageBucketName,
