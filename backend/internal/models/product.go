@@ -2,6 +2,7 @@ package models
 
 import (
 	"electronik/pkg/utils"
+	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -311,4 +312,12 @@ func (p *Product) FromMap(data map[string]interface{}) {
 		sale.FromMap(saleData)
 		p.Sale = &sale
 	}
+}
+func (v *Variant) SetSerialFromString() error {
+	serial, err := strconv.ParseInt(v.SerialString, 10, 64)
+	if err != nil {
+		return err
+	}
+	v.Serial = serial
+	return nil
 }

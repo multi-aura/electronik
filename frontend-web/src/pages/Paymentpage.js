@@ -95,7 +95,7 @@ const PaymentPage = () => {
             total: calculateTotal(),
             details: orderItems.map((item) => ({
                 productID: item.id,
-                serial: parseInt(item.serial, 10),
+                serial: item.serial,
                 nameVi: item.name,
                 variantID: item.variantID,
                 color: item.color,
@@ -103,11 +103,11 @@ const PaymentPage = () => {
                 price: item.price,
                 quantity: item.quantity,
                 total: item.price * item.quantity,
-                sale: {
+                sale: item.sale.saleID && item.sale.saleID.length === 24 ? {
                     saleID: item.sale.saleID,
                     saleNameVi: item.sale.saleName,
                     discountPercentage: item.sale.discountPercentage,
-                },
+                } : null,
             }))
         };
         try {
