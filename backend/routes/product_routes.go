@@ -10,7 +10,9 @@ import (
 
 func SetUpProductRoutes(app *fiber.App) {
 	repository := repositories.NewProductRepository(mongoDB)
+
 	service := services.NewProductService(repository)
+
 	controller := controllers.NewProductController(service)
 
 	productGroup := app.Group("/product")
