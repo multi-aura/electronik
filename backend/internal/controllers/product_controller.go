@@ -96,7 +96,6 @@ func (pro *ProductController) UpdateProduct(c *fiber.Ctx) error {
 			"error": "Failed to update product",
 		})
 	}
-	// Kiểm tra nếu có lỗi validation
 	if validationErrors != nil && len(validationErrors) > 0 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"validation_errors": validationErrors,

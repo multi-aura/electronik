@@ -4,7 +4,7 @@ import Dashboard from '../pages/Admin/Dashboard';
 import EMHUN from '../pages/Admin/EMHUN';
 import ProductManagementPage from '../pages/Admin/ProductManagement/ProductManagement';
 import ProductCreatePage from '../pages/Admin/ProductManagement/createProductPage';
-import OrderManagement from '../pages/Admin/OrderListPage'
+import OrderManagement from '../pages/Admin/orderManagement/OrderListPage'
 import VariantManagementPage from '../pages/Admin/ProductManagement/VariantManagementPage';
 function AdminRoutes() {
   return (
