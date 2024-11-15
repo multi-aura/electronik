@@ -9,6 +9,7 @@ import { calculateTotal, clearCart, getCart, removeFromCart } from '../services/
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { fetchCreateOrder } from '../services/paymentService';
+import OrderConfirmationModal from '../components/Paymentpage/OrderConfirmationModal/OrderConfirmationModal';
 
 const PaymentPage = () => {
     const [shippingInfo, setShippingInfo] = useState({
@@ -26,7 +27,7 @@ const PaymentPage = () => {
     const [errors, setErrors] = useState({});
     const [shippingCost, setShippingCost] = useState(0);
     const [orderItems, setOrderItems] = useState(getCart());
-
+    const [isModalOpen, setModalOpen] = useState(false); // Trạng thái của modal
     const handleShippingCostChange = (cost) => {
         setShippingCost(cost);
     };
@@ -112,9 +113,8 @@ const PaymentPage = () => {
         };
         try {
             const response = await fetchCreateOrder(orderData);
-            alert('Đơn hàng đã được tạo thành công!');
+            setModalOpen(true);
             clearCart();
-            // window.location.href = '/order-confirmation';
         } catch (error) {
             console.error('Error creating order:', error);
             alert('Tạo đơn hàng không thành công. Vui lòng kiểm tra lại thông tin và thử lại.');
@@ -163,7 +163,11 @@ const PaymentPage = () => {
                     </div>
 
                 </div>
-
+                <OrderConfirmationModal
+                    isOpen={isModalOpen}
+                    onViewOrder={() => window.location.href = '/order-details'}
+                    onGoHome={() => window.location.href = '/'}
+                />
 
             </div>
         </Layout>
