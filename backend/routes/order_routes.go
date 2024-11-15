@@ -21,4 +21,7 @@ func SetUpOrderRoutes(app *fiber.App) {
 	orderGroup.Put("/update", controller.UpdateOrder)
 	orderGroup.Delete("/delete/:id", controller.DeleteOrder)
 	orderGroup.Get("/:id", controller.GetOrderByID)
+	orderGroup.Post("/All", controller.GetAllOders)
+	orderGroup.Put("/updatestatusorder", controller.UpdateStatusOrder)
+
 }
