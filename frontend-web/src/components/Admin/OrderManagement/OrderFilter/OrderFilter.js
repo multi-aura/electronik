@@ -2,37 +2,38 @@ import React from 'react';
 import './OrderFilter.css';
 
 const OrderFilter = ({ setStatusFilter, activeFilter }) => {
+
     return (
         <div className="order-filter mb-3">
             <button
                 onClick={() => setStatusFilter('All')}
                 className={`filter-button ${activeFilter === 'All' ? 'active' : ''}`}
             >
-                All
+                Tất cả
             </button>
             <button
-                onClick={() => setStatusFilter('Wait for confirmation')}
-                className={`filter-button ${activeFilter === 'Wait for confirmation' ? 'active' : ''}`}
+                onClick={() => setStatusFilter(1)}
+                className={`filter-button ${activeFilter === 1 ? 'active' : ''}`}
             >
-                Wait for confirmation
+                Chờ xác nhận
             </button>
             <button
-                onClick={() => setStatusFilter('Confirmed')}
-                className={`filter-button ${activeFilter === 'Confirmed' ? 'active' : ''}`}
+                onClick={() => setStatusFilter(2)}
+                className={`filter-button ${activeFilter === 2 ? 'active' : ''}`}
             >
-                Confirmed
+                Đã xác nhận
             </button>
             <button
-                onClick={() => setStatusFilter('Cancelled')}
-                className={`filter-button ${activeFilter === 'Cancelled' ? 'active' : ''}`}
+                onClick={() => setStatusFilter(3)}
+                className={`filter-button ${activeFilter === 3 ? 'active' : ''}`}
             >
-                Cancelled
+                Đã hủy
             </button>
             <button
-                onClick={() => setStatusFilter('Done')}
-                className={`filter-button ${activeFilter === 'Done' ? 'active' : ''}`}
+                onClick={() => setStatusFilter(4)}
+                className={`filter-button ${activeFilter === 4 ? 'active' : ''}`}
             >
-                Done
+                Đã hoàn thành
             </button>
         </div>
     );
