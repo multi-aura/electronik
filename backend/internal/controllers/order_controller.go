@@ -151,3 +151,61 @@ func (oc *OrderController) GetOrdersOfUser(c *fiber.Ctx) error {
 
 	return APIResponse.SendSuccessResponse(c, fiber.StatusOK, "Orders retrieved successfully", orders)
 }
+
+func (oc *OrderController) GetAllOders(c *fiber.Ctx) error {
+
+	var req models.PagingRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "Statusbadrequest",
+		})
+	}
+	if req.Limit <= 0 {
+		req.Limit = 10
+	}
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+
+	orders, err := oc.service.GetAllOrders(int(req.Page), int(req.Limit))
+	if err != nil {
+		return APIResponse.SendErrorResponse(c, fiber.StatusInternalServerError, "Failed to all orders", err.Error())
+	}
+
+	return APIResponse.SendSuccessResponse(c, fiber.StatusOK, "Orders all successfully", orders)
+
+}
+
+func (oc *OrderController) UpdateStatusOrder(c *fiber.Ctx) error {
+	type updateStatusOrder struct {
+		OrderID string `json:"order_id" bson:"order_id"`
+		Status  int64  `json:"status"`
+	}
+	var req updateStatusOrder
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
+			Status:  fiber.StatusBadRequest,
+			Message: "Invalid request body",
+			Error:   "Statusbadrequest",
+		})
+	}
+	if req.OrderID == "" {
+		return APIResponse.SendErrorResponse(c, fiber.StatusBadRequest, "Order ID is required", "StatusBadRequest")
+
+	}
+	err := oc.service.UpdateStatusOrder(req.OrderID, req.Status)
+	if err != nil {
+		return APIResponse.SendErrorResponse(c, fiber.StatusInternalServerError, "Failed to update order status", err.Error())
+	}
+	return c.JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Order status updated successfully",
+		Data: map[string]interface{}{
+			"order_id": req.OrderID,
+			"status":   req.Status,
+		},
+	})
+
+}

@@ -30,7 +30,7 @@ const AdminSidebar = ({ toggleSidebar, isOpen }) => {
                     <div className="icon"><FontAwesomeIcon icon={faFileAlt} /></div>
                     <span>Orders</span>
                 </a>
-                <a className="nav-link d-flex align-items-center text-white" href="/sales">
+                <a className="nav-link d-flex align-items-center text-white" href="/admin/SaleManagement">
                     <div className="icon"><FontAwesomeIcon icon={faFileAlt} /></div>
                     <span>Sale</span>
                 </a>
