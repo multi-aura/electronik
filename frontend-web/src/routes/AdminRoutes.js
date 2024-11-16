@@ -6,12 +6,15 @@ import ProductManagementPage from '../pages/Admin/ProductManagement/ProductManag
 import ProductCreatePage from '../pages/Admin/ProductManagement/createProductPage';
 import OrderManagement from '../pages/Admin/orderManagement/OrderListPage'
 import VariantManagementPage from '../pages/Admin/ProductManagement/VariantManagementPage';
+import SalesManagementPage from '../pages/Admin/SalesManagementPage/SalesManagementPage';
 function AdminRoutes() {
   return (
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/Emhun" element={<EMHUN />} />
         <Route path="/ProductManagement" element={<ProductManagementPage />} />
+        <Route path="/SaleManagement" element={<SalesManagementPage />} />
+
         <Route path="/ProductManagement/create" element={<ProductCreatePage />} />
         <Route path="/OrderManagement" element={<OrderManagement />} />
         <Route path="/products/:productId/variants" element={<VariantManagementPage />} />
