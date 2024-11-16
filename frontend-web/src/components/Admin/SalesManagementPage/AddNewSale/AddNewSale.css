@@ -1,0 +1,190 @@
+.add-sale-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.add-sale-modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 500px; /* Độ rộng phù hợp */
+    max-width: 90%; /* Đảm bảo modal không quá lớn trên màn hình nhỏ */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s;
+}
+
+.add-sale-modal-content h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}.error-text {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+
+.add-sale-modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-sale-modal-content label {
+    margin-top: 12px;
+    font-weight: 500;
+    color: #555;
+}
+
+.add-sale-modal-content input,
+.add-sale-modal-content textarea,
+.add-sale-modal-content select {
+    margin-top: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%; /* Đảm bảo input vừa với modal */
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến kích thước */
+    transition: all 0.2s; /* Chuyển động khi focus */
+}
+
+.add-sale-modal-content input:focus,
+.add-sale-modal-content textarea:focus,
+.add-sale-modal-content select:focus {
+    border-color: #6200ea;
+    outline: none;
+    transform: scale(1.02); /* Hiệu ứng phóng to nhẹ khi focus */
+}
+
+.add-sale-date-picker {
+    position: relative;
+    margin-top: 12px;
+}
+
+.add-sale-date-picker input {
+    width: 100%; /* Đảm bảo input vừa với modal */
+}
+
+.add-sale-date-picker .calendar-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #6200ea;
+    cursor: pointer;
+}
+
+.add-sale-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.add-sale-apply-button,
+.add-sale-cancel-button {
+    background-color: transparent;
+    border: 1px solid; /* Viền outline */
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+/* Apply button với viền và chữ màu xanh dương */
+.add-sale-apply-button {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.add-sale-apply-button:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+.radio-group {
+    margin-top: 15px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.radio-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-custom {
+    width: 16px;
+    height: 16px;
+    border: 2px solid green;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    position: relative;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.radio-input:checked + .radio-custom {
+    background-color: green;
+    border-color: green;
+}
+
+.radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.radio-input:checked + .radio-custom::after {
+    opacity: 1;
+}
+
+/* Cancel button với viền và chữ màu đỏ nhạt */
+.add-sale-cancel-button {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.add-sale-cancel-button:hover {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

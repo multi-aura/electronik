@@ -1,0 +1,138 @@
+.edit-sale-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.edit-sale-modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s;
+}
+
+.edit-sale-modal-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+}
+
+.edit-sale-error-text {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.edit-sale-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-sale-form-group label {
+    margin-top: 12px;
+    font-weight: 500;
+    color: #555;
+}
+
+.edit-sale-form-group input,
+.edit-sale-form-group textarea,
+.edit-sale-form-group select {
+    margin-top: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.edit-sale-form-group input:focus,
+.edit-sale-form-group textarea:focus,
+.edit-sale-form-group select:focus {
+    border-color: #6200ea;
+    outline: none;
+    transform: scale(1.02);
+}
+
+.edit-sale-radio-group {
+    margin-top: 15px;
+}
+
+.edit-sale-radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.edit-sale-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.edit-sale-apply-button,
+.edit-sale-cancel-button {
+    background-color: transparent;
+    border: 1px solid;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.edit-sale-apply-button {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.edit-sale-apply-button:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.edit-sale-cancel-button {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.edit-sale-cancel-button:hover {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.edit-sale-radio-option {
+    display: flex;
+    align-items: center;
+}
+
+.edit-sale-radio-option input[type="radio"] {
+    margin-right: 8px;
+}
