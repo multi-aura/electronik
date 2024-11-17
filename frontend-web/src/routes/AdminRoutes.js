@@ -4,8 +4,9 @@ import Dashboard from '../pages/Admin/Dashboard';
 import EMHUN from '../pages/Admin/EMHUN';
 import ProductManagementPage from '../pages/Admin/ProductManagement/ProductManagement';
 import ProductCreatePage from '../pages/Admin/ProductManagement/createProductPage';
-import OrderManagement from '../pages/Admin/OrderListPage'
+import OrderManagement from '../pages/Admin/orderManagement/OrderListPage'
 import VariantManagementPage from '../pages/Admin/ProductManagement/VariantManagementPage';
+import SalesManagementPage from '../pages/Admin/SalesManagementPage/SalesManagementPage';
 import ProductEditPage from '../pages/Admin/ProductManagement/ProductEditPage';
 function AdminRoutes() {
   return (
@@ -13,6 +14,8 @@ function AdminRoutes() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/Emhun" element={<EMHUN />} />
         <Route path="/ProductManagement" element={<ProductManagementPage />} />
+        <Route path="/SaleManagement" element={<SalesManagementPage />} />
+
         <Route path="/ProductManagement/create" element={<ProductCreatePage />} />
         <Route path="/OrderManagement" element={<OrderManagement />} />
         <Route path="/products/:productId/variants" element={<VariantManagementPage />} />

@@ -19,6 +19,8 @@ type (
 		Repository[models.Order]
 		StartSession() (mongo.Session, error)
 		GetOrdersOfUser(userID string, limit int, skip int) ([]*models.Order, error)
+		GetAllOrder(limit int, skip int) ([]*models.Order, error)
+		UpdateStatusOrder(orderID string, status int64) error
 	}
 
 	orderRepository struct {
@@ -154,6 +156,27 @@ func (o *orderRepository) GetOrdersOfUser(userID string, limit int, skip int) ([
 
 	return orders, nil
 }
+func (o *orderRepository) GetAllOrder(limit int, skip int) ([]*models.Order, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	options := options.Find()
+	options.SetLimit(int64(limit))
+	options.SetSkip(int64(skip))
+
+	cursor, err := o.collection.Find(ctx, bson.M{}, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var orders []*models.Order
+	if err := cursor.All(ctx, &orders); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
 
 func (o *orderRepository) updateVariantStock(sessCtx mongo.SessionContext, variantID string, quantityPurchased int) error {
 	varID, err := primitive.ObjectIDFromHex(variantID)
@@ -190,5 +213,27 @@ func (o *orderRepository) updateVariantStock(sessCtx mongo.SessionContext, varia
 		return errors.New("failed to update stock: no variant found or stock update resulted in negative quantity")
 	}
 
+	return nil
+}
+func (o *orderRepository) UpdateStatusOrder(orderID string, status int64) error {
+	orID, err := primitive.ObjectIDFromHex(orderID)
+	if err != nil {
+		return errors.New("Invalid order ID")
+	}
+	if status == 0 {
+		return errors.New("Status order is invalid")
+	}
+	filter := bson.M{
+		"_id": orID,
+	}
+	update := bson.M{
+		"$set": bson.M{
+			"status": status,
+		},
+	}
+	_, err = o.db.Database.Collection("orders").UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return errors.New("Failed to update order status")
+	}
 	return nil
 }
