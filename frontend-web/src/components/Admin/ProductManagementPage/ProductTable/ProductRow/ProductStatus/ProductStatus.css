@@ -1,33 +1,33 @@
-/* ProductStatus.css */
-.status-badge {
-    display: inline-block;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-radius: 20px;
-    color: #fff;
+.product-status-label {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: inline-block;
 }
 
-.status-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+.status-in-stock {
+    color: #ffffff;
+    background-color: #27ae60; /* Green */
 }
 
-.badge-success {
-    background-color: #28a745; /* green */
+.status-out-of-stock {
+    color: #ffffff;
+    background-color: #e74c3c; /* Red */
 }
 
-.badge-danger {
-    background-color: #dc3545; /* red */
+.status-pending {
+    color: #ffffff;
+    background-color: #f39c12; /* Yellow */
 }
 
-.badge-warning {
-    background-color: #ffc107; /* yellow */
+.status-discontinued {
+    color: #ffffff;
+    background-color: #7f8c8d; /* Gray */
 }
 
-.badge-secondary {
-    background-color: #6c757d; /* gray */
+.status-unknown {
+    color: #ffffff;
+    background-color: #34495e; /* Dark Gray */
 }

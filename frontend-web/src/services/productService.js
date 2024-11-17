@@ -161,3 +161,62 @@ export const createProduct = async (productData) => {
         throw error;
     }
 };
+export const updateProduct = async (productData) => {
+    try {
+        console.log('Payload to update:', productData);
+
+        const token = Cookies.get('authToken');
+        const response = await axios.put(
+            `${API_URL}/product/update`,
+            productData,
+            {
+                headers: {
+                    'Content-Type': 'application/json', 
+                    Authorization: `Bearer ${token}`,  
+                },
+            }
+        );
+
+        if (response.status === 200 || response.status === 201) {
+            return response.data;
+        } else {
+            throw new Error('Failed to update product');
+        }
+    } catch (error) {
+        // Log error details
+        if (error.response) {
+            console.error('Error response status:', error.response.status);
+            console.error('Error response data:', error.response.data);
+        }
+        console.error('Error updating product:', error.message);
+        throw error;
+    }
+};
+
+export const deleteProduct = async (productId) => {
+    try {
+        const token = Cookies.get('authToken');
+        const response = await axios.put(
+            `${API_URL}/product/delete/${productId}`,
+            {}, 
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if (response.status === 200 || response.status === 204) {
+            return response.data;
+        } else {
+            throw new Error('Failed to delete product');
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error response status:', error.response.status);
+            console.error('Error response data:', error.response.data);
+        }
+        console.error('Error deleting product:', error);
+        throw error;
+    }
+};

@@ -18,7 +18,7 @@ func SetUpProductRoutes(app *fiber.App) {
 	productGroup := app.Group("/product")
 	productGroup.Post("/create", controller.CreateProduct)
 	productGroup.Put("/update/", controller.UpdateProduct)
-	productGroup.Patch("/delete/:id", controller.DeleteProduct)
+	productGroup.Put("/delete/:id", controller.DeleteProduct)
 	productGroup.Post("/informationBySerial", controller.GetProductsBySerials)
 	productGroup.Post("/information", controller.GetProductsByIDs)
 	productGroup.Get("/similar", controller.GetSimilarProducts)
