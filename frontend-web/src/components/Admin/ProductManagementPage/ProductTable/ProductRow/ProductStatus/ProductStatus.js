@@ -1,21 +1,37 @@
-// ProductStatus.js
 import React from 'react';
-import PropTypes from 'prop-types';
 import './ProductStatus.css';
 
-const ProductStatus = ({ status = 'Unknown' }) => {
-    const statusClasses = {
-        'Còn hàng': 'badge badge-success',
-        'Hết hàng': 'badge badge-danger',
-        'Sắp có hàng': 'badge badge-warning',
-        'Unknown': 'badge badge-secondary',
-    };
+const ProductStatus = ({ status }) => {
+    let statusLabel = '';
+    let statusClass = '';
 
-    return <span className={`status-badge ${statusClasses[status] || statusClasses['Unknown']}`}>{status}</span>;
-};
+    switch (status) {
+        case 1:
+            statusLabel = 'Còn hàng'; // In Stock
+            statusClass = 'status-in-stock';
+            break;
+        case 2:
+            statusLabel = 'Hết hàng'; // Out of Stock
+            statusClass = 'status-out-of-stock';
+            break;
+        case 3:
+            statusLabel = 'Đang chờ'; // Pending
+            statusClass = 'status-pending';
+            break;
+        case -1:
+            statusLabel = 'Ngừng bán'; // Discontinued
+            statusClass = 'status-discontinued';
+            break;
+        default:
+            statusLabel = 'Không xác định'; // Unknown
+            statusClass = 'status-unknown';
+    }
 
-ProductStatus.propTypes = {
-    status: PropTypes.string,
+    return (
+        <span className={`product-status-label ${statusClass}`}>
+            {statusLabel}
+        </span>
+    );
 };
 
 export default ProductStatus;
