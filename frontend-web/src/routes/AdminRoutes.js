@@ -7,6 +7,7 @@ import ProductCreatePage from '../pages/Admin/ProductManagement/createProductPag
 import OrderManagement from '../pages/Admin/orderManagement/OrderListPage'
 import VariantManagementPage from '../pages/Admin/ProductManagement/VariantManagementPage';
 import SalesManagementPage from '../pages/Admin/SalesManagementPage/SalesManagementPage';
+import ProductEditPage from '../pages/Admin/ProductManagement/ProductEditPage';
 function AdminRoutes() {
   return (
       <Routes>
@@ -18,6 +19,7 @@ function AdminRoutes() {
         <Route path="/ProductManagement/create" element={<ProductCreatePage />} />
         <Route path="/OrderManagement" element={<OrderManagement />} />
         <Route path="/products/:productId/variants" element={<VariantManagementPage />} />
+        <Route path="/products/:productId/edit" element={<ProductEditPage />} />
 
 
       </Routes>
