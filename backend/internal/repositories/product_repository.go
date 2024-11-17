@@ -29,6 +29,8 @@ type (
 		UpdateVariantStock(variantID string, quantityPurchased int) error
 		UpdateSerialForAllVariants() error
 		GetBySerials(serials []int64) ([]*models.Product, error)
+		UpdateProductWithSale(productId string, sale models.Sale) error
+		RemoveSaleFromProducts(productIDs []string) error
 	}
 
 	productRepository struct {
@@ -495,4 +497,62 @@ func (pro *productRepository) GetBySerials(serials []int64) ([]*models.Product, 
 	}
 
 	return products, nil
+}
+
+func (pro *productRepository) UpdateProductWithSale(productId string, sale models.Sale) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	objectID, err := primitive.ObjectIDFromHex(productId)
+	if err != nil {
+		return errors.New("Invalid sale ID format")
+	}
+	filter := bson.M{"_id": objectID}
+	update := bson.M{
+		"$set": bson.M{
+			"sale": bson.M{
+				"_id":                sale.ID,
+				"saleNameVi":         sale.SaleNameVi,
+				"saleNameEn":         sale.SaleNameEn,
+				"discountPercentage": sale.DiscountPercentage,
+				"startDate":          sale.StartDate,
+				"endDate":            sale.EndDate,
+			},
+		},
+	}
+
+	_, err = pro.collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return errors.New("Failed to update product sale")
+	}
+
+	return nil
+}
+
+func (p *productRepository) RemoveSaleFromProducts(productIDs []string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Chuyển đổi productIDs sang ObjectID
+	var productObjectIDs []primitive.ObjectID
+	for _, id := range productIDs {
+		objectID, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return errors.New("Invalid Product ID format")
+		}
+		productObjectIDs = append(productObjectIDs, objectID)
+	}
+
+	// Xóa trường sale trong sản phẩm
+	filter := bson.M{"_id": bson.M{"$in": productObjectIDs}}
+	update := bson.M{
+		"$unset": bson.M{
+			"sale": "",
+		},
+	}
+	_, err := p.collection.UpdateMany(ctx, filter, update)
+	if err != nil {
+		return errors.New("Failed to update products")
+	}
+
+	return nil
 }
