@@ -28,6 +28,8 @@ func SetupRoutes(app *fiber.App) {
 	SetUpProductRoutes(app)
 	SetUpCategoryRoutes(app)
 	SetUpOrderRoutes(app)
+	SetUpSaleRoutes(app)
+
 	SetUpImageRoutes(app)
 	app.Get("/analysis-with-emhun", func(c *fiber.Ctx) error {
 		minUtilityStr := c.Query("minUtility", "50000")

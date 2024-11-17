@@ -13,6 +13,8 @@ type (
 		Update(orderMap *map[string]interface{}) error
 		Delete(id string) error
 		GetOrdersOfUser(userID string, page, limit int) ([]*models.Order, error)
+		GetAllOrders(page, limit int) ([]*models.Order, error)
+		UpdateStatusOrder(orderID string, status int64) error
 	}
 	orderService struct {
 		repo        repositories.OrderRepository
@@ -61,4 +63,26 @@ func (s *orderService) GetOrdersOfUser(userID string, page, limit int) ([]*model
 		return nil, errors.New("user ID cannot be empty")
 	}
 	return s.repo.GetOrdersOfUser(userID, limit, skip)
+}
+func (s *orderService) GetAllOrders(page, limit int) ([]*models.Order, error) {
+	if (page <= 0) || (limit <= 0) {
+		return nil, errors.New("page and limit must be greater than 0")
+	}
+	skip := (page - 1) * limit
+
+	return s.repo.GetAllOrder(limit, skip)
+}
+func (s *orderService) UpdateStatusOrder(orderID string, status int64) error {
+	if orderID == "" {
+		return errors.New("orders ID is required for update")
+	}
+	if status < 0 {
+		return errors.New("status is required for update")
+	}
+	err := s.repo.UpdateStatusOrder(orderID, status)
+	if err != nil {
+		return errors.New("Failed to update order status")
+	}
+
+	return nil
 }

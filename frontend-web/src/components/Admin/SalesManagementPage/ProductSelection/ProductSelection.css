@@ -1,0 +1,216 @@
+/* Modal overlay */
+.product-selection-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal content */
+.product-selection-modal-content {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Modal header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.close-button:hover {
+    color: #000;
+}
+
+/* Modal info */
+.modal-info {
+    background-color: #f9fbfd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-left: 4px solid #007bff;
+}
+
+.modal-info p {
+    margin: 5px 0;
+    color: #444;
+}
+
+/* Product list header */
+.product-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.search-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.select-all-checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+    gap: 5px;
+}
+
+/* Product list */
+.product-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+/* Product item */
+.product-item-sale {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #ffffff;
+    transition: box-shadow 0.3s;
+}
+
+.product-item-sale:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-info-sale {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-image-sale {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.product-details-sale {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name-sale {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.product-color-sale {
+    font-size: 12px;
+    color: #777;
+}
+
+.product-stats-sale {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.product-quantity-sale,
+.product-price-sale {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Checkbox */
+.product-select-checkbox {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Modal actions */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+
+.close-button:hover {
+    color: #000;
+}
+.apply-button,
+.cancel-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Nút Áp dụng */
+.apply-button {
+    border-color: #28a745; /* Màu viền */
+    color: #28a745; /* Màu chữ */
+}
+
+.apply-button:hover {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+/* Nút Hủy */
+.cancel-button {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.cancel-button:hover {
+    background-color: #dc3545;
+    color: #ffffff;
+}
