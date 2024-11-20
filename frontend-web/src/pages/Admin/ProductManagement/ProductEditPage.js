@@ -7,13 +7,13 @@ import ProductSpecifications from '../../../components/Admin/ProductManagementPa
 import ProductHeader from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductHeader/ProductHeader';
 import { fetchAllCategories } from '../../../services/categoryService';
 import { fetchProductDetailsByID, updateProduct } from '../../../services/productService';
-import { defaultProduct } from '../../../models/productModel';
+import { Product } from '../../../models/productModel';
 import '../../../assets/css/ProductEditPage.css';
 
 const ProductEditPage = () => {
     const { productId } = useParams(); 
     const navigate = useNavigate();
-    const [product, setProduct] = useState(defaultProduct);
+    const [product, setProduct] = useState(Product);
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
