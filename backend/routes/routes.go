@@ -29,6 +29,7 @@ func SetupRoutes(app *fiber.App) {
 	SetUpCategoryRoutes(app)
 	SetUpOrderRoutes(app)
 	SetUpSaleRoutes(app)
+	SetUpVariantRoutes(app)
 
 	SetUpImageRoutes(app)
 	app.Get("/analysis-with-emhun", func(c *fiber.Ctx) error {

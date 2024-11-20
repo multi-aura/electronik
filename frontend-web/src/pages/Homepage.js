@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext  } from 'react';
 import Layout from '../layouts/Layout';
 import Sidebar from '../components/Sidebar/Sidebar'
 import BannerCarousel from '../components/BannerCarousel/BannerCarousel';
@@ -6,10 +6,12 @@ import FlashSale from '../components/FlashSale/FlashSale';
 import BestSellingProducts from '../components/BestSellingProducts/BestSellingProducts';
 import CategoryGrid from '../components/CategoryGrid/CategoryGrid';
 import { fetchAllCategories } from '../services/categoryService';
+import { UserContext } from '../contexts/UserContext';
 function Home() {
   const userData = { name: 'Alex Korobov' }; 
   const [categories, setCategories] = useState([]);
-  
+  // const { user } = useContext(UserContext);
+  // console.log("data1",user);
   useEffect(() => {
       const loadCategories = async () => {
           try {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate  } from 'react-router-dom';
 import { fetchProductDetailsByID } from '../../../services/productService';
 import AdminLayout from '../../../layouts/AdminLayout/AdminLayout';
 import VariantCard from '../../../components/Admin/ProductManagementPage/VariantCard/VariantCard';
@@ -8,6 +8,7 @@ import '../../../assets/css/VariantManagementPage.css';
 
 const VariantManagementPage = () => {
     const { productId } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -36,7 +37,9 @@ const VariantManagementPage = () => {
     const handleCloseModal = () => {
         setSelectedVariant(null);
     };
-
+    const handleCreateVariant = () => {
+        navigate(`/admin/products/${productId}/variants/create`);
+    };
     const handleDeleteVariant = (variantId) => {
         // Logic for deleting a variant, possibly including an API call
         console.log(`Deleting variant with ID: ${variantId}`);
@@ -50,7 +53,15 @@ const VariantManagementPage = () => {
     return (
         <AdminLayout>
             <div className="variant-management-page">
-                <h2>Manage Variants for {product.nameVi}</h2>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Manage Variants for {product.nameVi}</h2>
+                    <button
+                        className="btn btn-success"
+                        onClick={handleCreateVariant}
+                    >
+                        <i className="fas fa-plus-circle"></i> Tạo Variant mới
+                    </button>
+                </div>
                 <div className="variant-list">
                     {product.variants.map((variant) => (
                         <VariantCard

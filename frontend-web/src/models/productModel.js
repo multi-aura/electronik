@@ -1,4 +1,4 @@
-export const defaultProduct = {
+export const Product = {
     nameVi: '',
     nameEn: '',
     descriptionVi: '',
@@ -20,28 +20,5 @@ export const defaultProduct = {
     status: 1,
 };
 
-export const defaultVariant = {
-    _id: '',
-    serial: '',
-    color: '',
-    stock: 0,
-    price: 0,
-    purchasePrice: 0,
-    weight: '',
-    sku: '',
-    images: [], // Array of image objects
-    descriptionVi: '',
-    descriptionEn: '',
-};
 
-export const defaultSpecification = {
-    _id: '',
-    name: '',
-    value: '',
-};
 
-export const defaultImage = {
-    _id: '',
-    url: '',
-    isDefault: false,
-};
