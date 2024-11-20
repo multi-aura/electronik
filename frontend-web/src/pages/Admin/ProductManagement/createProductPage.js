@@ -9,11 +9,11 @@ import ProductHeader from '../../../components/Admin/ProductManagementPage/Creat
 import { fetchAllCategories } from '../../../services/categoryService';
 import { uploadImages } from '../../../services/imageService';
 import { createProduct } from '../../../services/productService';
-import { defaultProduct } from '../../../models/productModel';
+import { Product } from '../../../models/productModel';
 
 import '../../../assets/css/ProductCreatePage.css';
 const ProductCreatePage = () => {
-    const [product, setProduct] = useState(defaultProduct);
+    const [product, setProduct] = useState(Product);
     const [categories, setCategories] = useState([]);
     const [images, setImages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

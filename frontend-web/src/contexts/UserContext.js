@@ -2,11 +2,12 @@ import React, { createContext, useState } from 'react';
 
 export const UserContext = createContext();
 
+// Tạo provider để bao bọc ứng dụng
 export const UserProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
 
   return (
-    <UserContext.Provider value={{ userData, setUserData }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
