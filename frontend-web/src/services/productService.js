@@ -5,10 +5,10 @@ import Cookies from 'js-cookie';
 
 export const fetchProductsByCategory = async (categoryId, page, limit) => {
     try {
-        
+
         const response = await axios.post(
             `${API_URL}/product/category/${categoryId}`,
-            { page, limit } // Thêm dữ liệu `body` như trong Postman
+            { page, limit }
         );
 
         if (response.status === 200) {
@@ -61,12 +61,42 @@ export const fetchProductNoQuery = async (page = 1, limit = 10) => {
             `${API_URL}/product/search`,
             { page, limit }
         );
+
+        if (!response || !response.data) {
+            throw new Error('Dữ liệu phản hồi không hợp lệ hoặc rỗng');
+        }
+
         return response.data;
     } catch (error) {
         console.error('Error fetching product no query:', error);
-        throw error; // Ném lỗi ra để xử lý bên ngoài nếu cần
+
+        if (error.response) {
+            console.error('Response status:', error.response.status);
+            console.error('Response data:', error.response.data);
+        } else if (error.request) {
+            console.error('Request made but no response received:', error.request);
+        } else {
+            console.error('Error message:', error.message);
+        }
+
+        throw error; // Ném lỗi ra để xử lý ở nơi gọi hàm nếu cần
     }
 };
+export const fetchProductALL = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/product/All`);
+
+        if (response.status !== 200) {
+            throw new Error(`Failed to fetch products: ${response.statusText}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        throw error; // Ném lỗi ra ngoài để có thể xử lý tiếp nếu cần
+    }
+};
+
 
 export const fetchProductRecommend = async (serial) => {
     try {

@@ -6,6 +6,7 @@ import (
 	"electronik/internal/models"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
@@ -31,6 +32,7 @@ type (
 		GetBySerials(serials []int64) ([]*models.Product, error)
 		UpdateProductWithSale(productId string, sale models.Sale) error
 		RemoveSaleFromProducts(productIDs []string) error
+		GetAllProducts() ([]*models.Product, error)
 	}
 
 	productRepository struct {
@@ -241,6 +243,46 @@ func (pro *productRepository) GetProductsByPagination(limit int, skip int) ([]*m
 
 	if err := cursor.Err(); err != nil {
 		return nil, err
+	}
+
+	return listProduct, nil
+}
+func (pro *productRepository) GetAllProducts() ([]*models.Product, error) {
+	listProduct := []*models.Product{}
+
+	// Tạo ngữ cảnh có thời gian chờ để tránh việc treo lâu trong truy vấn
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Thực hiện truy vấn tìm kiếm tất cả các bản ghi trong collection
+	cursor, err := pro.collection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute find query: %w", err)
+	}
+	defer func() {
+		if cerr := cursor.Close(ctx); cerr != nil {
+			log.Printf("Error closing cursor: %v", cerr)
+		}
+	}()
+
+	// Lặp qua các kết quả và giải mã vào slice `listProduct`
+	for cursor.Next(ctx) {
+		var product models.Product
+		if err := cursor.Decode(&product); err != nil {
+			continue // Bỏ qua phần tử hiện tại nếu giải mã thất bại và tiếp tục với phần tử tiếp theo
+		}
+		listProduct = append(listProduct, &product)
+	}
+
+	// Kiểm tra lỗi từ cursor sau khi lặp qua
+	if err := cursor.Err(); err != nil {
+		log.Printf("Cursor error occurred: %v", err)
+		return nil, fmt.Errorf("cursor error: %w", err)
+	}
+
+	// Kiểm tra nếu không có sản phẩm nào được tìm thấy
+	if len(listProduct) == 0 {
+		log.Printf("No products found in collection")
 	}
 
 	return listProduct, nil
@@ -516,6 +558,8 @@ func (pro *productRepository) UpdateProductWithSale(productId string, sale model
 				"discountPercentage": sale.DiscountPercentage,
 				"startDate":          sale.StartDate,
 				"endDate":            sale.EndDate,
+				"status_sale":        sale.StatusSale,
+				"saletype":           sale.SaleType,
 			},
 		},
 	}

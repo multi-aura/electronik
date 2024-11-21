@@ -3,6 +3,7 @@ import "./ProductCardListpage.css";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  console.log(product);
  
   return (
     <div className="product-card-listpage">
@@ -13,7 +14,7 @@ const ProductCard = ({ product }) => {
             alt={product.nameVi} 
             className="product-image-listpage" 
           />
-          {product.sale && product.sale.discountPercentage && (
+          {product.sale  &&product.sale.discountPercentage && (
             <div className="discount-badge">
               -{product.sale.discountPercentage}%
             </div>

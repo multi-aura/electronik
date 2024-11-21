@@ -166,6 +166,20 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 	})
 
 }
+func (pro *ProductController) GetAllProducts(c *fiber.Ctx) error {
+	products, err := pro.service.GetAllProducts()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to get all products",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
+		Status:  fiber.StatusOK,
+		Message: "Retrieving all products successful",
+		Data:    products,
+	})
+}
 
 func (pro *ProductController) UpdateListProduct(c *fiber.Ctx) error {
 	var products []models.Product

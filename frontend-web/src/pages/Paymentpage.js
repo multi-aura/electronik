@@ -59,11 +59,11 @@ const PaymentPage = () => {
         else if (!/^[A-Za-zÀ-ỹ\s]+$/.test(shippingInfo.lastName)) newErrors.lastName = "Tên chỉ chứa chữ cái";
 
         if (!shippingInfo.address) newErrors.address = "Địa chỉ không được để trống";
-        if (!shippingInfo.district) newErrors.district = "Quận/Huyện không được để trống";
+        // if (!shippingInfo.district) newErrors.district = "Quận/Huyện không được để trống";
 
-        if (!shippingInfo.province) newErrors.province = "Thành phố không được để trống";
+        // if (!shippingInfo.province) newErrors.province = "Thành phố không được để trống";
 
-        if (!shippingInfo.ward) newErrors.ward = "Xã/Phường không được để trống";
+        // if (!shippingInfo.ward) newErrors.ward = "Xã/Phường không được để trống";
 
         if (!shippingInfo.telephone) newErrors.telephone = "Điện thoại không được để trống";
         else if (!/^\d{10,15}$/.test(shippingInfo.telephone)) newErrors.telephone = "Số điện thoại không hợp lệ";

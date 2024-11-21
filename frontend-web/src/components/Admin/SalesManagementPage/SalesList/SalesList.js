@@ -2,7 +2,7 @@ import React from 'react';
 import SaleItem from '../SaleItem/SaleItem';
 import './SalesList.css';
 
-const SalesList = ({ sales, onEditSale, onSelectProduct }) => {
+const SalesList = ({ sales, onEditSale, onSelectProduct,setIdDelete }) => {
     return (
         <div className="sales-list">
             {sales.map((sale) => (
@@ -11,6 +11,9 @@ const SalesList = ({ sales, onEditSale, onSelectProduct }) => {
                     sale={sale}
                     onEditSale={onEditSale}
                     onSelectProduct={onSelectProduct} // Truyền prop đúng
+                    setIdDelete={setIdDelete}
+
+
                 />
             ))}
         </div>

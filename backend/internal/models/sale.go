@@ -8,20 +8,19 @@ import (
 )
 
 /*
-status_sale,Status  :0 = inactive, 1 = active, -1 =deleted ,
-SaleType: 1: product_discounts. 2 = voucher_code
+status_sale, Status: 0 = expired, 1 = active, -1 = deleted,
+SaleType: 1 = product_discounts, 2 = voucher_code
 */
 type Sale struct {
 	ID                 primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty" form:"_id"`
-	SaleNameVi         string             `bson:"SaleNameVi" json:"SaleNameVi" validate:"required" form:"SaleNameVi"`
-	SaleNameEn         string             `bson:"SaleNameEn" json:"SaleNameEn" form:"SaleNameEn"`
+	SaleNameVi         string             `bson:"saleNameVi" json:"saleNameVi" validate:"required" form:"saleNameVi"`
+	SaleNameEn         string             `bson:"saleNameEn" json:"saleNameEn" form:"saleNameEn"`
 	StartDate          time.Time          `bson:"start_date" json:"startDate" validate:"required" form:"startDate"`
 	EndDate            time.Time          `bson:"end_date" json:"endDate" validate:"required" form:"endDate"`
-	DiscountPercentage int                `bson:"discount_percentage" json:"discount_percentage" validate:"required" form:"discount_percentage"`
-	Statussale         int                `bson:"status_sale" json:"status_sale" validate:"required" form:"status_sale"`
-
-	SaleType int           `bson:"saletype" json:"saletype" validate:"required" form:"saletype"`
-	Products []SaleProduct `bson:"products" json:"products" ,dive" form:"products"`
+	DiscountPercentage int                `bson:"discountPercentage" json:"discountPercentage" validate:"required" `
+	StatusSale         int                `bson:"status_sale" json:"status_sale" validate:"required" form:"status_sale"`
+	SaleType           int                `bson:"saletype" json:"saletype" validate:"required" form:"saletype"`
+	Products           []SaleProduct      `bson:"products" json:"products" form:"products"`
 }
 
 type SaleProduct struct {
@@ -127,12 +126,12 @@ func (s *Sale) FromMap(data map[string]interface{}) error {
 	}
 	s.DiscountPercentage = discount
 
-	// Lấy Status
-	status_sale, err := getIntFromInterface(data["status_sale"])
+	// Lấy StatusSale
+	statusSale, err := getIntFromInterface(data["status_sale"])
 	if err != nil {
-		return fmt.Errorf("invalid status: %v", err)
+		return fmt.Errorf("invalid status_sale: %v", err)
 	}
-	s.Statussale = status_sale
+	s.StatusSale = statusSale
 
 	// Lấy SaleType
 	saleType, err := getIntFromInterface(data["saletype"])
@@ -180,7 +179,7 @@ func (s *Sale) ToMap() map[string]interface{} {
 		"startDate":          s.StartDate.Format(time.RFC3339),
 		"endDate":            s.EndDate.Format(time.RFC3339),
 		"discountPercentage": s.DiscountPercentage,
-		"status_sale":        s.Statussale,
+		"status_sale":        s.StatusSale,
 		"saletype":           s.SaleType,
 		"products":           products,
 	}

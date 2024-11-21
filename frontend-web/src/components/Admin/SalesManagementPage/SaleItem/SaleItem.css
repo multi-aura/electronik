@@ -15,6 +15,42 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+.status-indicator {
+    border-radius: 5px;
+}
+
+/* Trạng thái */
+.status-indicator.active {
+    color: green; /* Màu xanh pastel */
+}
+
+.status-indicator.expired {
+    color: #cbbeb5; /* Màu nâu pastel */
+}
+.disabled-button {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status-indicator.deleted {
+    color: red; /* Màu đỏ pastel */
+}
+
+/* Loại giảm giá */
+.type-indicator {
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.type-indicator.product_discounts {
+    color: blue; /* Màu tím pastel */
+}
+
+.type-indicator.voucher_code {
+    color: Teal; /* Màu xanh da trời pastel */
+}
+
 
 .sale-info,
 .sale-dates,
