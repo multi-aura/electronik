@@ -119,6 +119,7 @@ func (pro *productService) UpdateProduct(product *models.Product) ([]ErrorRespon
 		"specifications":  product.Specifications,
 		"warranty":        product.Warranty,
 		"weight":          product.Weight,
+		"status":          product.Status,
 	}
 
 	err := pro.repo.Update(&updateFields)

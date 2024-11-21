@@ -19,7 +19,7 @@ func SetupRoutes(app *fiber.App) {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "http://localhost:3001",       // Cho phép từ frontend chạy trên localhost:3001
 		AllowCredentials: true,                          // Nếu bạn dùng cookies hay thông tin xác thực
-		AllowMethods:     "GET,POST,PUT,DELETE",         // Các phương thức được cho phép
+		AllowMethods:     "GET,POST,PUT,DELETE,PATCH",   // Các phương thức được cho phép
 		AllowHeaders:     "Content-Type, Authorization", // Các headers được phép
 	}))
 
@@ -29,6 +29,7 @@ func SetupRoutes(app *fiber.App) {
 	SetUpCategoryRoutes(app)
 	SetUpOrderRoutes(app)
 	SetUpSaleRoutes(app)
+	SetUpVariantRoutes(app)
 
 	SetUpImageRoutes(app)
 	app.Get("/analysis-with-emhun", func(c *fiber.Ctx) error {
