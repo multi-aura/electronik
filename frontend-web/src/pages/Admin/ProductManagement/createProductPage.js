@@ -9,29 +9,11 @@ import ProductHeader from '../../../components/Admin/ProductManagementPage/Creat
 import { fetchAllCategories } from '../../../services/categoryService';
 import { uploadImages } from '../../../services/imageService';
 import { createProduct } from '../../../services/productService';
+import { Product } from '../../../models/productModel';
+
 import '../../../assets/css/ProductCreatePage.css';
 const ProductCreatePage = () => {
-    const [product, setProduct] = useState({
-        nameVi: '',
-        nameEn: '',
-        descriptionVi: '',
-        descriptionEn: '',
-        default_image: '',
-        price: '',
-        category: {
-            _id: '',
-            nameVi: '',
-            nameEn: '',
-            image: '',
-        },
-        variants: [],
-        specifications: [],
-        manufacturer: '',
-        dimensions: '',
-        warranty: '',
-        weight: '',
-        status: 1
-    });
+    const [product, setProduct] = useState(Product);
     const [categories, setCategories] = useState([]);
     const [images, setImages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

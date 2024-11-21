@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import LogoSection from '../components/LogoSection/LogoSection'; 
 import LoginForm from '../components/LoginForm/LoginForm';
 import logoImage from '../assets/img/Logo.png';
 import { login } from '../services/authService';
+import { UserContext } from '../contexts/UserContext';
 import '../assets/css/LoginPage.css';
 function LoginPage() {
   const [errorMessage, setErrorMessage] = useState(''); 
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
   const handleLogin = async (credentials) => {
     try {
       const response = await login(credentials.username, credentials.password); 
       console.log('Đăng nhập thành công:', response);
+      setUser(response.data);
       try {
         navigate('/', { state: { userData: response.data } });
       } catch (error) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams,useNavigate  } from 'react-router-dom';
 import { Container, Row, Col, Tabs, Tab, Button } from 'react-bootstrap';
 import AdminLayout from '../../../layouts/AdminLayout/AdminLayout';
 import ProductOverview from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductOverview/ProductOverview';
@@ -6,27 +7,13 @@ import ProductSpecifications from '../../../components/Admin/ProductManagementPa
 import ProductHeader from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductHeader/ProductHeader';
 import { fetchAllCategories } from '../../../services/categoryService';
 import { fetchProductDetailsByID, updateProduct } from '../../../services/productService';
+import { Product } from '../../../models/productModel';
 import '../../../assets/css/ProductEditPage.css';
 
-const ProductEditPage = ({ productID }) => {
-    const [product, setProduct] = useState({
-        nameVi: '',
-        nameEn: '',
-        descriptionVi: '',
-        descriptionEn: '',
-        category: {
-            _id: '',
-            nameVi: '',
-            nameEn: '',
-        },
-        variants: [],
-        specifications: [],
-        manufacturer: '',
-        dimensions: '',
-        warranty: '',
-        weight: '',
-        status: 1,
-    });
+const ProductEditPage = () => {
+    const { productId } = useParams(); 
+    const navigate = useNavigate();
+    const [product, setProduct] = useState(Product);
     const [categories, setCategories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -39,26 +26,33 @@ const ProductEditPage = ({ productID }) => {
                 console.error('Error fetching categories:', error);
             }
         };
+        console.log('productid',productId);
 
         const loadProductDetails = async () => {
             try {
-                const data = await fetchProductDetailsByID(productID);
-                setProduct(data); // Assuming `data` contains the product object
+                const data = await fetchProductDetailsByID(productId);
+                setProduct(data.data); // Ensure this line sets the product data directly
             } catch (error) {
                 console.error('Error fetching product details:', error);
             } finally {
                 setIsLoading(false);
             }
         };
-
+    
         loadCategories();
         loadProductDetails();
-    }, [productID]);
+    }, [productId]);
+    console.log('product',product);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProduct(prevState => ({ ...prevState, [name]: value }));
+    
+        setProduct(prevState => ({
+            ...prevState,
+            [name]: name === 'status' ? parseInt(value, 10) : value // Convert status to integer
+        }));
     };
+    
 
     const handleSpecificationChange = (e, index) => {
         const { name, value } = e.target;
@@ -85,14 +79,27 @@ const ProductEditPage = ({ productID }) => {
 
     const handleSaveProduct = async () => {
         try {
-            await updateProduct(productID, product);
+            const payload = {
+                ...product,
+                price: parseFloat(product.price), 
+                status: parseInt(product.status, 10), 
+                variants: product.variants.map(variant => ({
+                    ...variant,
+                    price: parseFloat(variant.price),
+                    stock: parseInt(variant.stock, 10),
+                })),
+            };
+    
+            console.log('Payload to update:', payload);
+    
+            await updateProduct(payload);
             alert('Product updated successfully!');
+            navigate('/admin/ProductManagement');
         } catch (error) {
             console.error('Error while updating product:', error);
             alert('Failed to update product. Please check the console for more details.');
         }
     };
-
     return (
         <AdminLayout>
             <Container fluid className="admin-product-edit-page p-4 bg-light rounded shadow">
