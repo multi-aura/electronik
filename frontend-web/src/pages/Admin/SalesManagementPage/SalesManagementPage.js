@@ -173,7 +173,7 @@ const SalesManagementPage = () => {
             <div className="sales-management-page">
                 <FilterSale onChangeStatus={setStatusFilter} onChangeDate={setDateFilter} />
                 <button className="btn btn-success filter-sale-add-new-button" onClick={() => setIsNewSaleOpen(true)}>
-                    + Add new
+                    + Thêm mới
                 </button>
                 <SalesList
                     sales={sales.filter(sale =>

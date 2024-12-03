@@ -43,7 +43,6 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
     }
   };
 
-    console.log(product);
   const handleAddToCart = () => {
     const productToAdd = {
       id: product._id,

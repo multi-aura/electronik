@@ -11,8 +11,7 @@ const VariantDetailsModal = ({ variant, onClose, onDelete }) => {
             <div className="modal-dialog custom-modal-width" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">Variant Details</h5>
-                      
+                        <h5 className="modal-title">Chi tiết biến thể</h5>
                     </div>
                     <div className="modal-body">
                         <div className="text-center mb-3">
@@ -25,28 +24,28 @@ const VariantDetailsModal = ({ variant, onClose, onDelete }) => {
                         <div className="container">
                             <div className="row">
                                 <div className="col-md-6">
-                                    <p><strong>Color:</strong> {variant.color}</p>
-                                    <p><strong>Stock:</strong> {variant.stock}</p>
+                                    <p><strong>Màu sắc:</strong> {variant.color}</p>
+                                    <p><strong>Tồn kho:</strong> {variant.stock}</p>
                                     <p><strong>SKU:</strong> {variant.sku}</p>
-                                    <p><strong>Price:</strong> {variant.price.toLocaleString()} đ</p>
+                                    <p><strong>Giá bán:</strong> {variant.price.toLocaleString()} đ</p>
                                 </div>
                                 <div className="col-md-6">
-                                    <p><strong>Purchase Price:</strong> {variant.purchasePrice.toLocaleString()} đ</p>
-                                    <p><strong>Weight:</strong> {variant.weight}</p>
-                                    <p><strong>Description (VI):</strong> {variant.descriptionVi}</p>
-                                    <p><strong>Description (EN):</strong> {variant.descriptionEn}</p>
+                                    <p><strong>Giá mua:</strong> {variant.purchasePrice.toLocaleString()} đ</p>
+                                    <p><strong>Cân nặng:</strong> {variant.weight}</p>
+                                    <p><strong>Mô tả (VI):</strong> {variant.descriptionVi}</p>
+                                    <p><strong>Mô tả (EN):</strong> {variant.descriptionEn}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="modal-footer">
                         <button className="btn btn-primary me-2">
-                            <FaEdit className="me-1" /> Edit
+                            <FaEdit className="me-1" /> Chỉnh sửa
                         </button>
                         <button className="btn btn-danger me-2" onClick={() => onDelete(variant._id)}>
-                            <FaTrash className="me-1" /> Delete
+                            <FaTrash className="me-1" /> Xóa
                         </button>
-                        <button className="btn btn-secondary" onClick={onClose}>Close</button>
+                        <button className="btn btn-secondary" onClick={onClose}>Đóng</button>
                     </div>
                 </div>
             </div>

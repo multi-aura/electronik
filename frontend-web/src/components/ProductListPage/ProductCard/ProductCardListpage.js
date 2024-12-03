@@ -3,7 +3,6 @@ import "./ProductCardListpage.css";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
-  console.log(product);
  
   return (
     <div className="product-card-listpage">

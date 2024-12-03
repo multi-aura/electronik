@@ -1,5 +1,4 @@
-/* components/Admin/AdminSidebar.css */
-
+/* CSS cho sidebar */
 .admin-sidebar {
     width: 250px;
     min-height: 100vh;
@@ -20,14 +19,13 @@
     text-align: center;
     width: 100%;
     margin-bottom: 5px;
-    
 }
 
 .nav {
     width: 100%;
 }
 
-.nav-link {
+.custom-nav-link {
     color: #ffffff;
     padding: 10px 0;
     display: flex;
@@ -35,18 +33,21 @@
     width: 100%;
     padding-left: 20px; /* Add left padding for consistency */
     text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
-.nav-link:hover {
-    color: #ffffff;
+/* CSS cho mục khi được hover */
+.custom-nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color:  white;
 }
 
-/* Fixed width for icons to align text consistently */
-.nav-link .icon {
-    width: 20px; /* Fixed width to ensure all text aligns consistently */
-    display: flex;
-    justify-content: center;
-    margin-right: 10px; /* Space between icon and text */
+/* CSS cho mục được chọn */
+.custom-nav-link.custom-selected {
+    background-color: #454546; /* Màu xanh */
+    color: white;
+    border-radius: 5px;
 }
 
 .sidebar-footer {
@@ -55,4 +56,44 @@
     justify-content: center;
     width: 100%;
     padding-bottom: 20px;
+}
+.icon{
+    padding-right: 5px;
+}
+/* Giãn khoảng cách giữa các mục trong sidebar */
+.nav-link {
+    padding: 15px 20px;  /* Tăng khoảng cách bên trái và phải, cũng như trên và dưới */
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px; /* Tạo khoảng cách giữa các mục */
+}
+
+/* Màu nền khi hover vào mục */
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* Mục được chọn (selected) */
+.custom-selected {
+    background-color: #007bff; /* Màu xanh */
+    color: white;
+    border-radius: 5px;
+}
+
+/* Giãn khoảng cách giữa các mục */
+.nav {
+    margin-bottom: 20px; /* Tạo khoảng cách giữa các nhóm mục trong sidebar */
+}
+
+/* Đảm bảo khoảng cách giữa các mục và footer */
+.sidebar-footer {
+    margin-top: auto; /* Đẩy footer xuống dưới cùng */
+    padding: 20px 0; /* Tăng khoảng cách trên và dưới của footer */
+}
+
+/* Tăng khoảng cách giữa các mục trong header */
+.sidebar-header {
+    margin-bottom: 15px;
 }

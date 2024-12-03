@@ -129,7 +129,6 @@ export const fetchProductBySerial = async (serials) => {
         );
 
         if (response.status === 200) {
-            console.log(response.data);
             return response.data;
         } else {
             console.log('Error: Failed to get product recommendations.');

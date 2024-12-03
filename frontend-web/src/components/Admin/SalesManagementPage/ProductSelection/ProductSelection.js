@@ -110,7 +110,7 @@ const ProductSelection = ({ isOpen, onClose, onApply, initialProducts, sale }) =
         <div className="product-selection-modal-overlay">
             <div className="product-selection-modal-content">
                 <div className="modal-header">
-                    <h2>Product Selection</h2>
+                    <h2>Lựa chọn sản phẩm</h2>
                     <button onClick={onClose} className="close-button">
                         <FaTimes />
                     </button>
@@ -118,15 +118,15 @@ const ProductSelection = ({ isOpen, onClose, onApply, initialProducts, sale }) =
 
                 {sale && (
                     <div className="sale-details">
-                        <h3>Thông tin SALE</h3>
+                        <h3>Thông tin khuyến mãi</h3>
                         <div className="sale-details-grid">
                             <div className="sale-details-column">
-                                <p><strong>Sale Name:</strong> {sale.saleNameVi}</p>
-                                <p><strong>Discount:</strong> {sale.discountPercentage}%</p>
+                                <p><strong> khuyến mãi:</strong> {sale.saleNameVi}</p>
+                                <p><strong>Giảm giá:</strong> {sale.discountPercentage}%</p>
                             </div>
                             <div className="sale-details-column">
-                                <p><strong>Start Date:</strong> {new Date(sale.startDate).toLocaleDateString()}</p>
-                                <p><strong>End Date:</strong> {new Date(sale.endDate).toLocaleDateString()}</p>
+                                <p><strong>Ngày bắt đầu:</strong> {new Date(sale.startDate).toLocaleDateString()}</p>
+                                <p><strong>Ngày kết thúc:</strong> {new Date(sale.endDate).toLocaleDateString()}</p>
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@ const ProductSelection = ({ isOpen, onClose, onApply, initialProducts, sale }) =
                 <div className="product-list-header">
                     <input
                         type="text"
-                        placeholder="Search products..."
+                        placeholder="Tìm kiếm sản phẩm..."
                         className="search-input"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}

@@ -2,6 +2,7 @@ import React from 'react';
 import './SaleItem.css';
 
 const SaleItem = ({ sale, onEditSale, onSelectProduct, setIdDelete }) => {
+    console.log(sale);
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('vi-VN', {
@@ -53,8 +54,6 @@ const SaleItem = ({ sale, onEditSale, onSelectProduct, setIdDelete }) => {
                 </span></strong>
             </div>
             <div className="sale-actions">
-                {console.log(sale.status_sale)}
-                {console.log(sale.status_sale)}
                 <button
                     className={`action-button edit-button ${sale.status_sale === -1 ? 'disabled-button' : ''}`}
 

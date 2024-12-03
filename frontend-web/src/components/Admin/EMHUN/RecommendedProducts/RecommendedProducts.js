@@ -6,7 +6,8 @@ const RecommendedProducts = ({ analysisResults, productData }) => {
         <div className="recommended-products-container">
             {analysisResults.map((result, index) => (
                 <div key={index} className="result-item-card">
-                    <h4>Itemset: [{result.itemset.join(', ')}]</h4>
+
+
                     <p>Utility: {result.utility.toFixed(2)}</p>
                     <div className="product-grid">
                         {result.itemset.map((serial) => {

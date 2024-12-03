@@ -123,7 +123,7 @@ const ProductDetail = () => {
                     </Col>
                 </Row>
             </Container>
-            <FlashSale />
+            <FlashSale  serial={serial}/>
             <CategoryGrid />
         </Layout>
     );

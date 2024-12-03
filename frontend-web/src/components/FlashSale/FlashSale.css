@@ -1,48 +1,240 @@
 
+.flash-sale-container .card {
+  padding-top: 20px;
+  border: none;
+}
+
+.flash-sale-container .card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+.flash-sale-container .card-title {
+  font-size: 14px;
+}
+
+.flash-sale-container .card-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.btn-prev,
+.btn-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn-prev {
+  left: -20px;
+}
+
+.btn-next {
+  right: -20px;
+}
+
+/* Sản phẩm */
+.product-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Ảnh sản phẩm */
+.product-image {
+  width: 70%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+  transform: scale(1.05);
+}
+
+/* Thông tin sản phẩm */
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Mô tả đặc điểm sản phẩm */
+.product-specifications {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+}
+
+.spec-badge {
+  background-color: #f1f1f1;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+/* Giá sản phẩm */
+.product-pricing {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.original-price {
+  font-size: 0.9rem;
+  text-decoration: line-through;
+}
+
+.discounted-price {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.discount-percent {
+  font-size: 0.9rem;
+  color: #28a745;
+}
+
+/* Nút mua ngay */
+.btn-primary {
+  background-color: #3498db;
+  border-color: #3498db;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 6px 12px;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  border-color: #2980b9;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .flash-sale-container {
-    background-color: #ededed61;
-    border-radius: 8px;
-    margin: 20px;
-    padding: 15px;
+  position: relative;
+}
+
+.flash-sale-title {
+  color: red;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6), 0px 0px 8px rgba(255, 255, 255, 0.6) !important;
+  background: linear-gradient(90deg, #ff6f00, #ff9800, #ffeb3b) !important;
+  background-size: 200% 200%;
+  animation: gradientAnimation 5s ease infinite;
+  -webkit-background-clip: text;
+}
+
+.flash-sale-title span {
+  animation: flash 1s infinite;
+}
+
+.flash-sale-description {
+  font-size: 25px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-top: 10px;
+  background: linear-gradient(200deg, #F44336, #8BC34A) !important;
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  letter-spacing: 1px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.flash_sale_product {
+  background: linear-gradient(90deg, #ff5722, #ff9800) !important;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  .flash-sale-container .card {
-    padding-top: 20px;
-    border: none;
+  50% {
+    background-position: 100% 50%;
   }
-  
-  .flash-sale-container .card-img-top {
-    height: 180px;
-    object-fit: cover;
+  100% {
+    background-position: 0% 50%;
   }
-  
-  .flash-sale-container .card-title {
-    font-size: 14px;
+}
+
+@keyframes flash {
+  0%, 100% {
+    opacity: 1;
   }
-  
-  .flash-sale-container .card-text {
-    font-size: 16px;
-    font-weight: bold;
+  50% {
+    opacity: 0.5;
   }
-  .btn-prev, .btn-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    padding: 0;
-    border-radius: 50%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
   }
-  
-  .btn-prev {
-    left: -20px; 
+  50% {
+    transform: scale(1.05);
   }
-  
-  .btn-next {
-    right: -20px; 
+}
+
+.flash-sale-description strong {
+  color: #ff5722;
+  text-transform: uppercase;
+}
+
+.flash-sale-description::before,
+.flash-sale-description::after {
+  content: "🔥"; /* Thêm icon trước và sau text */
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
   }
+  50% {
+    transform: translateY(-10px);
+  }
+}
