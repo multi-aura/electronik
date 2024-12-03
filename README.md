@@ -61,8 +61,7 @@
 | 8 | Tin tức và hướng dẫn | |  |
 | 9 | Đề xuất sản phẩm  ||  |
 | 10 | Tạo chiến dịch sale  ||  |
-| 11 | Để xuất bán sản phẩm combo  ||  |
-| 12 | Search  ||  |
+| 11 | Search  ||  |
 
 
 
