@@ -64,12 +64,11 @@ const Navigation = () => {
 
 
       {isCartOpen && <Cart onClose={toggleCart} />}
-
       {dataUser ? (
         <Dropdown align="end">
           <Dropdown.Toggle variant="link" className="text-white text-decoration-none d-flex align-items-center" id="dropdown-user">
-            <span>{dataUser.data.username}</span>
-            <img src={dataUser.data.avatar || 'path-to-default-avatar.png'} alt="Avatar" className="rounded-circle me-2 avatar_login" />
+            <span>{dataUser?.data?.username}</span>
+            <img src={dataUser?.data?.avatar || 'path-to-default-avatar.png'} alt="Avatar" className="rounded-circle me-2 avatar_login" />
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item className="no-underline">

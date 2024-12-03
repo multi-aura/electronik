@@ -25,7 +25,6 @@ const ProductListPage = () => {
       const productsData = categoryID
         ? await fetchProductsByCategory(categoryID, page, limit, manufacturer)
         : await fetchProductNoQuery(page, limit, manufacturer);
-      
       if (productsData.data) {
         setProducts(prevProducts => page === 1 ? productsData.data : [...prevProducts, ...productsData.data]);
         setCurrentPage(page);
@@ -37,12 +36,10 @@ const ProductListPage = () => {
     }
   };
 
-  // Tải lại sản phẩm khi `categoryID` hoặc `manufacturer` thay đổi
   useEffect(() => {
     fetchProducts(1);
   }, [categoryID, manufacturer]);
 
-  // Tải thêm sản phẩm khi người dùng cuộn xuống cuối trang
   const loadMoreProducts = () => {
     if (!loading && currentPage < totalPages) {
       fetchProducts(currentPage + 1);

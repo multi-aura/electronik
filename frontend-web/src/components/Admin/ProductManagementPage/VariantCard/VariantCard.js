@@ -16,9 +16,9 @@ const VariantCard = ({ variant, onShowDetails, onDelete }) => {
        
             <div className="card-body">
                 <p className="card-text"><strong>Serial:</strong> {variant.serial}</p> 
-                <p className="card-text"><strong>Color:</strong> {variant.color}</p>
+                <p className="card-text"><strong>Màu sắc:</strong> {variant.color}</p>
                 <p className="card-text"><strong>SKU:</strong> {variant.sku}</p>
-                <p className="card-text"><strong>Price:</strong> {variant.price.toLocaleString()} đ</p>
+                <p className="card-text"><strong>Giá:</strong> {variant.price.toLocaleString()} đ</p>
             </div>
             <div className="card-footer d-flex justify-content-end">
                 <button
@@ -28,7 +28,7 @@ const VariantCard = ({ variant, onShowDetails, onDelete }) => {
                         onShowDetails(variant);
                     }}
                 >
-                    <FaEdit /> Edit
+                    <FaEdit /> Chỉnh sửa
                 </button>
                 <button
                     className="btn btn-danger"
@@ -37,7 +37,7 @@ const VariantCard = ({ variant, onShowDetails, onDelete }) => {
                         onDelete(variant._id);
                     }}
                 >
-                    <FaTrash /> Delete
+                    <FaTrash /> Xóa
                 </button>
             </div>
         </div>

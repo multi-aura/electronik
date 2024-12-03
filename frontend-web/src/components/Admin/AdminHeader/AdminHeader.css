@@ -1,42 +1,47 @@
-
-.header {
-    border-bottom: 1px solid #ddd;
-}
-
-.toggle-sidebar-btn {
-    background-color: #000000; /* Primary color */
-    color: white;
-    border: none;
-    border-radius: 50%; /* Make it circular */
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.toggle-sidebar-btn:hover {
-    background-color: #0056b3; 
-}
-
-.admin-info {
-    display: flex;
-    align-items: center;
-    color: #333;
-}
-
 .admin-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    cursor: pointer;
     object-fit: cover;
+  }
+  
+  .header {
+    border-bottom: 1px solid #ddd;
+  }
+  /* Thay đổi vị trí của dropdown-menu */
+.dropdown-menu.custom-dropdown {
+    position: absolute !important; /* Đảm bảo menu có thể định vị bất kỳ đâu */
+    top: 0px !important; /* Khoảng cách từ top của header hoặc từ avatar */
+    right: -0px !important; /* Căn lề phải */
+    width: 100px; /* Đặt chiều rộng của dropdown */
+    background-color: white; /* Màu nền */
+    border: 1px solid #ddd; /* Viền nhạt */
+    border-radius: 8px; /* Bo góc */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+    z-index: 1050; /* Đảm bảo menu nằm trên các phần tử khác */
+    opacity: 0;
+  }
+  
+  /* Khi dropdown mở */
+  .dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .admin-name {
+    color: black;
+  }
+  .admin-name {
+    font-size: 1rem;          /* Kích thước chữ vừa phải */
+    font-weight: bold;        /* Chữ đậm để nổi bật */
+    color: #333;              /* Màu sắc trung tính */
+    padding: 4px 8px;         /* Thêm khoảng cách trong */
+    border-radius: 8px;       /* Bo góc */
+    background-color: #f8f9fa; /* Nền sáng nhẹ */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.admin-header:hover {
+    cursor: pointer; /* Thay đổi con trỏ thành dạng pointer */
+    background-color: #f8f9fa; /* Tùy chọn: thêm hiệu ứng nền */
+    transition: background-color 0.3s ease; /* Thêm hiệu ứng mượt */
 }
 
-.admin-name {
-    font-size: 1rem;
-    margin-left: 10px;
-    color: #333;
-    font-weight: 500;
-}

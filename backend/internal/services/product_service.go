@@ -25,6 +25,7 @@ type (
 		GetProductsByCategoryID(page, limit int, categoryID, manufacturer string) ([]*models.Product, error)
 		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
 		GetProductsBySerials(serials []int64) ([]*models.Product, error)
+		GetAllProducts() ([]*models.Product, error)
 	}
 	productService struct {
 		repo repositories.ProductRepository
@@ -169,6 +170,13 @@ func (pro *productService) GetListProductByPagination(page int, limit int) ([]*m
 	}
 	return products, nil
 
+}
+func (pro *productService) GetAllProducts() ([]*models.Product, error) {
+	products, err := pro.repo.GetAllProducts()
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
 }
 
 func (pro *productService) GetListProductBySearch(page int, limit int, query string) ([]*models.Product, error) {

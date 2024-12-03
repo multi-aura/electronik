@@ -101,16 +101,30 @@ func (s *saleService) AddProductToSale(saleId string, products []models.SaleProd
 	if err != nil {
 		return errors.New("Sale ID not found")
 	}
+	checkCount := 0
 	for _, product := range products {
+		isDuplicate := false
+		for _, existingProduct := range sale.Products {
+			if existingProduct.ProductID == product.ProductID {
+				isDuplicate = true
+				break
+			}
+		}
+		if isDuplicate {
+			continue
+		}
+		checkCount++
 		existingProduct, err := s.repoProduct.GetByID(product.ProductID.Hex())
 		if err != nil {
 			return errors.New("Product not found")
 		}
+
 		SaleProduct := models.SaleProduct{
 			ProductID:    existingProduct.ID,
 			Status:       1,
 			QuantitySale: product.QuantitySale,
 		}
+
 		err = s.repo.AddProductToSale(saleId, SaleProduct)
 		if err != nil {
 			return err
@@ -121,12 +135,18 @@ func (s *saleService) AddProductToSale(saleId string, products []models.SaleProd
 			DiscountPercentage: sale.DiscountPercentage,
 			StartDate:          sale.StartDate,
 			EndDate:            sale.EndDate,
+			SaleType:           sale.SaleType,
+			StatusSale:         sale.StatusSale,
 		}
 		err = s.repoProduct.UpdateProductWithSale(product.ProductID.Hex(), saleInfo)
 		if err != nil {
 			return err
 		}
 	}
+	if checkCount == 0 {
+		return errors.New("No new products were added to the sale")
+	}
+
 	return nil
 
 }

@@ -205,26 +205,6 @@ func (s *Specification) FromMap(data map[string]interface{}) {
 	s.Value = data["value"].(string)
 }
 
-// func (s *Sale) ToMap() map[string]interface{} {
-// 	return map[string]interface{}{
-// 		"_id":                 s.ID,
-// 		"saleNameVi":          s.SaleNameVi,
-// 		"saleNameEn":          s.SaleNameEn,
-// 		"discountOPercentage": s.DiscountPercentage,
-// 		"startDate":           s.StartDate.Format(time.RFC3339),
-// 		"endDate":             s.EndDate.Format(time.RFC3339),
-// 	}
-// }
-
-// func (s *Sale) FromMap(data map[string]interface{}) {
-// 	s.ID = utils.GetObjectID(data, "_id")
-// 	s.SaleNameVi = utils.GetString(data, "saleNameVi")
-// 	s.SaleNameEn = utils.GetString(data, "saleNameEn")
-// 	s.DiscountPercentage = utils.GetInt(data, "discountPercentage")
-// 	s.StartDate = utils.GetTime(data, "startDate")
-// 	s.EndDate = utils.GetTime(data, "endDate")
-// }
-
 func (p *Product) ToMap() map[string]interface{} {
 	variants := []map[string]interface{}{}
 	for _, v := range p.Variants {

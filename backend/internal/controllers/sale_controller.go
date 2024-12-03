@@ -4,6 +4,7 @@ import (
 	"electronik/internal/models"
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,6 +42,8 @@ func (sc *SaleController) GetAllSales(c *fiber.Ctx) error {
 	return APIResponse.SendSuccessResponse(c, fiber.StatusOK, "Sales fetched successfully", sales)
 }
 func (sc *SaleController) CreateSale(c *fiber.Ctx) error {
+	fmt.Printf("Raw Body: %s\n", string(c.Body()))
+
 	var sale models.Sale
 	if err := c.BodyParser(&sale); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{

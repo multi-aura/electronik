@@ -20,7 +20,6 @@ const OrderTable = ({ orders, onConfirmOrder, onCancelOrder }) => {
         'payment-pending': { class: "payment-pending", display: "Chưa thanh toán" },
         'payment-success': { class: "payment-success", display: "Đã thanh toán" },
     };
-
     const getStatusInfo = (status) => statusMapping[status] || { class: "", display: "Không xác định" };
     const getPaymentStatusInfo = (paymentStatus) => paymentStatusMapping[paymentStatus] || { class: "", display: "" };
 

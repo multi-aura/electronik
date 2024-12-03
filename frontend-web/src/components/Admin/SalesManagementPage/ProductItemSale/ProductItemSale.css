@@ -1,21 +1,23 @@
+/* Container của sản phẩm */
 .sale-product-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
     padding: 15px;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #ffffff;
+    transition: box-shadow 0.3s, transform 0.3s;
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 .sale-product-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
 }
 
+/* Thông tin sản phẩm */
 .sale-product-info {
     display: flex;
     align-items: center;
@@ -27,7 +29,7 @@
     height: 60px;
     border-radius: 8px;
     object-fit: cover;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #ddd;
 }
 
 .sale-product-details {
@@ -39,45 +41,52 @@
     font-weight: 600;
     font-size: 16px;
     color: #333;
+    margin: 0;
 }
 
 .sale-product-color {
-    font-size: 14px;
+    font-size: 13px;
     color: #777;
+    margin-top: 4px;
 }
 
+/* Thông tin thêm của sản phẩm */
 .sale-product-stats {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
+.sale-product-stats span {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Input số lượng */
 .sale-product-quantity-input {
     width: 60px;
     padding: 5px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
     font-size: 14px;
     text-align: center;
-    outline: none;
-    transition: border-color 0.3s;
+    transition: border-color 0.2s;
 }
 
 .sale-product-quantity-input:focus {
     border-color: #007bff;
+    outline: none;
 }
 
+/* Checkbox chọn sản phẩm */
 .sale-product-checkbox {
     transform: scale(1.2);
     cursor: pointer;
 }
 
-.sale-product-stats span {
-    font-size: 14px;
-    color: #555;
-}
+/* Hiển thị lỗi */
 .error-text {
-    color: red;
+    color: #dc3545;
     font-size: 12px;
     margin-top: 5px;
 }

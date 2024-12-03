@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import AdminLayout from '../../../layouts/AdminLayout/AdminLayout';
 import SalesList from '../../../components/Admin/SalesManagementPage/SalesList/SalesList';
 import '../../../assets/css/SalesManagementPage.css';
@@ -6,148 +6,194 @@ import FilterSale from '../../../components/Admin/SalesManagementPage/FilterSale
 import AddNewSale from '../../../components/Admin/SalesManagementPage/AddNewSale/AddNewSale';
 import EditSale from '../../../components/Admin/SalesManagementPage/EditSale/EditSale';
 import ProductSelection from '../../../components/Admin/SalesManagementPage/ProductSelection/ProductSelection';
+import { AddProductSale, DeleteSale, fetchAllSale, GetSaleByID, SaveSale, UpdateSale } from '../../../services/saleService';
 
 const SalesManagementPage = () => {
-    const [sales, setSales] = useState([
-        {
-            id: 'SA12312312',
-            name: 'Sale mùa lễ hội',
-            description: 'Sale off 50% cho các sản phẩm sữa rửa mặt',
-            discount: 50,
-            startDate: '2024-09-09',
-            endDate: '2024-09-09',
-            status: 'Active',
-            category: 'giảm giá sản phẩm',
-        },
-        {
-            id: 'SA12312312',
-            name: 'Sale mùa lễ hội',
-            description: 'Sale off 50% cho các sản phẩm sữa rửa mặt',
-            discount: 50,
-            startDate: '2024-09-09',
-            endDate: '2024-09-09',
-            status: 'Active',
-            category: 'giảm giá sản phẩm',
-        },
-        {
-            id: 'SA12312312',
-            name: 'Sale mùa lễ hội',
-            description: 'Sale off 50% cho các sản phẩm sữa rửa mặt',
-            discount: 50,
-            startDate: '2024-09-09',
-            endDate: '2024-09-09',
-            status: 'Active',
-            category: 'giảm giá sản phẩm',
-        },
-        {
-            id: 'SA12312312',
-            name: 'Sale mùa lễ hội',
-            description: 'Sale off 50% cho các sản phẩm sữa rửa mặt',
-            discount: 50,
-            startDate: '2024-09-09',
-            endDate: '2024-09-09',
-            status: 'Active',
-            category: 'giảm giá sản phẩm',
-        },
-        // Thêm các sale mẫu khác nếu cần
-    ]);
-
+    const [sales, setSales] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [isNewSaleOpen, setIsNewSaleOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
     const [currentSale, setCurrentSale] = useState(null);
+    const [statusFilter, setStatusFilter] = useState('All');
+    const [dateFilter, setDateFilter] = useState(null);
+    const [IdEditSale, setIdEditSale] = useState(null);
+    const [IdSale, setIdSale] = useState(null);
+    const [selectedProducts, setSelectedProducts] = useState([]);
+    const [selectedSale, setSelectedSale] = useState(null);
 
-    const openNewSaleModal = () => {
-        setIsNewSaleOpen(true);
-    };
-
-    const closeNewSaleModal = () => {
-        setIsNewSaleOpen(false);
+    const initialSaleState = {
+        SaleNameVi: '',
+        discount_percentage: '',
+        startDate: '',
+        endDate: '',
+        saletype: '',
+        status_sale: '1',
     };
 
     const openEditModal = (sale) => {
+        setIdEditSale(sale._id);
         setCurrentSale(sale);
         setIsEditOpen(true);
     };
 
-    const closeEditModal = () => {
-        setIsEditOpen(false);
-        setCurrentSale(null);
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        try {
+            const response = await fetchAllSale();
+            setSales(response.data);
+        } catch (error) {
+            console.error("Error fetching sales:", error);
+            setError("Có lỗi khi lấy dữ liệu");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    const handleSave = async (sale) => {
+        const saleNew = {
+            discountPercentage: Number(sale.discount_percentage),
+            SaleNameVi: sale.SaleNameVi,
+            status_sale: Number(sale.status_sale),
+            saletype: Number(sale.saletype),
+            startDate: new Date(sale.startDate).toISOString(),
+            endDate: new Date(sale.endDate).toISOString(),
+        };
+        try {
+            await SaveSale(saleNew);
+            fetchData();
+            alert("Đã thêm sale thành công");
+            setIsNewSaleOpen(false);
+        } catch (error) {
+            console.error("Error saving sale:", error);
+        }
     };
 
-    const openProductModal = () => {
+    const handleUpdateSale = async (updatedSale) => {
+        const saleNew = {
+            _id: IdEditSale,
+            discountPercentage: Number(updatedSale.discountPercentage),
+            saleNameVi: updatedSale.saleNameVi,
+            status_sale: Number(updatedSale.status_sale),
+            saletype: Number(updatedSale.saletype),
+            startDate: new Date(updatedSale.startDate).toISOString(),
+            endDate: new Date(updatedSale.endDate).toISOString(),
+        };
+        try {
+            await UpdateSale(saleNew);
+            fetchData();
+            alert("Đã cập nhật sale thành công");
+            setIsEditOpen(false);
+            setCurrentSale(null);
+        } catch (error) {
+            console.error("Error updating sale:", error);
+        }
+    };
+
+    const handleDeleteSale = useCallback(async (IdDelete) => {
+        if (!IdDelete) return;
+        try {
+            const response = await DeleteSale(IdDelete);
+            if (response.data.status === 200) {
+                alert("Bạn đã xóa thành công sale");
+                fetchData();
+            }
+        } catch (error) {
+            console.error("Error deleting sale:", error);
+        }
+    }, [fetchData]);
+
+    const GetSaleID = async (id) => {
+        try {
+            const response = await GetSaleByID(id);
+            setCurrentSale(response.data);
+        } catch (error) {
+            console.error("Error fetching sale by ID:", error);
+        }
+    };
+
+
+    const handleProductSelection = async (productDetails) => {
+        if (productDetails.length > 0) {
+            const productAddSale = {
+                SaleID: IdSale,
+                products: productDetails.map((product) => ({
+                    productId: product.productId,
+                    status: 1,
+                    quantitySale: product.quantity,
+                }))
+            };
+    
+            try {
+                const response = await AddProductSale(productAddSale);
+                if (response) {
+                    alert("Bạn đã thêm thành công");
+                    fetchData(); // Gọi lại để cập nhật danh sách sale
+    
+                    if (IdSale) {
+                        await GetSaleID(IdSale);
+                    }
+    
+                    setIsProductModalOpen(false);
+                }
+            } catch (error) {
+                console.log('Error adding products to sale:', error);
+                console.log('Product Add Sale:', productAddSale);
+            }
+        }
+    };
+    
+    
+
+
+    const handleSelectProduct = (sale) => {
         setIsProductModalOpen(true);
-    };
 
-    const closeProductModal = () => {
-        setIsProductModalOpen(false);
+        if (sale && sale._id !== selectedSale?._id) {
+            setSelectedSale(sale);
+            setIdEditSale(sale._id);
+            setIdSale(sale._id);
+        }
     };
+    useEffect(() => {
+        if (IdSale) {
+            GetSaleID(IdSale);
+        }
+    }, [IdSale]);
 
-    const handleSave = (sale) => {
-        console.log('Sale saved:', sale);
-        setSales([...sales, sale]);
-        closeNewSaleModal();
-    };
 
-    const handleUpdateSale = (updatedSale) => {
-        setSales(
-            sales.map((sale) => (sale.id === updatedSale.id ? updatedSale : sale))
-        );
-        closeEditModal();
-    };
 
     return (
         <AdminLayout>
             <div className="sales-management-page">
-                <div className="sales-filter-bar">
-                    <FilterSale />
-                </div>
-
-                <div className="sales-add-new-button-container">
-                    <button className="btn btn-success filter-sale-add-new-button" onClick={openNewSaleModal}>+ Add new</button>
-                </div>
-
-                {/* Truyền hàm openEditModal và openProductModal vào SalesList */}
+                <FilterSale onChangeStatus={setStatusFilter} onChangeDate={setDateFilter} />
+                <button className="btn btn-success filter-sale-add-new-button" onClick={() => setIsNewSaleOpen(true)}>
+                    + Thêm mới
+                </button>
                 <SalesList
-                    sales={sales}
+                    sales={sales.filter(sale =>
+                        (statusFilter === 'All' || sale.status_sale === statusFilter) &&
+                        (!dateFilter || sale.date === dateFilter)
+                    )}
                     onEditSale={openEditModal}
-                    onSelectProduct={openProductModal} // Thêm prop này để truyền đúng hàm
+                    onSelectProduct={handleSelectProduct}
+                    setIdDelete={handleDeleteSale}
                 />
-
-
-                <AddNewSale isOpen={isNewSaleOpen} onClose={closeNewSaleModal} onSave={handleSave} />
-
+                <AddNewSale isOpen={isNewSaleOpen} onClose={() => setIsNewSaleOpen(false)} onSave={handleSave} />
                 {isEditOpen && currentSale && (
-                    <EditSale
-                        saleData={currentSale}
-                        onSave={handleUpdateSale}
-                        onCancel={closeEditModal}
-                    />
+                    <EditSale saleData={currentSale} onSave={handleUpdateSale} onCancel={() => setIsEditOpen(false)} />
                 )}
-
-                {/* Modal ProductSelection */}
                 {isProductModalOpen && (
                     <ProductSelection
-                        products={[
-                            { id: 'P1', name: 'Son Merzy V6 Blue Dream', color: 'Red', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P2', name: 'Son Merzy V6 Blue Dream', color: 'Blue', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P3', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P4', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P5', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P6', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P8', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P9', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-                            { id: 'P20', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' },
-
-                            { id: 'P7', name: 'Son Merzy V6 Blue Dream', color: 'Green', quantity: 123, price: 1311, image: 'https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_medium.png' }
-
-                        ]}
                         isOpen={isProductModalOpen}
-                        onClose={closeProductModal}
-                        onApply={(selectedProducts) => {
-                            console.log('Selected products:', selectedProducts);
-                            closeProductModal();
-                        }}
+                        onClose={() => setIsProductModalOpen(false)}
+                        onApply={handleProductSelection} // Truyền hàm xử lý vào đây
+                        sale={currentSale}
                     />
                 )}
             </div>
