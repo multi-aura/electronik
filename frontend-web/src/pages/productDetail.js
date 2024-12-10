@@ -117,9 +117,7 @@ const ProductDetail = () => {
                     <Col md={5} className="product-detail-side-col">
                         <SimilarProducts similarProducts={similar} />
 
-                        <div className="product-detail-news-section" style={{ marginTop: '20px' }}>
-                            <SuggestedProducts serial={serial} />
-                        </div>
+                      
                     </Col>
                 </Row>
             </Container>

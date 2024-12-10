@@ -95,9 +95,8 @@ const FlashSale = ({ serial }) => {
               const discount = item.sale?.discountPercentage || 0;
               const discountPrice = price * (1 - discount / 100);
               return (
-                <div key={item._id}>
+            
                   <ProductCardSugges product={item} />
-                </div>
               );
             })
           ) : (
