@@ -1,69 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../../layouts/AdminLayout/AdminLayout';
 import { Variant } from '../../../models/variantModel';
 import { Container, Row, Col, Tabs, Tab, Button } from 'react-bootstrap';
 import ProductImageUpload from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductImageUpload/ProductImageUpload';
-import ProductVariants from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductVariants/ProductVariants';
+import ProductVariant from '../../../components/Admin/ProductManagementPage/CreateProductPage/ProductVariant/ProductVariant';
 import { uploadImages } from '../../../services/imageService';
+import { addVariantToProduct } from '../../../services/variantService';
 import '../../../assets/css/VariantCreatePage.css';
 
 const VariantCreatePage = () => {
     const { productId } = useParams();
     const navigate = useNavigate();
-    const [variant, setVariant] = useState({ ...Variant, variants: [] });
+    const [variant, setVariant] = useState(Variant);
 
     const [images, setImages] = useState([]);
+    const [isReadyToSave, setIsReadyToSave] = useState(false);
 
     const handleImageUpload = (uploadedImages) => {
-        setImages((prevImages) => [...prevImages, ...uploadedImages]);
+        setImages((prevImages) => [...prevImages, ...uploadedImages]); // Append new images to existing ones
         setVariant((prevVariant) => ({
             ...prevVariant,
-            images: uploadedImages.map((img, index) => ({
-                url: img,
-                isDefault: index === 0,
-            })),
+            images: uploadedImages.map((img) => ({
+                url: img, // Lưu URL của ảnh
+                isDefault: true
+            }))
         }));
     };
-
-    const handleVariantChange = (e, index) => {
+    const handleVariantChange = (e) => {
         const { name, value } = e.target;
-        setVariant((prevVariant) => {
-            const updatedVariants = [...prevVariant.variants];
-            updatedVariants[index] = {
-                ...updatedVariants[index],
-                [name]: name === 'stock' || name === 'price' || name === 'purchasePrice' ? parseFloat(value) : value,
-            };
-            return { ...prevVariant, variants: updatedVariants };
-        });
-    };
-
-    const addVariant = () => {
         setVariant((prevVariant) => ({
             ...prevVariant,
-            variants: [...prevVariant.variants, { color: '', stock: 0, price: 0, sku: '', purchasePrice: 0 }],
+            [name]: name === 'stock' || name === 'price' || name === 'purchasePrice' ? parseFloat(value) : value,
         }));
     };
-
-    const removeVariant = (index) => {
-        setVariant((prevVariant) => ({
-            ...prevVariant,
-            variants: prevVariant.variants.filter((_, i) => i !== index),
-        }));
+    
+    const processImageUploadAndVariant = async () => {
+        if (images.length > 0) {
+            // Tải ảnh lên và nhận lại URL ảnh
+            const uploadedImageUrls = await uploadImages(images);
+            console.log(uploadedImageUrls);
+    
+            setVariant((prevState) => {
+                const updatedVariant = {
+                    ...prevState, // Giữ lại các thông tin hiện tại của variant
+                    images: uploadedImageUrls.map((url, index) => ({
+                        url: url,
+                        isDefault: index === 0, // Đánh dấu ảnh đầu tiên là ảnh mặc định
+                    })),
+                };
+    
+                return updatedVariant;
+            });
+        }
     };
+    
 
+    useEffect(() => {
+        if (isReadyToSave) {
+            setIsReadyToSave(false);
+            SaveVariant();
+        }
+    }, [variant, isReadyToSave]);
     const handleSaveVariant = async () => {
         try {
-            const payload = { ...variant, productId };
-            // const response = await createVariant(payload);
-            // console.log('Variant created successfully:', response);
+            await processImageUploadAndVariant();
+            setIsReadyToSave(true);
+
             alert('Variant created successfully!');
-            // navigate(`/admin/products/${productId}/variants`);
         } catch (error) {
             console.error('Error creating variant:', error);
             alert('Failed to create variant. Please check the console for more details.');
         }
     };
+    const SaveVariant = async () => {
+        console.log('Product to be saved:', variant);
+        try {
+            const response = await addVariantToProduct(productId, variant);
+
+            console.log('Product created successfully:', response);
+            alert('Product created successfully!');
+        } catch (error) {
+            console.error('Error while saving product:', error);
+            alert('Failed to create product. Please check the console for more details.');
+        }
+    };
+    console.log('Variant:',variant );
 
     return (
         <AdminLayout>
@@ -84,15 +106,12 @@ const VariantCreatePage = () => {
                         </div>
                     </Tab>
 
-                    {/* Tab "Biến thể sản phẩm" */}
                     <Tab eventKey="variants" title="Biến thể sản phẩm">
                         <div className="p-3 bg-white shadow-sm rounded admin-tab-content">
-                            <ProductVariants
-                                variants={variant.variants}
-                                handleVariantChange={handleVariantChange}
-                                addVariant={addVariant}
-                                removeVariant={removeVariant}
-                            />
+                        <ProductVariant
+                            variant={variant} 
+                            handleVariantChange={handleVariantChange}
+                        />
                         </div>
                     </Tab>
                 </Tabs>
