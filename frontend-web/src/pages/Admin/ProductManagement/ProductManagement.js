@@ -5,7 +5,7 @@ import Header from '../../../components/Admin/ProductManagementPage/Header/Heade
 import Filter from '../../../components/Admin/ProductManagementPage/Filter/Filter';
 import PaginationControls from '../../../components/Admin/ProductManagementPage/PaginationControls/PaginationControls';
 import ProductTable from '../../../components/Admin/ProductManagementPage/ProductTable/ProductTable';
-import { fetchProductsBySearch } from '../../../services/productService';
+import { fetchProductsBySearch,fetchProductsBySearchWithQuery } from '../../../services/productService';
 import '../../../assets/css/ProductManagement.css'
 
 const ProductManagementPage = () => {
@@ -14,14 +14,16 @@ const ProductManagementPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 setIsLoading(true);
-                const data = await fetchProductsBySearch(currentPage, itemsPerPage);
-                
+                const data = await fetchProductsBySearchWithQuery(currentPage, itemsPerPage, searchTerm);
+                console.log(data.data); 
                 if (data.data && data.data.length > 0) {
-                    setProducts((prevProducts) => [...prevProducts, ...data.data]); // Append new products
+                    setProducts((prevProducts) => [...prevProducts, ...data.data]); 
                 } else {
                     setHasMore(false); // No more products to load
                 }
@@ -34,7 +36,7 @@ const ProductManagementPage = () => {
         };
 
         fetchProducts();
-    }, [currentPage, itemsPerPage]);
+    }, [currentPage, itemsPerPage, searchTerm]);
 
     // Infinite scroll event handler
     useEffect(() => {
@@ -54,6 +56,11 @@ const ProductManagementPage = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [isLoading, hasMore]);
+    useEffect(() => {
+        setProducts([]);
+        setCurrentPage(1);
+        setHasMore(true);
+    }, [searchTerm, itemsPerPage]);
     return (
         <AdminLayout>
             <div className="container-fluid px-4 ProductManagement">
@@ -66,7 +73,10 @@ const ProductManagementPage = () => {
 
                 <div className="row mb-3">
                     <div className="col">
-                        <Filter />
+                        <Filter 
+                            searchTerm={searchTerm} 
+                            onSearchChange={setSearchTerm} 
+                        />
                     </div>
                     
                 </div>

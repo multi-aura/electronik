@@ -249,3 +249,22 @@ export const deleteProduct = async (productId) => {
         throw error;
     }
 };
+export const fetchProductsBySearchWithQuery = async (page, limit, searchTerm) => {
+    const URL_SEARCH = `${API_URL}/product/search`;
+    
+    const params = {
+        q: searchTerm,
+    };
+    
+    const body = {
+        page: page,
+        limit: limit,
+    };
+    
+    try {
+        const response = await axios.post(URL_SEARCH, body, { params: params });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
