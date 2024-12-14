@@ -4,7 +4,6 @@ import (
 	"electronik/internal/models"
 	"electronik/internal/services"
 	APIResponse "electronik/pkg/api_response"
-	"fmt"
 	"log"
 	"strconv"
 
@@ -69,9 +68,9 @@ func (pro *ProductController) GetProductByID(c *fiber.Ctx) error {
 	}
 
 	// Chuyển đổi `Serial` thành chuỗi cho từng variant trong `product`
-	for i, variant := range product.Variants {
-		product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
-	}
+	// for i, variant := range product.Variants {
+	// 	product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
+	// }
 
 	// Trả về kết quả thành công
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
@@ -146,15 +145,19 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 	if query == "" {
 		products, err = pro.service.GetListProductByPagination(int(req.Page), int(req.Limit))
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to get list product",
+			return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusInternalServerError,
+				Message: err.Error(),
+				Error:   "StatusInternalServerError",
 			})
 		}
 	} else {
 		products, err = pro.service.GetListProductBySearch(int(req.Page), int(req.Limit), query)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to get list product",
+			return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusInternalServerError,
+				Message: err.Error(),
+				Error:   "StatusInternalServerError",
 			})
 		}
 	}
@@ -355,11 +358,11 @@ func (pro *ProductController) GetProductsByIDs(c *fiber.Ctx) error {
 			Error: "StatusInternalServerError",
 		})
 	}
-	for _, product := range products {
-		for i, variant := range product.Variants {
-			product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
-		}
-	}
+	// for _, product := range products {
+	// 	for i, variant := range product.Variants {
+	// 		product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
+	// 	}
+	// }
 
 	if len(products) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(APIResponse.ErrorResponse{
@@ -464,11 +467,11 @@ func (pro *ProductController) GetProductsBySerials(c *fiber.Ctx) error {
 			Error:   "StatusNotFound",
 		})
 	}
-	for _, product := range products {
-		for i, variant := range product.Variants {
-			product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
-		}
-	}
+	// for _, product := range products {
+	// 	for i, variant := range product.Variants {
+	// 		product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
+	// 	}
+	// }
 
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
