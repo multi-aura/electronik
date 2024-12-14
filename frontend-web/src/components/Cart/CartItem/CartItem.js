@@ -5,13 +5,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './CartItem.css';
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {  const handleDecrease = () => {
+  
+  console.log("a", item);
+
     if (item.quantity > 1) {
-      onUpdateQuantity(item.id, item.quantity - 1);
+      onUpdateQuantity(item.variantID, item.quantity - 1);
     }
   };
 
   const handleIncrease = () => {
-    onUpdateQuantity(item.id, item.quantity + 1);
+    onUpdateQuantity(item.variantID, item.quantity + 1);
   };
   const formatPrice = (price) => {
     return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });

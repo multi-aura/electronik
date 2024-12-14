@@ -3,10 +3,20 @@ import { Button, Badge, Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaHeart, FaShareAlt, FaShippingFast, FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { addToCart } from '../../../services/cartService';
+import SuccessModal from '../../SuccessModal/SuccessModal';
 
 function ProductInfo({ product, onSelectImage, onSelectSerial }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [maxQuantity, setMaxQuantity] = useState(0);
+
+  useEffect(() => {
+    if (product?.variants?.length > 0) {
+      setMaxQuantity(product.variants[0].stock || 0);
+    }
+  }, [product]);
 
   useEffect(() => {
     if (product && product.variants && product.variants.length > 0) {
@@ -25,10 +35,19 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
     : price;
 
   const handleQuantityChange = (value) => {
-    setQuantity(Math.max(1, quantity + value));
+    setQuantity((prevQuantity) => {
+      const newQuantity = prevQuantity + value;
+
+      if (newQuantity < 1) return 1;
+
+      if (newQuantity > maxQuantity) return maxQuantity;
+
+      return newQuantity;
+    });
   };
 
   const handleVariantClick = (variant) => {
+    setMaxQuantity(variant.stock || 0);
     setQuantity(1);
     setSelectedColor(variant);
 
@@ -59,12 +78,14 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
         saleID: product && product.sale && product.sale._id ? product.sale._id : ' ',
         saleName: product && product.sale && product.sale.saleNameVi ? product.sale.saleNameVi : ' ',
         discountPercentage: product && product.sale && product.sale.discountPercentage ? product.sale.discountPercentage : 0,
-      }
+      },
+      quantityTotal: selectedColor?.stock || 0, 
 
     };
-    console.log(productToAdd)
+
     addToCart(productToAdd);
-    alert('Sản phẩm đã được thêm vào giỏ hàng!');
+    setShowSuccessModal(true);
+
   };
 
   return (
@@ -152,43 +173,73 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
 
       <hr />
 
-      {/* Số Lượng */}
       <div className="quantity-section mt-3">
-        <strong>Số lượng:</strong>
-        <div className="d-flex align-items-center gap-2 mt-2">
-          <Button variant="outline-secondary" onClick={() => handleQuantityChange(-1)}>-</Button>
-          <Form.Control
-            type="text"
-            value={quantity}
-            readOnly
-            className="text-center"
-            style={{ width: '60px' }}
-          />
-          <Button variant="outline-secondary" onClick={() => handleQuantityChange(1)}>+</Button>
-        </div>
+        {maxQuantity === 0 ? (
+          <strong className="text-danger">Hết hàng</strong>
+        ) : (
+          <>
+            <strong>Số lượng:</strong>
+            <div className="d-flex align-items-center gap-2 mt-2">
+              <Button
+                variant="outline-secondary"
+                onClick={() => handleQuantityChange(-1)}
+                disabled={quantity === 1}
+              >
+                -
+              </Button>
+              <Form.Control
+                type="text"
+                value={quantity}
+                readOnly
+                className="text-center"
+                style={{ width: '60px' }}
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={() => handleQuantityChange(1)}
+                disabled={quantity === maxQuantity}
+              >
+                +
+              </Button>
+            </div>
+            <div className="subtotal-section mt-3">
+              <strong>Tổng cộng:</strong> {`${(priceSale * quantity).toLocaleString()}đ`}
+            </div>
+
+            <div className="d-flex gap-2 mt-4">
+              <Button variant="danger" className="flex-grow-1" onClick={handleAddToCart}>
+                <FaShoppingCart className="me-2" /> Thêm vào giỏ hàng
+              </Button>
+              <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center">
+                <FaHeart />
+              </Button>
+              <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center">
+                <FaShareAlt />
+              </Button>
+            </div>
+          </>
+
+        )}
       </div>
 
-      <div className="subtotal-section mt-3">
-        <strong>Tổng cộng:</strong> {`${(priceSale * quantity).toLocaleString()}đ`}
-      </div>
 
-      <div className="d-flex gap-2 mt-4">
-        <Button variant="danger" className="flex-grow-1" onClick={handleAddToCart}>
-          <FaShoppingCart className="me-2" /> Thêm vào giỏ hàng
-        </Button>
-        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center">
-          <FaHeart />
-        </Button>
-        <Button variant="outline-secondary" className="d-flex align-items-center justify-content-center">
-          <FaShareAlt />
-        </Button>
-      </div>
 
       <div className="additional-info mt-4">
         <p><strong>Bảo hành:</strong> {product.warranty || 'N/A'}</p>
         <p><strong>Chính sách đổi trả:</strong> Đổi trả trong 30 ngày nếu có lỗi kỹ thuật</p>
       </div>
+      {showSuccessModal && (
+        <SuccessModal
+          title="Thành công!"
+          description="Bạn đã thêm đơn hàng thành công."
+          onClose={() => setShowSuccessModal(false)}
+        />)
+
+
+      }
+
     </div>
+
   );
 }
 

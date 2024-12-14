@@ -17,7 +17,6 @@ const ProductListPage = () => {
   const { categoryID } = useParams();
   const limit = 8;
 
-  // Hàm tải sản phẩm, có kiểm tra categoryID để quyết định gọi API nào
   const fetchProducts = async (page) => {
     setLoading(true);
     try {
@@ -65,7 +64,7 @@ const ProductListPage = () => {
       <div className="container product-list-page my-3">
         <div className="row mt-4">
           <div>
-            <FilterSidebar setManufacturer={setManufacturer} /> {/* Truyền `setManufacturer` để cập nhật giá trị */}
+            <FilterSidebar setManufacturer={setManufacturer} /> 
             <TopFilterBar />
           </div>
 
