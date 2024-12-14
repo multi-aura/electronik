@@ -32,7 +32,7 @@ type OrderDetail struct {
 	ProductID    primitive.ObjectID `bson:"productID" json:"productID" validate:"required" form:"productID"`
 	VariantID    primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
 	Serial       int64              `bson:"serial" json:"-" validate:"required" form:"serial"`
-	SerialString string             `json:"serial"`
+	SerialString string             `json:"serialstring"`
 	NameVi       string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
 	Color        string             `bson:"color" json:"color" validate:"required" form:"color"`
 	Image        string             `bson:"image" json:"image" validate:"required" form:"image"`

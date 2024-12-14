@@ -146,15 +146,19 @@ func (pro *ProductController) SearchProducts(c *fiber.Ctx) error {
 	if query == "" {
 		products, err = pro.service.GetListProductByPagination(int(req.Page), int(req.Limit))
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to get list product",
+			return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusBadRequest,
+				Message: err.Error(),
+				Error:   "StatusInternalServerError",
 			})
 		}
 	} else {
 		products, err = pro.service.GetListProductBySearch(int(req.Page), int(req.Limit), query)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to get list product",
+			return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
+				Status:  fiber.StatusBadRequest,
+				Message: err.Error(),
+				Error:   "StatusInternalServerError",
 			})
 		}
 	}
