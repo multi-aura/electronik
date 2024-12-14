@@ -4,6 +4,7 @@ import (
 	"electronik/internal/databases"
 	"electronik/internal/models"
 	"errors"
+	"strconv"
 
 	"context"
 	"time"
@@ -46,7 +47,7 @@ func (v *variantRepository) AddVariantToProduct(productID string, variant *model
 
 	// Generate ObjectID and Serial for the new variant
 	variant.ID = primitive.NewObjectID()
-	variant.Serial = node.Generate().Int64()
+	variant.Serial = strconv.FormatInt(node.Generate().Int64(), 10)
 
 	// Assign ObjectIDs for images in the variant
 	for i := range variant.Images {

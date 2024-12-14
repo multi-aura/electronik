@@ -1,7 +1,6 @@
 package models
 
 import (
-	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -22,8 +21,7 @@ type (
 
 	Variant struct {
 		ID            primitive.ObjectID `bson:"_id" json:"_id" form:"_id"`
-		Serial        int64              `bson:"serial" json:"-" form:"serial"`
-		SerialString  string             `json:"serial"`
+		Serial        string             `bson:"serial" json:"serial" form:"serial"`
 		Color         string             `bson:"color" json:"color" validate:"required" form:"color"`
 		Stock         int                `bson:"stock" json:"stock" validate:"required,gte=0" form:"stock"`
 		Price         float64            `bson:"price" json:"price" validate:"required,gt=0" form:"price"`
@@ -133,6 +131,8 @@ func (v *Variant) ToMap() map[string]interface{} {
 		"price":         v.Price,
 		"weight":        v.Weight,
 		"sku":           v.SKU,
+		"serial":        v.Serial,
+		"purchasePrice": v.PurchasePrice,
 		"images":        images,
 		"descriptionVi": v.DescriptionVi,
 		"descriptionEn": v.DescriptionEn,
@@ -145,6 +145,8 @@ func (v *Variant) FromMap(data map[string]interface{}) {
 	v.Stock = int(data["stock"].(float64))
 	v.Price = data["price"].(float64)
 	v.Weight = data["weight"].(string)
+	v.Serial = data["serial"].(string)
+	v.PurchasePrice = data["purchasePrice"].(float64)
 	v.SKU = data["sku"].(string)
 	v.DescriptionVi = data["descriptionVi"].(string)
 	v.DescriptionEn = data["descriptionEn"].(string)
@@ -293,10 +295,10 @@ func (p *Product) FromMap(data map[string]interface{}) {
 	}
 }
 func (v *Variant) SetSerialFromString() error {
-	serial, err := strconv.ParseInt(v.SerialString, 10, 64)
-	if err != nil {
-		return err
-	}
-	v.Serial = serial
+	// serial, err := strconv.ParseInt(v.Serial, 10, 64)
+	// if err != nil {
+	// 	return err
+	// }
+	// v.Serial = serial
 	return nil
 }

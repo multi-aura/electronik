@@ -163,13 +163,16 @@ func (pro *productService) GetListProductByPagination(page int, limit int) ([]*m
 	if (page <= 0) || (limit <= 0) {
 		return nil, errors.New("page and limit must be greater than 0")
 	}
+
+	_ = pro.repo.UpdateSerialForAllVariants()
+
 	skip := (page - 1) * limit
 	products, err := pro.repo.GetProductsByPagination(limit, skip)
+
 	if err != nil {
 		return nil, err
 	}
 	return products, nil
-
 }
 func (pro *productService) GetAllProducts() ([]*models.Product, error) {
 	products, err := pro.repo.GetAllProducts()

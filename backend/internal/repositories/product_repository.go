@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
@@ -118,7 +119,8 @@ func (pro *productRepository) Create(entity *models.Product) error {
 		entity.Variants[i].ID = primitive.NewObjectID()
 
 		// Generate Snowflake ID for the Serial field of each Variant
-		entity.Variants[i].Serial = node.Generate().Int64()
+		// entity.Variants[i].Serial = node.Generate().Int64()
+		entity.Variants[i].Serial = strconv.FormatInt(node.Generate().Int64(), 10)
 
 		// Loop through each image in the variant and assign ObjectIDs
 		for j := range entity.Variants[i].Images {
@@ -153,7 +155,7 @@ func (pro *productRepository) UpdateSerialForAllVariants() error {
 
 		// Cập nhật serial cho từng variant
 		for i := range product.Variants {
-			product.Variants[i].Serial = node.Generate().Int64()
+			product.Variants[i].Serial = strconv.FormatInt(node.Generate().Int64(), 10)
 		}
 
 		// Cập nhật sản phẩm trong cơ sở dữ liệu

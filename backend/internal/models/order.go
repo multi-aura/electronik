@@ -2,8 +2,6 @@ package models
 
 import (
 	"electronik/pkg/utils"
-	"fmt"
-	"strconv"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -29,17 +27,16 @@ type Order struct {
 }
 
 type OrderDetail struct {
-	ProductID    primitive.ObjectID `bson:"productID" json:"productID" validate:"required" form:"productID"`
-	VariantID    primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
-	Serial       int64              `bson:"serial" json:"-" validate:"required" form:"serial"`
-	SerialString string             `json:"serialstring"`
-	NameVi       string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
-	Color        string             `bson:"color" json:"color" validate:"required" form:"color"`
-	Image        string             `bson:"image" json:"image" validate:"required" form:"image"`
-	Sale         *SaleInfo          `bson:"sale" json:"sale" form:"sale"`
-	Price        float64            `bson:"price" json:"price" validate:"required,gte=0" form:"price"`
-	Quantity     int                `bson:"quantity" json:"quantity" validate:"required,gte=0" form:"quantity"`
-	Total        float64            `bson:"total" json:"total" validate:"required,gte=0" form:"total"`
+	ProductID primitive.ObjectID `bson:"productID" json:"productID" validate:"required" form:"productID"`
+	VariantID primitive.ObjectID `bson:"variantID" json:"variantID" validate:"required" form:"variantID"`
+	Serial    string             `bson:"serial" json:"serial" validate:"required" form:"serial"`
+	NameVi    string             `bson:"nameVi" json:"nameVi" validate:"required" form:"nameVi"`
+	Color     string             `bson:"color" json:"color" validate:"required" form:"color"`
+	Image     string             `bson:"image" json:"image" validate:"required" form:"image"`
+	Sale      *SaleInfo          `bson:"sale" json:"sale" form:"sale"`
+	Price     float64            `bson:"price" json:"price" validate:"required,gte=0" form:"price"`
+	Quantity  int                `bson:"quantity" json:"quantity" validate:"required,gte=0" form:"quantity"`
+	Total     float64            `bson:"total" json:"total" validate:"required,gte=0" form:"total"`
 }
 
 type SaleInfo struct {
@@ -158,14 +155,14 @@ func (o *Order) FromMap(data map[string]interface{}) error {
 	return nil
 }
 func (od *OrderDetail) SetSerialFromString() error {
-	// Kiểm tra nếu `SerialString` không trống
-	if od.SerialString != "" {
-		// Chuyển đổi `SerialString` thành `int64`
-		serial, err := strconv.ParseInt(od.SerialString, 10, 64)
-		if err != nil {
-			return fmt.Errorf("Invalid serial format: %v", err)
-		}
-		od.Serial = serial // Gán giá trị sau khi chuyển đổi cho `Serial`
-	}
+	// // Kiểm tra nếu `SerialString` không trống
+	// if od.SerialString != "" {
+	// 	// Chuyển đổi `SerialString` thành `int64`
+	// 	serial, err := strconv.ParseInt(od.SerialString, 10, 64)
+	// 	if err != nil {
+	// 		return fmt.Errorf("Invalid serial format: %v", err)
+	// 	}
+	// 	od.Serial = serial // Gán giá trị sau khi chuyển đổi cho `Serial`
+	// }
 	return nil
 }
