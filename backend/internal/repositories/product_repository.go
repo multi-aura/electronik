@@ -30,7 +30,7 @@ type (
 		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
 		UpdateVariantStock(variantID string, quantityPurchased int) error
 		UpdateSerialForAllVariants() error
-		GetBySerials(serials []int64) ([]*models.Product, error)
+		GetBySerials(serials []string) ([]*models.Product, error)
 		UpdateProductWithSale(productId string, sale models.Sale) error
 		RemoveSaleFromProducts(productIDs []string) error
 		GetAllProducts() ([]*models.Product, error)
@@ -519,7 +519,7 @@ func (pro *productRepository) UpdateVariantStock(variantID string, quantityPurch
 
 	return nil
 }
-func (pro *productRepository) GetBySerials(serials []int64) ([]*models.Product, error) {
+func (pro *productRepository) GetBySerials(serials []string) ([]*models.Product, error) {
 	var products []*models.Product
 
 	if len(serials) == 0 {

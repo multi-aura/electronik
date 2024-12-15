@@ -437,22 +437,9 @@ func (pro *ProductController) GetProductsBySerials(c *fiber.Ctx) error {
 		})
 	}
 
-	// Chuyển đổi chuỗi thành int64
-	var serials []int64
-	for _, s := range request.Serials {
-		serial, err := strconv.ParseInt(s, 10, 64)
-		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(APIResponse.ErrorResponse{
-				Status:  fiber.StatusBadRequest,
-				Message: "Invalid serial format",
-				Error:   "StatusBadRequest",
-			})
-		}
-		serials = append(serials, serial)
-	}
-
-	products, err := pro.service.GetProductsBySerials(serials)
+	products, err := pro.service.GetProductsBySerials(request.Serials)
 	if err != nil {
+		log.Printf("Error fetching products by serials: %v", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(APIResponse.ErrorResponse{
 			Status:  fiber.StatusInternalServerError,
 			Message: err.Error(),
@@ -467,11 +454,6 @@ func (pro *ProductController) GetProductsBySerials(c *fiber.Ctx) error {
 			Error:   "StatusNotFound",
 		})
 	}
-	// for _, product := range products {
-	// 	for i, variant := range product.Variants {
-	// 		product.Variants[i].SerialString = fmt.Sprintf("%d", variant.Serial)
-	// 	}
-	// }
 
 	return c.Status(fiber.StatusOK).JSON(APIResponse.SuccessResponse{
 		Status:  fiber.StatusOK,
