@@ -2,33 +2,51 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGift } from '@fortawesome/free-solid-svg-icons';
 import './ProductCard.css';
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product, defaultImage }) => {
+  console.log(product);
   return (
-    <div className="card product-card h-100 border-0 shadow-sm">
-      <div className="gift-badge">
-        <span className="badge bg-primary">
-          <FontAwesomeIcon icon={faGift} /> {product.gift}
-        </span>
-      </div>
-      <img
-        src={product.imgSrc || defaultImage} 
-        className="card-img-top"
-        alt={product.name}
-      />
-      <div className="card-body">
-        <h6 className="card-title text-truncate">{product.name}</h6>
-        <div className="d-flex justify-content-between align-items-center mb-2">
-          <span className="text-danger">{product.price}</span>
-          <span className="badge bg-danger text-white">{product.discount}</span>
+    <Link to={`/product/${product._id}`} className="product-link">
+      <div className="card product-card h-100 border-0 shadow-sm">
+        <div className="gift-badge">
+          <span className="badge bg-primary">
+            <FontAwesomeIcon icon={faGift} /> {product.gift}
+          </span>
         </div>
-        <div className="mt-2">
-          {product.specs.map((spec, i) => (
-            <span key={i} className="badge bg-light text-dark me-1">{spec}</span>
+        <img
+          src={product.default_image}
+          alt={product.nameVi}
+          className="product-image-listpage"
+        />
+        {product.sale && product.sale.discountPercentage && (
+          <div className="discount-badge">
+            -{product.sale.discountPercentage}%
+          </div>
+        )}
+        <div className="product-specs">
+          {product.specifications.map((spec, index) => (
+            <span key={index} className="spec-item">
+              {spec.value}
+            </span>
           ))}
         </div>
+        <div className="price-section">
+          {product.sale && product.sale.discountPercentage ? (
+            <>
+              <p className="old-price">
+                {product.price.toLocaleString()} VND
+              </p>
+              <p className="new-price">
+                {(product.price * (1 - product.sale.discountPercentage / 100)).toLocaleString()} VND
+              </p>
+            </>
+          ) : (
+            <p className="new-price">{product.price.toLocaleString()} VND</p>
+          )}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

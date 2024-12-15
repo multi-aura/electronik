@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import './CartItem.css';
 import RelatedProducts from '../RelatedProducts/RelatedProducts';
 import { Link } from 'react-router-dom';
+import NotificationModal from '../../NotificationModal/NotificationModal';
 const CartItem = ({ item, onUpdateQuantity, onRemove, relatedProducts }) => {
+  console.log(item);
+  const [showErrorModal, setshowErrorModal] = useState(false);
+
+  const quantyMax = item?.quantityTotal || 0;
   const handleDecrease = () => {
     if (item.quantity > 1) {
-      onUpdateQuantity(item.id, item.quantity - 1);
+      onUpdateQuantity(item.variantID, item.quantity - 1);
     }
   };
-
   const handleIncrease = () => {
-    onUpdateQuantity(item.id, item.quantity + 1);
+    if (item.quantity < quantyMax) {
+      onUpdateQuantity(item.variantID, item.quantity + 1);
+    }
+    else {
+      setshowErrorModal(true);
+    }
   };
   const formatPrice = (price) => {
     return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   }
-
   return (
     <div className="cart-item-custom row align-items-center py-3 border-bottom">
       <div className="col-6 col-md-4 d-flex align-items-center">
@@ -47,6 +56,13 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, relatedProducts }) => {
 
       {relatedProducts && relatedProducts.length > 0 && (
         <RelatedProducts relatedProducts={relatedProducts} />
+      )}
+      {showErrorModal && (
+        <NotificationModal
+          title="Thất bại!"
+          description="Số lượng sản phẩm không đủ để tăng thêm."
+          onClose={() => setshowErrorModal(false)}
+        />
       )}
     </div>
   );

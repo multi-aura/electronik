@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CartItem.css';
+import NotificationModal from '../../NotificationModal/NotificationModal';
 
-const CartItem = ({ item, onUpdateQuantity, onRemove }) => {  const handleDecrease = () => {
+const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
+    const [showErrorModal, setshowErrorModal] = useState(false);
+  
+    const quantyMax = item?.quantityTotal || 0;
+    const handleDecrease = () => {
+
     if (item.quantity > 1) {
-      onUpdateQuantity(item.id, item.quantity - 1);
+      onUpdateQuantity(item.variantID, item.quantity - 1);
     }
   };
 
   const handleIncrease = () => {
-    onUpdateQuantity(item.id, item.quantity + 1);
+    if (item.quantity < quantyMax) {
+      onUpdateQuantity(item.variantID, item.quantity + 1);
+    }
+    else {
+      setshowErrorModal(true);
+    }
   };
   const formatPrice = (price) => {
     return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -54,8 +65,16 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {  const handleDecrea
           </div>
         </div>
       </div>
+      {showErrorModal && (
+        <NotificationModal
+          title="Thất bại!"
+          description="Số lượng sản phẩm không đủ để tăng thêm."
+          onClose={() => setshowErrorModal(false)}
+        />
+      )}
       <div className="col-md-1 d-flex align-items-center justify-content-end">
-        <button className="btn btn-outline-danger btn-sm" onClick={() => onRemove(item.serial)}>
+
+        <button className="btn btn-outline-danger  btn-sm" style={{"borderRadius" :50 }} onClick={() => onRemove(item.serial)}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
       </div>

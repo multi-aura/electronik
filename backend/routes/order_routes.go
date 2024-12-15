@@ -14,7 +14,6 @@ func SetUpOrderRoutes(app *fiber.App) {
 	productRepository := repositories.NewProductRepository(mongoDB)
 	service := services.NewOrderService(repository, productRepository)
 	controller := controllers.NewOrderController(service)
-
 	orderGroup := app.Group("/order")
 	orderGroup.Post("/user", middlewares.AuthMiddleware(), controller.GetOrdersOfUser)
 	orderGroup.Post("/create", controller.CreateOrder)
@@ -23,5 +22,4 @@ func SetUpOrderRoutes(app *fiber.App) {
 	orderGroup.Get("/:id", controller.GetOrderByID)
 	orderGroup.Post("/All", controller.GetAllOders)
 	orderGroup.Put("/updatestatusorder", controller.UpdateStatusOrder)
-
 }

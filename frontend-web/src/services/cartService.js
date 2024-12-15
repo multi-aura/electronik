@@ -1,5 +1,5 @@
 
-export const createCartItem = (id, name, variantID, priceold, price, quantity, image, serial, sku, color, sale) => {
+export const createCartItem = (id, name, variantID, priceold, price, quantity, image, serial, sku, color, sale, quantityTatol) => {
     return {
         id,
         name,
@@ -12,6 +12,8 @@ export const createCartItem = (id, name, variantID, priceold, price, quantity, i
         sku,
         color,
         sale,
+        quantityTatol,
+
     };
 };
 
@@ -43,9 +45,9 @@ export const addToCart = (product) => {
 };
 
 // Cập nhật số lượng sản phẩm
-export const updateQuantity = (productId, quantity) => {
+export const updateQuantity = (variantID, quantity) => {
     const cart = getCart();
-    const product = cart.find(item => item.id === productId);
+    const product = cart.find(item => item.variantID === variantID);
 
     if (product) {
         product.quantity = quantity;

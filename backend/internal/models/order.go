@@ -23,7 +23,9 @@ type Order struct {
 	Status        int64              `bson:"status" json:"status" validate:"required" form:"status"`
 	DeliveryFee   float64            `bson:"deliveryFee" json:"deliveryFee" validate:"required" form:"deliveryFee"`
 	Total         float64            `bson:"total" json:"total" validate:"required" form:"total"`
-	Details       []*OrderDetail     `bson:"details" json:"details" validate:"dive" form:"details"`
+	Note          string             `bson:"note" json:"note" form:"note"`
+
+	Details []*OrderDetail `bson:"details" json:"details" validate:"dive" form:"details"`
 }
 
 type OrderDetail struct {
@@ -120,6 +122,7 @@ func (o *Order) ToMap() (map[string]interface{}, error) {
 		"deliveryFee":   o.DeliveryFee,
 		"total":         o.Total,
 		"details":       details,
+		"note":          o.Note,
 	}, nil
 }
 
@@ -138,6 +141,7 @@ func (o *Order) FromMap(data map[string]interface{}) error {
 	o.PaymentStatus = utils.GetString(data, "paymentStatus")
 	o.OrderDate = utils.GetTime(data, "orderDate")
 	o.Status = int64(utils.GetInt(data, "status"))
+	o.Note = utils.GetString(data, "note")
 
 	o.DeliveryFee = utils.GetFloat64(data, "deliveryFee")
 	o.Total = utils.GetFloat64(data, "total")

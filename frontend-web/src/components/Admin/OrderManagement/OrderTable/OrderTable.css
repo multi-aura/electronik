@@ -254,3 +254,15 @@
 .btn-cancel:hover {
     background-color: #c82333;
 }
+.btn-completed{
+    background-color: gray;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+.btn-completed:hover {
+border:  1px solid black;
+}

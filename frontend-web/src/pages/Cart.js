@@ -13,6 +13,7 @@ const Cart = ({ onClose }) => {
     const [items, setItems] = useState(getCart());
     const [subtotal, setSubtotal] = useState(calculateTotal());
 
+    console.log(items);
     useEffect(() => {
         setIsVisible(true); // Kích hoạt hiệu ứng trượt vào khi giỏ hàng mở
     }, []);

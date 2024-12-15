@@ -10,22 +10,25 @@
     font-weight: bold;
     font-size: 18px;
 }
-
 .form-row {
     display: flex;
     justify-content: space-between;
+    gap: 10px; 
+    margin-bottom: 10px;
 }
 
 .form-group {
     flex: 1;
-    margin-right: 10px;
+    margin: 0px;
 }
 
 .form-group.half-width {
-    width: 48%;
+    width: 0 0 48%;
 }
 
-
+.form-group.third-width {
+    flex: 0 0 32%;
+}
 
 .form-group:last-child {
     margin-right: 0;
@@ -38,8 +41,11 @@
     border-radius: 5px;
     font-size: 14px;
     transition: border-color 0.3s, background-color 0.3s;
+    box-sizing: border-box;
 }
-
+textarea.form-control {
+    height: auto; 
+}
 .form-control:focus {
     border-color: #007bff;
     outline: none;

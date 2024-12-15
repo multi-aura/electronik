@@ -55,7 +55,7 @@ function Home() {
           <BannerCarousel banners={banners} />
         </main>
       </div>
-      <FlashSale />
+      <BestSellingProducts />
      <CategoryGrid  />
 
     </Layout>

@@ -11,9 +11,8 @@ import { Link } from 'react-router-dom';
 import RelatedProducts from '../components/CartPage/RelatedProducts/RelatedProducts';
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState(getCart()); // Lấy danh sách sản phẩm trong giỏ hàng
-  const [subtotal, setSubtotal] = useState(calculateTotal()); // Tính tổng giá trị giỏ hàng
-
+  const [cartItems, setCartItems] = useState(getCart());
+  const [subtotal, setSubtotal] = useState(calculateTotal());
   useEffect(() => {
     const handleCartUpdate = () => {
       setCartItems(getCart());
@@ -25,7 +24,6 @@ const CartPage = () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
     };
   }, []);
-  console.log("cart",cartItems);
   const handleUpdateQuantity = (productId, newQuantity) => {
     updateQuantity(productId, newQuantity);
     setCartItems(getCart());
@@ -81,7 +79,7 @@ const CartPage = () => {
                   {item.relatedProducts && item.relatedProducts.length > 0 && (
                     <div className="related-products mt-3">
                       <h6>Sản phẩm kèm theo:</h6>
-                      <RelatedProducts  />
+                      <RelatedProducts />
                     </div>
                   )}
                 </div>

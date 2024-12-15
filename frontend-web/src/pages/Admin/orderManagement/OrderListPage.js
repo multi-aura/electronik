@@ -9,11 +9,13 @@ import Col from 'react-bootstrap/Col';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../../assets/css/OrderListPage.css';
 import { fetchAllOrder, fetchUpdateStatusOrder } from '../../../services/orderService';
+import SuccessModal from "../../../components/SuccessModal/SuccessModal";
 
 const OrderListPage = () => {
     const [orders, setOrders] = useState([]);
     const [statusFilter, setStatusFilter] = useState('All');
     const [orderToUpdate, setOrderToUpdate] = useState(null); // Lưu trữ ID và status cần cập nhật
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     // Fetch tất cả các đơn hàng
     const handleAllOrder = async () => {
@@ -25,7 +27,7 @@ const OrderListPage = () => {
         }
     };
     useEffect(() => {
-       
+
         handleAllOrder();
     }, []);
 
@@ -37,8 +39,9 @@ const OrderListPage = () => {
             try {
                 const { orderId, status } = orderToUpdate;
                 const response = await fetchUpdateStatusOrder(orderId, status);
-                if (response.status===200) {
-                    alert('Cập nhật trạng thái đơn hàng thành công!');
+                if (response.status === 200) {
+                    setShowSuccessModal(true);
+
                     handleAllOrder();
                 }
             } catch (error) {
@@ -49,16 +52,17 @@ const OrderListPage = () => {
         handleUpdateStatusOrder();
     }, [orderToUpdate]);
 
-    // Xử lý xác nhận đơn hàng
     const handleConfirmOrder = (orderId) => {
-        setOrderToUpdate({ orderId, status: 2 }); // 1 là trạng thái xác nhận
+        setOrderToUpdate({ orderId, status: 2 });
     };
 
-    // Xử lý hủy đơn hàng
     const handleCancelOrder = (orderId) => {
-        setOrderToUpdate({ orderId, status: 3 }); // 0 là trạng thái hủy
+        setOrderToUpdate({ orderId, status: 3 });
     };
-    console.log(orderToUpdate);
+    const handleCompleted = (orderId) => {
+        setOrderToUpdate({ orderId, status: 4 });
+
+    }
 
     return (
         <AdminLayout>
@@ -82,11 +86,21 @@ const OrderListPage = () => {
                                 )}
                                 onConfirmOrder={handleConfirmOrder}
                                 onCancelOrder={handleCancelOrder}
+                                onCompleted={handleCompleted}
                             />
                         </Card>
                     </Col>
                 </Row>
             </Container>
+            {showSuccessModal && (
+                <SuccessModal
+                    title="Thành công!"
+                    description="Bạn đã cập nhật trạng thái đơn hàng thành công."
+                    onClose={() => setShowSuccessModal(false)}
+                />)
+
+
+            }
         </AdminLayout>
     );
 };

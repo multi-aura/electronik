@@ -20,7 +20,6 @@ const ShippingInfo = ({ onShippingInfoChange, onPlaceOrder, validateShippingInfo
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
 
-    // Load provinces on component mount
     useEffect(() => {
         const loadProvinces = async () => {
             try {
@@ -33,7 +32,6 @@ const ShippingInfo = ({ onShippingInfoChange, onPlaceOrder, validateShippingInfo
         loadProvinces();
     }, []);
 
-    // Load districts when city changes
     useEffect(() => {
         if (shippingInfo.province) {
             const loadDistricts = async () => {
@@ -51,7 +49,6 @@ const ShippingInfo = ({ onShippingInfoChange, onPlaceOrder, validateShippingInfo
         }
     }, [shippingInfo.province]);
 
-    // Load wards when district changes
     useEffect(() => {
         if (shippingInfo.district) {
             const loadWards = async () => {
