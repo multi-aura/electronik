@@ -58,7 +58,8 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {  const handleDecrea
         </div>
       </div>
       <div className="col-md-1 d-flex align-items-center justify-content-end">
-        <button className="btn btn-outline-danger btn-sm" onClick={() => onRemove(item.serial)}>
+
+        <button className="btn btn-outline-danger  btn-sm" style={{"borderRadius" :50 }} onClick={() => onRemove(item.serial)}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
       </div>

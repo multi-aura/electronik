@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './FilterSale.css';
 
-const FilterSale = ({ onChangeDate = () => {}, onChangeStatus = () => {} }) => {
+const FilterSale = ({ onChangeDate = () => { }, onChangeStatus = () => { }, setIsNewSaleOpen }) => {
     // State cho trạng thái
     const [activeStatus, setActiveStatus] = useState('All');
 
@@ -53,10 +53,18 @@ const FilterSale = ({ onChangeDate = () => {}, onChangeStatus = () => {} }) => {
                     </button>
                 </div>
 
+
                 {/* Bộ lọc ngày */}
                 <div className="col-md-4 col-12 filter-sale-date-filter d-flex justify-content-end align-items-center">
                     <div className="filter-sale-date-select-group d-flex align-items-center gap-2">
-                        <label className="filter-sale-date-label">Date:</label>
+                        <button
+                            className="btn btn-success filter-sale-add-new-button"
+                            onClick={() => setIsNewSaleOpen(true)}
+                        >
+                            + Thêm mới
+                        </button>
+
+                        {/* <label className="filter-sale-date-label">Date:</label>
                         <select
                             className="form-select filter-sale-date-select"
                             value={day}
@@ -98,7 +106,7 @@ const FilterSale = ({ onChangeDate = () => {}, onChangeStatus = () => {} }) => {
                                     {y}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
                     </div>
                 </div>
             </div>

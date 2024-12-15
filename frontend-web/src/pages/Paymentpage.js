@@ -79,7 +79,6 @@ const PaymentPage = () => {
             console.log("Thông tin không hợp lệ, vui lòng kiểm tra lại.");
             return;
         }
-
         const orderData = {
             ward: shippingInfo.wardName,
             district: shippingInfo.districtName,
@@ -94,6 +93,7 @@ const PaymentPage = () => {
             paymentStatus: "payment-pending",
             recipientName: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
             total: calculateTotal(),
+            Note: shippingInfo.note,
             details: orderItems.map((item) => ({
                 productID: item.id,
                 serial: item.serial,
@@ -119,7 +119,7 @@ const PaymentPage = () => {
             console.error('Error creating order:', error);
             alert('Tạo đơn hàng không thành công. Vui lòng kiểm tra lại thông tin và thử lại.');
         }
-        
+
     };
     // console.log(orderItems);
     return (
@@ -157,9 +157,9 @@ const PaymentPage = () => {
                         <div className="section">
                             <OrderDetails items={orderItems} onHandleOrderChange={handleShippingCostChange} />
                         </div>
-                        <div className="section">
+                        {/* <div className="section">
                             <PaymentMethod />
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>

@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "./SearchBar.css";
 import { fetchProductsBySearchWithQuery } from "../../services/productService";
+import SuggestionItem from "../SuggestionItem/SuggestionItem";
 
-const SearchBar = ({ fetchProducts }) => {
+const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Từ khóa tìm kiếm
   const [suggestedProducts, setSuggestedProducts] = useState([]); // Danh sách gợi ý sản phẩm
   const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Hiển thị dropdown
@@ -19,22 +20,21 @@ const SearchBar = ({ fetchProducts }) => {
     const delayDebounceFn = setTimeout(async () => {
       const page = 1;
       const limit = 10;
-      const results = await fetchProductsBySearchWithQuery(page, limit, searchTerm);
-      console.log(results);
+      const response = await fetchProductsBySearchWithQuery(page, limit, searchTerm);
+      const results = response?.data || [];
       setSuggestedProducts(results);
       setIsDropdownVisible(results.length > 0);
     }, 300); // Debounce 300ms
 
     return () => clearTimeout(delayDebounceFn); // Xóa timeout
-  }, [searchTerm, fetchProducts]);
+  }, [searchTerm]);
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
   const handleSelectProduct = (product) => {
-    console.log("Selected product:", product);
-    setIsDropdownVisible(false);
+    setIsDropdownVisible(false); // Ẩn dropdown
   };
 
   return (
@@ -54,28 +54,13 @@ const SearchBar = ({ fetchProducts }) => {
       </div>
 
       {isDropdownVisible && (
-        <div className="suggestions-dropdown">
+        <div className="suggestions-horizontal-container">
           {suggestedProducts.map((product) => (
-            <div
-              key={product.id}
-              className="suggestion-item"
-              onClick={() => handleSelectProduct(product)}
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="product-image"
-              />
-              <div className="product-info">
-                <span className="product-name">{product.name}</span>
-                <span className="product-price">
-                  {product.salePrice.toLocaleString("vi-VN")}đ
-                </span>
-                <span className="product-original-price">
-                  {product.originalPrice.toLocaleString("vi-VN")}đ
-                </span>
-              </div>
-            </div>
+            <SuggestionItem
+              key={product._id} 
+              product={product} 
+              onSelect={handleSelectProduct} 
+            />
           ))}
         </div>
       )}

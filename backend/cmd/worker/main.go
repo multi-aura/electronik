@@ -77,13 +77,13 @@ func main() {
 func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 	// Tạo thư mục scripts nếu chưa tồn tại
 	if err := os.MkdirAll("scripts", os.ModePerm); err != nil {
-		return fmt.Errorf("Error creating scripts directory: %v", err)
+		return fmt.Errorf("error creating scripts directory: %v", err)
 	}
 
 	// Mở file để ghi
 	file, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("Error creating file: %v", err)
+		return fmt.Errorf("error creating file: %v", err)
 	}
 	defer file.Close()
 
@@ -93,7 +93,7 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 
 	cursor, err := ordersCollection.Find(context.Background(), bson.M{})
 	if err != nil {
-		return fmt.Errorf("Error fetching orders: %v", err)
+		return fmt.Errorf("error fetching orders: %v", err)
 	}
 	defer cursor.Close(context.Background())
 
@@ -101,7 +101,7 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 	for cursor.Next(context.Background()) {
 		var order models.Order
 		if err := cursor.Decode(&order); err != nil {
-			fmt.Printf("Error decoding order: %v\n", err)
+			fmt.Printf("error decoding order: %v\n", err)
 			continue
 		}
 
@@ -115,13 +115,13 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 			if i > 0 {
 				serials += " "
 			}
-			serials += fmt.Sprintf("%d", detail.Serial)
+			serials += fmt.Sprintf(detail.Serial)
 
 			// Tìm sản phẩm chứa serial tương ứng
 			var product models.Product
 			err := productsCollection.FindOne(context.Background(), bson.M{"variants.serial": detail.Serial}).Decode(&product)
 			if err != nil {
-				fmt.Printf("Error fetching product for serial %d: %v\n", detail.Serial, err)
+				fmt.Printf("error fetching product for serial %v: %v\n", detail.Serial, err)
 				continue
 			}
 
@@ -141,12 +141,12 @@ func writeTransactionsToFile(client *databases.MongoDB, filePath string) error {
 
 		// Ghi vào file
 		if _, err := file.WriteString(resultLine); err != nil {
-			return fmt.Errorf("Error writing to file: %v", err)
+			return fmt.Errorf("error writing to file: %v", err)
 		}
 	}
 
 	if err := cursor.Err(); err != nil {
-		return fmt.Errorf("Cursor error: %v", err)
+		return fmt.Errorf("cursor error: %v", err)
 	}
 
 	return nil

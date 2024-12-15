@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './OrderTable.css';
 
-const OrderTable = ({ orders, onConfirmOrder, onCancelOrder }) => {
+const OrderTable = ({ orders, onConfirmOrder, onCancelOrder, onCompleted }) => {
     const [expandedOrderId, setExpandedOrderId] = useState(null);
 
     const handleDetailClick = (orderId) => {
@@ -78,6 +78,11 @@ const OrderTable = ({ orders, onConfirmOrder, onCancelOrder }) => {
                                                 <p><strong>Điện Thoại:</strong> {order.contactPhone}</p>
                                                 <p><strong>Email:</strong> {order.email}</p>
                                                 <p><strong>Địa Chỉ:</strong> {order.addressLine}, {order.ward}, {order.district}, {order.province}</p>
+                                                {order.note && order.note.trim().length > 0 && (
+                                                    <p>
+                                                        <strong>Ghi Chú:</strong> {order.note}
+                                                    </p>
+                                                )}
                                             </div>
                                             <div className="unique-order-products">
                                                 <h5>Danh Sách Sản Phẩm</h5>
@@ -116,6 +121,23 @@ const OrderTable = ({ orders, onConfirmOrder, onCancelOrder }) => {
                                                         onClick={() => onCancelOrder(order._id)}
                                                     >
                                                         Hủy
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-completed"
+                                                        onClick={() => onCompleted(order._id)}
+                                                    >
+                                                        Hoàn thành
+                                                    </button>
+                                                </div>
+                                            )}
+                                             {order.status === 2 && (
+                                                <div className="unique-order-actions">
+                                                   
+                                                    <button
+                                                        className="btn btn-completed"
+                                                        onClick={() => onCompleted(order._id)}
+                                                    >
+                                                        Hoàn thành
                                                     </button>
                                                 </div>
                                             )}

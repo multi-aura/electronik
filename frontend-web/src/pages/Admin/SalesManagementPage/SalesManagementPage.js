@@ -128,17 +128,17 @@ const SalesManagementPage = () => {
                     quantitySale: product.quantity,
                 }))
             };
-    
+
             try {
                 const response = await AddProductSale(productAddSale);
                 if (response) {
                     alert("Bạn đã thêm thành công");
                     fetchData(); // Gọi lại để cập nhật danh sách sale
-    
+
                     if (IdSale) {
                         await GetSaleID(IdSale);
                     }
-    
+
                     setIsProductModalOpen(false);
                 }
             } catch (error) {
@@ -147,8 +147,8 @@ const SalesManagementPage = () => {
             }
         }
     };
-    
-    
+
+
 
 
     const handleSelectProduct = (sale) => {
@@ -171,10 +171,13 @@ const SalesManagementPage = () => {
     return (
         <AdminLayout>
             <div className="sales-management-page">
-                <FilterSale onChangeStatus={setStatusFilter} onChangeDate={setDateFilter} />
-                <button className="btn btn-success filter-sale-add-new-button" onClick={() => setIsNewSaleOpen(true)}>
-                    + Thêm mới
-                </button>
+                <FilterSale
+                    onChangeStatus={setStatusFilter}
+                    onChangeDate={setDateFilter}
+                    setIsNewSaleOpen={setIsNewSaleOpen}
+                />
+
+
                 <SalesList
                     sales={sales.filter(sale =>
                         (statusFilter === 'All' || sale.status_sale === statusFilter) &&
