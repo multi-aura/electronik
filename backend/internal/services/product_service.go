@@ -24,7 +24,7 @@ type (
 		GetOnSaleProducts(page, limit int) ([]*models.Product, error)
 		GetProductsByCategoryID(page, limit int, categoryID, manufacturer string) ([]*models.Product, error)
 		GetSimilarProducts(productId string, limit int64) ([]*models.Product, error)
-		GetProductsBySerials(serials []int64) ([]*models.Product, error)
+		GetProductsBySerials(serials []string) ([]*models.Product, error)
 		GetAllProducts() ([]*models.Product, error)
 	}
 	productService struct {
@@ -164,8 +164,6 @@ func (pro *productService) GetListProductByPagination(page int, limit int) ([]*m
 		return nil, errors.New("page and limit must be greater than 0")
 	}
 
-	_ = pro.repo.UpdateSerialForAllVariants()
-
 	skip := (page - 1) * limit
 	products, err := pro.repo.GetProductsByPagination(limit, skip)
 
@@ -235,7 +233,7 @@ func (s *productService) GetSimilarProducts(productId string, limit int64) ([]*m
 
 	return similarProducts, nil
 }
-func (s *productService) GetProductsBySerials(serials []int64) ([]*models.Product, error) {
+func (s *productService) GetProductsBySerials(serials []string) ([]*models.Product, error) {
 	products, err := s.repo.GetBySerials(serials)
 	if err != nil {
 		return nil, err
