@@ -11,6 +11,7 @@ import VariantCreatePage from '../pages/Admin/ProductManagement/VariantCreatePag
 function AdminRoutes() {
   return (
       <Routes>
+        <Route path="/" element={<EMHUN />} />
         <Route path="/Emhun" element={<EMHUN />} />
         <Route path="/ProductManagement" element={<ProductManagementPage />} />
         <Route path="/SaleManagement" element={<SalesManagementPage />} />
