@@ -37,7 +37,6 @@
 }
 .suggestions-horizontal-container {
   display: flex;
-  justify-content: center; 
   align-items: center;
   gap: 10px; 
   padding: 10px;
@@ -54,17 +53,53 @@
   white-space: nowrap; 
 }
 
-
 .suggestions-horizontal-container::-webkit-scrollbar {
-  height: 8px; /* Chiều cao scrollbar */
+  height: 6px; /* Giảm chiều cao scrollbar */
 }
 
 .suggestions-horizontal-container::-webkit-scrollbar-thumb {
-  background: #ddd;
+  background: #ccc; /* Màu sắc thanh trượt */
   border-radius: 4px;
 }
 
 .suggestions-horizontal-container::-webkit-scrollbar-track {
-  background: #f5f5f5;
+  background: #f9f9f9; /* Màu nền của thanh cuộn */
+}
+/* Container chứa thanh trượt và 2 nút */
+.slider-wrapper {
+  position: relative;
+  /* width: 100%; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Nút trượt trái/phải */
+.slider-btn {
+  position: absolute;
+  top: 24%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 2000; /* Đảm bảo nằm trên thanh trượt */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-btn.left {
+  left: 165px; /* Khoảng cách với mép bên trái */
+}
+
+.slider-btn.right {
+  right: 510px; /* Khoảng cách với mép bên phải */
+}
+
+.slider-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}

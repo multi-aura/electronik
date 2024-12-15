@@ -63,10 +63,10 @@ const ProductListPage = () => {
     <Layout>
       <div className="container product-list-page my-3">
         <div className="row mt-4">
-          <div>
+          {/* <div>
             <FilterSidebar setManufacturer={setManufacturer} /> 
             <TopFilterBar />
-          </div>
+          </div> */}
 
           <div>
             {products.length > 0 ? (

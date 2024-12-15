@@ -4,11 +4,12 @@ import { FaHeart, FaShareAlt, FaShippingFast, FaShoppingCart } from 'react-icons
 import { Link } from 'react-router-dom';
 import { addToCart } from '../../../services/cartService';
 import SuccessModal from '../../SuccessModal/SuccessModal';
+import NotificationModal from '../../NotificationModal/NotificationModal';
 
 function ProductInfo({ product, onSelectImage, onSelectSerial }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(null);
-
+  const [showErrorModal, setshowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [maxQuantity, setMaxQuantity] = useState(0);
 
@@ -40,8 +41,11 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
 
       if (newQuantity < 1) return 1;
 
-      if (newQuantity > maxQuantity) return maxQuantity;
+      if (newQuantity > maxQuantity) {
+        setshowErrorModal(true);
 
+        return maxQuantity;
+      }
       return newQuantity;
     });
   };
@@ -79,7 +83,7 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
         saleName: product && product.sale && product.sale.saleNameVi ? product.sale.saleNameVi : ' ',
         discountPercentage: product && product.sale && product.sale.discountPercentage ? product.sale.discountPercentage : 0,
       },
-      quantityTotal: selectedColor?.stock || 0, 
+      quantityTotal: selectedColor?.stock || 0,
 
     };
 
@@ -172,6 +176,13 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
       )}
 
       <hr />
+      {showErrorModal && (
+        <NotificationModal
+          title="Thất bại!"
+          description="Số lượng sản phẩm không đủ để tăng thêm."
+          onClose={() => setshowErrorModal(false)}
+        />
+      )}
 
       <div className="quantity-section mt-3">
         {maxQuantity === 0 ? (
@@ -197,7 +208,7 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
               <Button
                 variant="outline-secondary"
                 onClick={() => handleQuantityChange(1)}
-                disabled={quantity === maxQuantity}
+
               >
                 +
               </Button>
@@ -234,8 +245,6 @@ function ProductInfo({ product, onSelectImage, onSelectSerial }) {
           description="Bạn đã thêm đơn hàng thành công."
           onClose={() => setShowSuccessModal(false)}
         />)
-
-
       }
 
     </div>

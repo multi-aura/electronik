@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import "./SearchBar.css";
 import { fetchProductsBySearchWithQuery } from "../../services/productService";
 import SuggestionItem from "../SuggestionItem/SuggestionItem";
 
 const SearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState(""); // Từ khóa tìm kiếm
-  const [suggestedProducts, setSuggestedProducts] = useState([]); // Danh sách gợi ý sản phẩm
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Hiển thị dropdown
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestedProducts, setSuggestedProducts] = useState([]);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const sliderRef = useRef(null); // Ref cho thanh trượt
 
   useEffect(() => {
     if (!searchTerm.trim()) {
-      setSuggestedProducts([]); // Xóa danh sách nếu từ khóa trống
+      setSuggestedProducts([]);
       setIsDropdownVisible(false);
       return;
     }
@@ -24,16 +25,18 @@ const SearchBar = () => {
       const results = response?.data || [];
       setSuggestedProducts(results);
       setIsDropdownVisible(results.length > 0);
-    }, 300); // Debounce 300ms
+    }, 300);
 
-    return () => clearTimeout(delayDebounceFn); // Xóa timeout
+    return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleInputChange = (e) => setSearchTerm(e.target.value);
 
-  const handleSelectProduct = (product) => {
+  const handleScroll = (direction) => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({ left: direction === "left" ? -200 : 200, behavior: "smooth" });
+    }
+  }; const handleSelectProduct = (product) => {
     setIsDropdownVisible(false); // Ẩn dropdown
   };
 
@@ -46,7 +49,7 @@ const SearchBar = () => {
           placeholder="Nhập tên sản phẩm cần tìm"
           value={searchTerm}
           onChange={handleInputChange}
-          onFocus={() => setIsDropdownVisible(suggestedProducts.length > 0)} // Hiển thị dropdown khi focus
+          onFocus={() => setIsDropdownVisible(suggestedProducts.length > 0)}
         />
         <div className="input-group-text ssearch-icon-bg">
           <FontAwesomeIcon icon={faSearch} />
@@ -54,14 +57,20 @@ const SearchBar = () => {
       </div>
 
       {isDropdownVisible && (
-        <div className="suggestions-horizontal-container">
-          {suggestedProducts.map((product) => (
-            <SuggestionItem
-              key={product._id} 
-              product={product} 
-              onSelect={handleSelectProduct} 
-            />
-          ))}
+        <div className="slider-container">
+          <button className="slider-btn left" onClick={() => handleScroll("left")}>
+            <FontAwesomeIcon icon={faChevronLeft} />
+          </button>
+
+          <div className="suggestions-horizontal-container" ref={sliderRef}>
+            {suggestedProducts.map((product) => (
+              <SuggestionItem key={product._id} product={product}   onSelect={handleSelectProduct} />
+            ))}
+          </div>
+
+          <button className="slider-btn right" onClick={() => handleScroll("right")}>
+            <FontAwesomeIcon icon={faChevronRight} />
+          </button>
         </div>
       )}
     </div>

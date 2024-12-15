@@ -41,13 +41,7 @@ const Navigation = () => {
         <FontAwesomeIcon icon={faPhone} className="me-2" />
         <span>Hotline 1900.5301</span>
       </div>
-      <div className="d-flex align-items-center text-white me-4" style={{ fontSize: '14px' }}>
-        <FontAwesomeIcon icon={faTags} className="me-2" />
-        <Link to={`/product`} className='text-white text-decoration-none'>
-          <span>Sản phẩm</span>
-
-        </Link>
-      </div>
+    
       <div className="cart-icon-wrapper d-flex align-items-center position-relative text-white me-4" style={{ fontSize: '14px' }}>
         <div className="d-flex align-items-center" onClick={toggleCart} style={{ cursor: 'pointer' }}>
           <FontAwesomeIcon icon={faShoppingCart} className="me-2" />

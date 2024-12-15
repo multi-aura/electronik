@@ -16,7 +16,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, relatedProducts }) => {
       onUpdateQuantity(item.variantID, item.quantity - 1);
     }
   };
-
   const handleIncrease = () => {
     if (item.quantity < quantyMax) {
       onUpdateQuantity(item.variantID, item.quantity + 1);
@@ -28,7 +27,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, relatedProducts }) => {
   const formatPrice = (price) => {
     return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   }
-
   return (
     <div className="cart-item-custom row align-items-center py-3 border-bottom">
       <div className="col-6 col-md-4 d-flex align-items-center">
@@ -66,7 +64,6 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, relatedProducts }) => {
           onClose={() => setshowErrorModal(false)}
         />
       )}
-
     </div>
   );
 };

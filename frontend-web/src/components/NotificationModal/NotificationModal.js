@@ -6,10 +6,10 @@ const NotificationModal = ({ title, description, onClose }) => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setShowModal(false); // Đóng modal sau 6 giây
-        }, 6000);
+            setShowModal(false); 
+        }, 3000);
 
-        return () => clearTimeout(timer); // Dọn dẹp khi component bị unmount
+        return () => clearTimeout(timer); 
     }, []);
 
     useEffect(() => {

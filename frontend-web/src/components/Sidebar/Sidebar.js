@@ -2,7 +2,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
-import { faLaptop, faDesktop, faMemory, faKeyboard, faMouse, faHeadphones, faGamepad } from '@fortawesome/free-solid-svg-icons';
+import { faLaptop, faDesktop, faMemory, faKeyboard, faMouse, faHeadphones, faGamepad,faTags } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
 
 const Sidebar = ({ categories }) => {
@@ -11,19 +11,27 @@ const Sidebar = ({ categories }) => {
   return (
     <aside className="sidebar">
       <ul className="list-unstyled">
+      <li  className="category-item">
+            <Link to={`/product`} className="d-flex align-items-center category-header">
+            <FontAwesomeIcon icon={faTags} className="sidebar-icon me-2" />
+
+              <span>Sản phẩm</span>
+
+            </Link>
+        </li>
         {categories.map((category, index) => (
           <li key={index} className="category-item">
-             <Link to={category.link} className="d-flex align-items-center category-header">
+            <Link to={category.link} className="d-flex align-items-center category-header">
               <FontAwesomeIcon icon={icons[index % icons.length]} className="sidebar-icon me-2" />
               <span>{category.label}</span>
             </Link>
-            <ul className="submenu list-unstyled">
+            {/* <ul className="submenu list-unstyled">
               {category.subcategories.map((subcategory, subIndex) => (
                 <li key={subIndex} className="submenu-item">
                   {subcategory}
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </li>
         ))}
       </ul>
